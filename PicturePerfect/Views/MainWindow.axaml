@@ -3,7 +3,7 @@
         xmlns:vm="using:PicturePerfect.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" MinHeight="450" MinWidth="800" Height="600" Width="1200"
+        mc:Ignorable="d" MinHeight="450" MinWidth="800" Height="800" Width="1600"
         x:Class="PicturePerfect.Views.MainWindow"
         Icon="/Assets/icon.ico"
         Title="Picture Perfect">
@@ -20,7 +20,7 @@
 
 		<Style Selector="TabItem">
 			<Setter Property="Background" Value="{Binding DarkColor}" />
-			<Setter Property="Width" Value="200"/>
+			<Setter Property="Width" Value="{Binding MenuBarWidth}"/>
 			<Setter Property="Padding" Value="10 0"/>
 			<Setter Property="Foreground" Value="WhiteSmoke"/>
 			<!-- Binding failes -->
@@ -60,102 +60,88 @@
 
 		<!-- ROW 1: Tab Control and all their child elements -->
 		<TabControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2" TabStripPlacement="Left" Background="{Binding MediumColor}">
-			<!-- Meal plan tab -->
-			<TabItem Name="itemTabMealPlan" Header="Meal plan" IsSelected="True" Margin="0,75,0,0">
-				<Grid ColumnDefinitions="2.5*,5*,75,75" RowDefinitions="*,*,*,*,*,*,0.25*,*,*">
-					<!-- Headline -->
-					<ComboBox Grid.Column="0" Grid.Row="0" SelectedItem="CW1" Margin="0,10,0,0" FontSize="{Binding LargeFontSize}" HorizontalAlignment="Stretch"/>
-					<Label Grid.Column="1" Grid.Row="0" Content="Meal plan" Margin="10,10,0,0" FontSize="{Binding LargeFontSize}"/>
-					<Button Grid.Column="2" Grid.Row="0" Margin="10,10,0,0">
-						<Image Source="/Assets/dices.png"/>
-					</Button>
-					<Button Grid.Column="3" Grid.Row="0" Margin="10,10,0,0">
-						<Image Source="/Assets/save.png"/>
-					</Button>
-					<!-- COLUMN 0: Days -->
-					<Label Content="Monday" Grid.Column="0" Grid.Row="1" FontSize="{Binding LargeFontSize}"/>
-					<Label Content="Tuesday" Grid.Column="0" Grid.Row="2" FontSize="{Binding LargeFontSize}"/>
-					<Label Content="Wednesday" Grid.Column="0" Grid.Row="3" FontSize="{Binding LargeFontSize}"/>
-					<Label Content="Thursday" Grid.Column="0" Grid.Row="4" FontSize="{Binding LargeFontSize}"/>
-					<Label Content="Friday" Grid.Column="0" Grid.Row="5" FontSize="{Binding LargeFontSize}"/>
-					<Label Content="Saturday" Grid.Column="0" Grid.Row="7" FontSize="{Binding LargeFontSize}" Margin="0,0,0,0"/>
-					<Label Content="Sunday" Grid.Column="0" Grid.Row="8" FontSize="{Binding LargeFontSize}"/>
+			<!-- Home tab -->
+			<TabItem Name="itemTabHome" Header="Home" IsSelected="True" Margin="0,75,0,0">
+				<Grid ColumnDefinitions="*,*,*" RowDefinitions="*,auto,*,auto">
+					<Image Grid.Column="0" Grid.Row="0" Margin="10" Source="avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg"/>
+					<Image Grid.Column="1" Grid.Row="2" Margin="10" Source="{Binding PlaceholderImage}"/>
 				</Grid>
 			</TabItem>
-			<!-- Meal database tab -->
-			<TabItem Name="itemTabMealDatabase" Header="Meals">
+			<!-- Image database tab -->
+			<TabItem Name="itemTabImages" Header="Images">
 				<!-- sub grid -->
-				<Grid ColumnDefinitions="*" RowDefinitions="*,auto">
+				<Grid ColumnDefinitions="*,2*" RowDefinitions="*,auto">
+					<!-- TreeView https://github.com/AvaloniaUI/Avalonia/discussions/5585 -->
+					<TreeView VerticalAlignment="Stretch" Margin="0, 10, 5, 10" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
+							  BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}">
+						<TreeViewItem Header="All"/>
+						<TreeViewItem Header="Test">
+							<TreeViewItem Header="Sub"/>
+						</TreeViewItem>
+						<TreeViewItem Header="Test 2"/>
+					</TreeView>
 					<!-- DataGrid -->
-					<DataGrid VerticalAlignment="Stretch" Margin="0, 10, 0, 10" HorizontalAlignment="Stretch" Grid.Row="0"
-							  BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding MediumColor}">
+					<DataGrid VerticalAlignment="Stretch" Margin="0, 10, 5, 10" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1"
+							  BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}">
 						<DataGrid.Columns>
-							<DataGridTextColumn Header="Title" Width="4*"/>
-							<DataGridTextColumn Header="Rating" Width="*"/>
-							<DataGridTextColumn Header="Effort" Width="*"/>
+							<DataGridTextColumn Header="Name" Width="2*"/>
+							<DataGridTextColumn Header="Size" Width="*"/>
+							<DataGridTextColumn Header="Creation date" Width="*"/>
+							<DataGridTextColumn Header="Camera" Width="*"/>
 						</DataGrid.Columns>
 					</DataGrid>
-					<!-- Buttons -->
-					<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 0, 10">
-						<Button ToolTip.Tip="Add a new meal to your database.">
-							<Image Source="/Assets/new_meal.png" Height="40" Width="125"/>
+					<!-- Buttons for TreeView -->
+					<StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 0, 10">
+						<Button ToolTip.Tip="Add category.">
+							<Image Source="/Assets/Drawables/add_category.png" Height="40"/>
 						</Button>
-						<Button ToolTip.Tip="Check or edit the selected meal.">
-							<Image Source="/Assets/properties.png" Height="40"/>
+						<Button ToolTip.Tip="Edit the selected category.">
+							<Image Source="/Assets/Drawables/edit_category.png" Height="40"/>
 						</Button>
-						<Button ToolTip.Tip="Delete the selected meal.">
-							<Image Source="/Assets/delete.png" Height="40"/>
+						<Button ToolTip.Tip="Delete the selected category.">
+							<Image Source="/Assets/Drawables/delete.png" Height="40"/>
+						</Button>
+					</StackPanel>
+					<!-- Buttons for DataGrid -->
+					<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 0, 10">
+						<Button ToolTip.Tip="Add images to your database.">
+							<Image Source="/Assets/Drawables/load_images.png" Height="40"/>
+						</Button>
+						<Button ToolTip.Tip="Open the selected image an review the properties.">
+							<Image Source="/Assets/Drawables/properties.png" Height="40"/>
+						</Button>
+						<Button ToolTip.Tip="Delete the selected image from your database.">
+							<Image Source="/Assets/Drawables/delete.png" Height="40"/>
 						</Button>
 					</StackPanel>
 				</Grid>
 			</TabItem>
 			<!-- Ingredients database tab -->
-			<TabItem Header="Ingredients">
-				<!-- sub grid -->
-				<Grid ColumnDefinitions="*" RowDefinitions="*,auto">
-					<!-- DataGrid -->
-					<DataGrid VerticalAlignment="Stretch" Margin="0, 10, 0, 10" HorizontalAlignment="Stretch" Grid.Row="0"
-							  BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding MediumColor}">
-						<DataGrid.Columns>
-							<DataGridTextColumn Header="Name" Width="*"/>
-							<DataGridTextColumn Header="Comment" Width="2*"/>
-						</DataGrid.Columns>
-					</DataGrid>
-					<!-- Buttons -->
-					<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 0, 10">
-						<Button ToolTip.Tip="Add a new ingredient to your database.">
-							<Image Source="/Assets/new_meal.png" Height="40" Width="125"/>
-						</Button>
-						<Button ToolTip.Tip="Check or edit the selected ingredient.">
-							<Image Source="/Assets/properties.png" Height="40"/>
-						</Button>
-						<Button ToolTip.Tip="Delete the selected ingredient.">
-							<Image Source="/Assets/delete.png" Height="40"/>
-						</Button>
-					</StackPanel>
-				</Grid>
+			<TabItem Header="Raw converter">
+
+				
 			</TabItem>
 			<!-- Settings tab -->
 			<TabItem Header="Settings"/>
 		</TabControl>
 
 		<!-- ROW 2: Info button -->
-		<Button Content="Info" Grid.Row="2" CornerRadius="0" Padding="20, 5"
-				Width="{Binding Width, ElementName=itemTabMealPlan, Mode=OneWay}"
+		<Button Content="Info" Grid.Row="2" CornerRadius="0" Padding="20, 5" HorizontalAlignment="Stretch"
+				Width="{Binding MenuBarWidth}"
 				Background="{Binding DarkColor}" FontSize="{Binding LargeFontSize}" Foreground="{Binding LightFontColor}" FontWeight="Light">
 		</Button>
 
 		<!-- ROW 2: Date and week entry -->
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-			<Label Content="{Binding Date}" Margin="0,0,10,0"/>
-			<Label Content="{Binding CalendarWeek}" Margin="0,0,10,0"/>
+			<ProgressBar Value="{Binding PercentageProgressBar}" Maximum="100" Margin="0,0,10,0"/>
+			<Label Content="{Binding LabelProgressBar}" Margin="0,0,10,0"/>
 		</StackPanel>
 
 		<!-- ROW 0: Seach box over other elements -->
 		<StackPanel Name="stackPlanelSearch" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5,0,0">
-			<Image Source="/Assets/search.png" Height="25" Margin="5,0,5,0"/>
+			<Image Source="/Assets/Drawables/search.png" Height="25" Margin="5,0,5,0"/>
 			<TextBox Text="" Background="{Binding DarkContrastColor}"
-					 CornerRadius="0" BorderThickness="0" Margin="1" Width="150"
+					 CornerRadius="0" BorderThickness="0" Margin="1" Width="{Binding SearchBoxWidth}"
 					 ToolTip.Tip="Type your search query here.">
 			</TextBox>
 		</StackPanel>

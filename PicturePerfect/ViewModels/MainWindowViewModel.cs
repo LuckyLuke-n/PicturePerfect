@@ -7,10 +7,6 @@ namespace PicturePerfect.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting => "Welcome to Avalonia!";
-        public static string Date => DateTime.Today.ToString("yyyy-MM-dd");
-        public static string CalendarWeek => "CW " + ISOWeek.GetWeekOfYear(DateTime.Now).ToString();
-
         # region Color properties
         public static string DarkColor => ThisApplication.DarkColor;
         public static string MediumColor => ThisApplication.MediumColor;
@@ -19,8 +15,22 @@ namespace PicturePerfect.ViewModels
         public static string DarkContrastColor => ThisApplication.DarkContrastColor;
         #endregion
 
-        #region Fonts
+        #region Fonts and Sizes
+        public static int MenuBarWidth => 250;
+        public static int SearchBoxWidth => MenuBarWidth - 55;
         public static int LargeFontSize => 23;
         #endregion
+
+        #region Defaults
+        public static string PlaceholderImage => "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
+        #endregion
+
+        public MainWindowViewModel()
+        {
+
+        }
+
+        public int PercentageProgressBar { get; private set; } = 100;
+        public string LabelProgressBar => $"{PercentageProgressBar}%";
     }
 }

@@ -9,11 +9,16 @@
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\add_category.png" />
     <None Remove="Assets\delete.png" />
-    <None Remove="Assets\dices.png" />
+    <None Remove="Assets\Drawables\image_placeholder.jpg" />
+    <None Remove="Assets\edit_category.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\info.png" />
+    <None Remove="Assets\load_images.png" />
     <None Remove="Assets\new_meal.png" />
+    <None Remove="Assets\P5140045_Stockerpel.jpg" />
+    <None Remove="Assets\P5140125_Gänsesägerin.jpg" />
     <None Remove="Assets\properties.png" />
     <None Remove="Assets\save.png" />
     <None Remove="Assets\search.png" />
