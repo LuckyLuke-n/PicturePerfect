@@ -6,7 +6,6 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
     <None Remove="Assets\add_category.png" />
@@ -22,6 +21,7 @@
     <None Remove="Assets\properties.png" />
     <None Remove="Assets\save.png" />
     <None Remove="Assets\search.png" />
+    <None Remove="Assets\test\P5140202_Kohlmeise.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />

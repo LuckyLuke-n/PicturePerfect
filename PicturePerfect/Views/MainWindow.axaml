@@ -63,8 +63,30 @@
 			<!-- Home tab -->
 			<TabItem Name="itemTabHome" Header="Home" IsSelected="True" Margin="0,75,0,0">
 				<Grid ColumnDefinitions="*,*,*" RowDefinitions="*,auto,*,auto">
-					<Image Grid.Column="0" Grid.Row="0" Margin="10" Source="avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg"/>
-					<Image Grid.Column="1" Grid.Row="2" Margin="10" Source="{Binding PlaceholderImage}"/>
+					<!-- Images and buttons -->
+					<Image Grid.Column="0" Grid.Row="0" Margin="10" Source="{Binding ImageNo1}"/>
+					<Button Content="Favorite 1" FontSize="{Binding LargeFontSize}"
+							Grid.Column="0" Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" Height="50"
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					<Image Grid.Column="1" Grid.Row="0" Margin="10" Source="{Binding ImageNo2}"/>
+					<Button Content="Favorite 2" FontSize="{Binding LargeFontSize}"
+							Grid.Column="1" Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" Height="50"
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					<Image Grid.Column="0" Grid.Row="2" Margin="10" Source="{Binding ImageNo3}"/>
+					<Button Content="Favorite 3" FontSize="{Binding LargeFontSize}"
+							Grid.Column="0" Grid.Row="3" Margin="10" HorizontalAlignment="Stretch" Height="50"
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					<Image Grid.Column="1" Grid.Row="2" Margin="10" Source="{Binding ImageNo4}"/>
+					<Button Content="Favorite 4" FontSize="{Binding LargeFontSize}"
+							Grid.Column="1" Grid.Row="3" Margin="10" HorizontalAlignment="Stretch" Height="50"
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+					<!-- Notebook -->
+					<Grid ColumnDefinitions="*" RowDefinitions="auto,*" Grid.Column="2" Grid.Row="0" Grid.RowSpan="4">
+						<Label Content="Notes" Grid.Row="0" FontSize="{Binding LargeFontSize}" Margin="10"/>
+						<TextBox Grid.Row="1" Background="{Binding LightColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+					</Grid>
+					
 				</Grid>
 			</TabItem>
 			<!-- Image database tab -->

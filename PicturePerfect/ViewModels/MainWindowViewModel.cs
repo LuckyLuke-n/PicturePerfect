@@ -1,3 +1,5 @@
+using Avalonia.Media.Imaging;
+using PicturePerfect.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,10 +23,21 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
-        #region Defaults
-        public static string PlaceholderImage => "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
+        #region Favorite images
+        public static Bitmap ImageNo1 => ConvertJPG("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
+        public static Bitmap ImageNo2 => ConvertJPG(PaceholderImagePath);
+        public static Bitmap ImageNo3 => ConvertJPG(PaceholderImagePath);
+        public static Bitmap ImageNo4 => ConvertJPG("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
         #endregion
 
+        #region Defaults
+        private static string PaceholderImagePath = "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
+        public static Bitmap PlaceholderImage => ConvertJPG("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
+        #endregion
+
+        /// <summary>
+        /// Creates an instance of the MainWindowViewModel.
+        /// </summary>
         public MainWindowViewModel()
         {
 
@@ -32,5 +45,11 @@ namespace PicturePerfect.ViewModels
 
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar => $"{PercentageProgressBar}%";
+
+        private static Bitmap ConvertJPG(string path)
+        {
+            BitmapValueConverter converter = new();
+            return converter.Convert(path);
+        }
     }
 }
