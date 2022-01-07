@@ -1,13 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\delete.png" />
+    <None Remove="Assets\dices.png" />
+    <None Remove="Assets\icon.ico" />
+    <None Remove="Assets\info.png" />
+    <None Remove="Assets\new_meal.png" />
+    <None Remove="Assets\properties.png" />
+    <None Remove="Assets\save.png" />
+    <None Remove="Assets\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.10" />
