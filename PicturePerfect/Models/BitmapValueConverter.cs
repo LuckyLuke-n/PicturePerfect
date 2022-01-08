@@ -22,7 +22,7 @@ namespace PicturePerfect.Models
         /// </summary>
         /// <param name="path"></param>
         /// <returns>Returns the bitmap image.</returns>
-        public Bitmap Convert(string path)
+        public static Bitmap Convert(string path)
         {
             Uri uri = new(path, UriKind.RelativeOrAbsolute);
             string scheme = uri.IsAbsoluteUri ? uri.Scheme : "file";

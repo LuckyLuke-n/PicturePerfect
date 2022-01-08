@@ -24,15 +24,15 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Favorite images
-        public static Bitmap ImageNo1 => ConvertJPG("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
-        public static Bitmap ImageNo2 => ConvertJPG(PaceholderImagePath);
-        public static Bitmap ImageNo3 => ConvertJPG(PaceholderImagePath);
-        public static Bitmap ImageNo4 => ConvertJPG("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+        public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
+        public static Bitmap ImageNo2 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
+        public static Bitmap ImageNo3 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
+        public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
         #endregion
 
         #region Defaults
         private static string PaceholderImagePath = "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
-        public static Bitmap PlaceholderImage => ConvertJPG("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
+        public static Bitmap PlaceholderImage => BitmapValueConverter.Convert("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
         #endregion
 
         /// <summary>
@@ -46,10 +46,7 @@ namespace PicturePerfect.ViewModels
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar => $"{PercentageProgressBar}%";
 
-        private static Bitmap ConvertJPG(string path)
-        {
-            BitmapValueConverter converter = new();
-            return converter.Convert(path);
-        }
+
+
     }
 }
