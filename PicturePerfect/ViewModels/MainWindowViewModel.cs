@@ -23,16 +23,16 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
+        #region Defaults
+        private static string PaceholderImagePath = "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
+        public static Bitmap PlaceholderImage => BitmapValueConverter.Convert("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
+        #endregion
+
         #region Favorite images
         public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
         public static Bitmap ImageNo2 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo3 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
-        #endregion
-
-        #region Defaults
-        private static string PaceholderImagePath = "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
-        public static Bitmap PlaceholderImage => BitmapValueConverter.Convert("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
         #endregion
 
         /// <summary>
@@ -44,7 +44,8 @@ namespace PicturePerfect.ViewModels
         }
 
         public int PercentageProgressBar { get; private set; } = 100;
-        public string LabelProgressBar => $"{PercentageProgressBar}%";
+        public string LabelProgressBar { get; private set; } = "100%";
+        public string ProjectName { get; private set; } = "TestProjekt (Hard coded name)";
 
 
 

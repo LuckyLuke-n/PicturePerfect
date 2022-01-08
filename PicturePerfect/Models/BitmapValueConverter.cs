@@ -10,13 +10,8 @@ namespace PicturePerfect.Models
     /// <summary>
     /// Class to convert JPG images to bitmaps for use in Avalonia UI image source bindings.
     /// </summary>
-    public class BitmapValueConverter
+    public static class BitmapValueConverter
     {
-        public BitmapValueConverter()
-        {
-
-        }
-
         /// <summary>
         /// Method to convert a given path to a image into bitmap.
         /// </summary>

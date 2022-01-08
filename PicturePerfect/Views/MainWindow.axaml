@@ -3,7 +3,7 @@
         xmlns:vm="using:PicturePerfect.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" MinHeight="450" MinWidth="800" Height="800" Width="1600"
+        mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1200" MinHeight="450" MinWidth="800" WindowState="Maximized"
         x:Class="PicturePerfect.Views.MainWindow"
         Icon="/Assets/icon.ico"
         Title="Picture Perfect">
@@ -86,7 +86,7 @@
 						<Label Content="Notes" Grid.Row="0" FontSize="{Binding LargeFontSize}" Margin="10"/>
 						<TextBox Grid.Row="1" Background="{Binding LightColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
 					</Grid>
-					
+
 				</Grid>
 			</TabItem>
 			<!-- Image database tab -->
@@ -157,6 +157,9 @@
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
 			<ProgressBar Value="{Binding PercentageProgressBar}" Maximum="100" Margin="0,0,10,0"/>
 			<Label Content="{Binding LabelProgressBar}" Margin="0,0,10,0"/>
+		</StackPanel>
+		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+			<Label Content="{Binding ProjectName}" Margin="10"/>
 		</StackPanel>
 
 		<!-- ROW 0: Seach box over other elements -->
