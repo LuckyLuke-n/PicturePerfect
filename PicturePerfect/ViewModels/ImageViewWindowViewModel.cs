@@ -10,25 +10,26 @@ namespace PicturePerfect.ViewModels
 {
     public class ImageViewWindowViewModel : ViewModelBase
     {
-        private int id;
+        private int imageId;
         
 
         /// <summary>
         /// Get or set the image id for the image to be displayed in the image viewer.
         /// </summary>
-        public int Id
+        public int ImageId
         {
-            get { return id; }
-            set { this.RaiseAndSetIfChanged(ref id, value); }
+            get { return imageId; }
+            set { this.RaiseAndSetIfChanged(ref imageId, value); }
         }
 
         /// <summary>
         /// Created a new instance of the image view view model.
         /// </summary>
         /// <param name="id"></param>
-        public ImageViewWindowViewModel(int id)
+        public ImageViewWindowViewModel()
         {
-            this.id = id;
+            // inherited from base view model
+            ImageId = SelectedImageId;
         }
     }
 }

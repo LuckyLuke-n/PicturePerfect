@@ -67,7 +67,8 @@
 					<Image Grid.Column="0" Grid.Row="0" Margin="10" Source="{Binding ImageNo1}"/>
 					<Button Content="Favorite 1" FontSize="{Binding LargeFontSize}"
 							Grid.Column="0" Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" Height="50"
-							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							Command="{Binding ShowFavorite1Command}"/>
 					<Image Grid.Column="1" Grid.Row="0" Margin="10" Source="{Binding ImageNo2}"/>
 					<Button Content="Favorite 2" FontSize="{Binding LargeFontSize}"
 							Grid.Column="1" Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" Height="50"
@@ -155,7 +156,8 @@
 
 		<!-- ROW 2: Date and week entry -->
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-			<ProgressBar Value="{Binding PercentageProgressBar}" Maximum="100" Margin="0,0,10,0"/>
+			<Label Content="{Binding InWorkItem}" Margin="0,0,10,0"/>
+			<ProgressBar Value="{Binding PercentageProgressBar}" Maximum="100" Margin="0,0,10,0" IsIndeterminate="{Binding IsIndeterminate}"/>
 			<Label Content="{Binding LabelProgressBar}" Margin="0,0,10,0"/>
 		</StackPanel>
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">

@@ -1,8 +1,11 @@
 using Avalonia.Media.Imaging;
 using PicturePerfect.Models;
+using PicturePerfect.Views;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reactive;
 using System.Text;
 
 namespace PicturePerfect.ViewModels
@@ -28,11 +31,31 @@ namespace PicturePerfect.ViewModels
         public static Bitmap PlaceholderImage => BitmapValueConverter.Convert("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
         #endregion
 
-        #region Favorite images
+        #region Favorite images for home page
         public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
         public static Bitmap ImageNo2 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo3 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+        #endregion
+
+        #region Page "Images" Properties
+        public int SelectedImage { get; set; } = 5;
+        #endregion
+
+        #region Status Bar
+        public int PercentageProgressBar { get; private set; } = 100;
+        public string LabelProgressBar { get; private set; } = "100%";
+        public bool IsIndeterminate { get; private set; } = false;
+        public string ProjectName { get; private set; } = "TestProjekt (Hard coded name)";
+        public string InWorkItem { get; private set; } = "Item name (hard coded name)";
+        #endregion
+
+        #region Commands
+        public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> ShowFavorite1Command { get; }
+        public ReactiveCommand<Unit, Unit> ShowFavorite2Command { get; }
+        public ReactiveCommand<Unit, Unit> ShowFavorite3Command { get; }
+        public ReactiveCommand<Unit, Unit> ShowFavorite4Command { get; }
         #endregion
 
         /// <summary>
@@ -40,14 +63,44 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
-
+            ShowImageCommand = ReactiveCommand.Create(RunShowImageCommand);
+            ShowFavorite1Command = ReactiveCommand.Create(RunShowFavorite1Command);
+            ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
+            ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
+            ShowFavorite4Command = ReactiveCommand.Create(RunShowFavorite4Command);
         }
 
-        public int PercentageProgressBar { get; private set; } = 100;
-        public string LabelProgressBar { get; private set; } = "100%";
-        public string ProjectName { get; private set; } = "TestProjekt (Hard coded name)";
 
+        private void RunShowImageCommand()
+        {
+            ShowImage(1);
+        }
 
+        private void RunShowFavorite1Command()
+        {
+            // set the inherited static property to make the id available to the other view models
+            SelectedImageId = SelectedImage;
+            new ImageViewWindow().Show();
+        }
 
+        private void RunShowFavorite2Command()
+        {
+            ShowImage(1);
+        }
+
+        private void RunShowFavorite3Command()
+        {
+            ShowImage(1);
+        }
+
+        private void RunShowFavorite4Command()
+        {
+            ShowImage(1);
+        }
+
+        private void ShowImage(int id)
+        {
+
+        }
     }
 }
