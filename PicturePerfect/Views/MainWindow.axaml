@@ -160,9 +160,12 @@
 			<ProgressBar Value="{Binding PercentageProgressBar}" Maximum="100" Margin="0,0,10,0" IsIndeterminate="{Binding IsIndeterminate}"/>
 			<Label Content="{Binding LabelProgressBar}" Margin="0,0,10,0"/>
 		</StackPanel>
-		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-			<Label Content="{Binding ProjectName}" Margin="10"/>
-		</StackPanel>
+		<Menu Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" >
+			<MenuItem Header="{Binding ProjectName}">
+				<MenuItem Header="New project"/>
+				<MenuItem Header="Select project file"/>
+			</MenuItem>
+		</Menu>
 
 		<!-- ROW 0: Seach box over other elements -->
 		<StackPanel Name="stackPlanelSearch" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5,0,0">
