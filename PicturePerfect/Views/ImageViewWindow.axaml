@@ -11,16 +11,30 @@
 	<Grid ColumnDefinitions="4*,auto,*,2*" RowDefinitions="*,auto">
 		<Border Grid.Column="0" Grid.Row="0" Background="{Binding MediumColor}"/>
 		<Border Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Background="{Binding MediumColor}"/>
-		<Border Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Background="{Binding LightColor}"/>
+		<Border Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Background="{Binding LightColor}"/>
 
 		<GridSplitter Grid.Column="1" Grid.Row="0" Background="{Binding DarkColor}" />
 
+		<!-- Button Row -->
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Content="Save" Margin="5"/>
 			<Button Name="buttonClose" Content="Close" Margin="5" Click="ButtonClose_Click" />
 		</StackPanel>
 
-		<Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="20" Source="{Binding ImageNo1}"/>
+		<!-- Image column -->
+		<StackPanel VerticalAlignment="Center">
+			<Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="20, 20, 20, 10" Source="{Binding ImageNo1}"/>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+				<Button Content="Left">
+					<Image Source="/Assets/Drawables/left.png" Height="40"/>
+				</Button>
+				<Button Content="Right">
+					<Image Source="/Assets/Drawables/right.png" Height="40"/>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+		
+		
 		
 		
 		

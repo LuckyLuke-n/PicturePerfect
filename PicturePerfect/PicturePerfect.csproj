@@ -11,6 +11,8 @@
     <None Remove="Assets\add_category.png" />
     <None Remove="Assets\delete.png" />
     <None Remove="Assets\Drawables\image_placeholder.jpg" />
+    <None Remove="Assets\Drawables\left.png" />
+    <None Remove="Assets\Drawables\right.png" />
     <None Remove="Assets\edit_category.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\info.png" />
@@ -21,6 +23,7 @@
     <None Remove="Assets\properties.png" />
     <None Remove="Assets\save.png" />
     <None Remove="Assets\search.png" />
+    <None Remove="Assets\settings.json" />
     <None Remove="Assets\test\P5140202_Kohlmeise.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -33,18 +36,5 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="UserSettings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>UserSettings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="UserSettings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>UserSettings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 </Project>

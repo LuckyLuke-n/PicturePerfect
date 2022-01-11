@@ -14,7 +14,6 @@ namespace PicturePerfect.Models
         public DateTime CreationDate { get; private set; }
         public string Notes { get; private set; } = string.Empty;
 
-
         public ProjectFile()
         {
 
@@ -26,13 +25,13 @@ namespace PicturePerfect.Models
         /// <returns>Return the project file.</returns>
         public static ProjectFile New(string path)
         {
-            UserSettings.Default.PathToProjectFile = path;
+            //UserSettings.Default.PathToProjectFile = path;
             ProjectFile file = new();
             file.ProjectOwner = Environment.UserName;
             file.CreationDate = DateTime.Now;
 
-            string jsonString = JsonConvert.SerializeObject(file);
-            File.WriteAllText(UserSettings.Default.PathToProjectFile, jsonString);
+            //string jsonString = JsonConvert.SerializeObject(file);
+            //File.WriteAllText(UserSettings.Default.PathToProjectFile, jsonString);
 
             return file;
         }
@@ -43,9 +42,11 @@ namespace PicturePerfect.Models
         /// <returns>Returns the project file object.</returns>
         public static ProjectFile Load()
         {
-            string jsonString = File.ReadAllText(UserSettings.Default.PathToProjectFile);
-            ProjectFile file = JsonConvert.DeserializeObject<ProjectFile>(jsonString);
-            return file;
+            //string jsonString = File.ReadAllText(UserSettings.Default.PathToProjectFile);
+            //ProjectFile file = JsonConvert.DeserializeObject<ProjectFile>(jsonString);
+            //return file;
+
+            return new ProjectFile();
         }
     }
 }
