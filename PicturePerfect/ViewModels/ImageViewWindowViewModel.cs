@@ -4,7 +4,9 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +22,46 @@ namespace PicturePerfect.ViewModels
         public static string DarkContrastColor => ThisApplication.ProjectFile.DarkContrastColor;
         public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
         #endregion
+
+        #region Visibilty of gui elements
+        private bool isVisibleAddLocation = false;
+        private bool isVisibleAddCategory = false;
+        private bool isVisibleAddSubCategory1 = false;
+        private bool isVisibleAddSubCategory2 = false;
+        public bool IsVisibleAddLocation
+        {
+            get { return isVisibleAddLocation; }
+            set { this.RaiseAndSetIfChanged(ref isVisibleAddLocation, value); }
+        }
+        public bool IsVisibleAddCategory
+        {
+            get { return isVisibleAddCategory; }
+            set { this.RaiseAndSetIfChanged(ref isVisibleAddCategory, value); }
+        }
+        public bool IsVisibleAddSubCategory1
+        {
+            get { return isVisibleAddSubCategory1; }
+            set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory1, value); }
+        }
+        public bool IsVisibleAddSubCategory2
+        {
+            get { return isVisibleAddSubCategory2; }
+            set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory2, value); }
+        }
+        #endregion
+
+        #region Commands
+        public ReactiveCommand<Unit, Unit> ToggleVisibilityLocationCommand { get; }
+        public ReactiveCommand<Unit, Unit> ToggleVisibilityCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategory1Command { get; }
+        public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategory2Command { get; }
+
+        public ReactiveCommand<Unit, Unit> SaveLocationCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveSubCategory1Command { get; }
+        public ReactiveCommand<Unit, Unit> SaveSubCategory2Command { get; }
+        #endregion
+
 
         private int imageId;
         
@@ -43,6 +85,56 @@ namespace PicturePerfect.ViewModels
         {
             // inherited from base view model
             ImageId = SelectedImageId;
+
+            ToggleVisibilityLocationCommand = ReactiveCommand.Create(RunToggleVisibilityLocationCommand);
+            ToggleVisibilityCategoryCommand = ReactiveCommand.Create(RunToggleVisibilityCategoryCommand);
+            ToggleVisibilitySubCategory1Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory1Command);
+            ToggleVisibilitySubCategory2Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory2Command);
+
+            SaveLocationCommand = ReactiveCommand.Create(RunSaveLocationCommand);
+            SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
+            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1Command);
+            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
+        }
+
+        private void RunToggleVisibilityLocationCommand()
+        {
+            IsVisibleAddLocation = !IsVisibleAddLocation;
+        }
+
+        private void RunToggleVisibilityCategoryCommand()
+        {
+            IsVisibleAddCategory = !IsVisibleAddCategory;
+        }
+
+        private void RunToggleVisibilitySubCategory1Command()
+        {
+            IsVisibleAddSubCategory1 = !IsVisibleAddSubCategory1;
+        }
+
+        private void RunToggleVisibilitySubCategory2Command()
+        {
+            IsVisibleAddSubCategory2 = !IsVisibleAddSubCategory2;
+        }
+
+        private void RunSaveLocationCommand()
+        {
+            RunToggleVisibilityLocationCommand();
+        }
+
+        private void RunSaveCategoryCommand()
+        {
+            RunToggleVisibilityCategoryCommand();
+        }
+
+        private void RunSaveSubCategory1Command()
+        {
+            RunToggleVisibilitySubCategory1Command();
+        }
+
+        private void RunSaveSubCategory2Command()
+        {
+            RunToggleVisibilitySubCategory2Command();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace PicturePerfect.ViewModels
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar { get; private set; } = "100%";
         public bool IsIndeterminate { get; private set; } = false;
-        public string ProjectName { get; } ThisApplication.ProjectFile.ProjectName;
+        public string ProjectName { get; } = ThisApplication.ProjectFile.ProjectName;
         public string InWorkItem { get; private set; } = "Item name (hard coded name)";
         #endregion
 

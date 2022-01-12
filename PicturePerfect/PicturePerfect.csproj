@@ -10,6 +10,8 @@
     <None Remove=".gitignore" />
     <None Remove="Assets\add_category.png" />
     <None Remove="Assets\delete.png" />
+    <None Remove="Assets\Drawables\delete_image.png" />
+    <None Remove="Assets\Drawables\export.png" />
     <None Remove="Assets\Drawables\image_placeholder.jpg" />
     <None Remove="Assets\Drawables\left.png" />
     <None Remove="Assets\Drawables\right.png" />

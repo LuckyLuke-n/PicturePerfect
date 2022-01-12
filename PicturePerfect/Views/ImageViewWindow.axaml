@@ -2,15 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Width="1200" Height="800"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600" Width="1200" Height="800"
         x:Class="PicturePerfect.Views.ImageViewWindow"
-        Title="ImageViewWindow">
+		Icon="/Assets/icon.ico"
+        Title="Picture Perfect">
 
 
 	<!-- Main grid -->
-	<Grid ColumnDefinitions="4*,auto,*,2*" RowDefinitions="*,auto">
+	<Grid ColumnDefinitions="4*,auto,3*" RowDefinitions="*,auto">
 		<Border Grid.Column="0" Grid.Row="0" Background="{Binding MediumColor}"/>
-		<Border Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Background="{Binding MediumColor}"/>
+		<Border Grid.Column="2" Grid.Row="0" Background="{Binding MediumColor}"/>
 		<Border Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1" Background="{Binding LightColor}"/>
 
 		<GridSplitter Grid.Column="1" Grid.Row="0" Background="{Binding DarkColor}" />
@@ -18,24 +19,94 @@
 		<!-- Button Row -->
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Content="Save" Margin="5"/>
-			<Button Name="buttonClose" Content="Close" Margin="5" Click="ButtonClose_Click" />
+			<Button Name="buttonClose" Content="Close" Margin="5,5,10,5" Click="ButtonClose_Click" />
 		</StackPanel>
 
 		<!-- Image column -->
 		<StackPanel VerticalAlignment="Center">
 			<Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="20, 20, 20, 10" Source="{Binding ImageNo1}"/>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-				<Button Content="Left">
+				<Button>
 					<Image Source="/Assets/Drawables/left.png" Height="40"/>
 				</Button>
-				<Button Content="Right">
+				<Button ToolTip.Tip="Export the current image.">
+					<Image Source="/Assets/Drawables/export.png" Height="40"/>
+				</Button>
+				<Button ToolTip.Tip="Delete the current image.">
+					<Image Source="/Assets/Drawables/delete_image.png" Height="40"/>
+				</Button>
+				<Button>
 					<Image Source="/Assets/Drawables/right.png" Height="40"/>
 				</Button>
 			</StackPanel>
 		</StackPanel>
-		
-		
-		
+
+		<!-- Grid for properties -->
+		<Grid Grid.Column="2" Grid.Row="0" Margin="10,10,10,0"
+			  ColumnDefinitions="auto,*,auto" RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, *" >
+			<!-- Id -->
+			<Label Content="Id" Grid.Column="0" Grid.Row="0" Margin="0,0,0,10"/>
+			<TextBox Text="123" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+					 IsReadOnly="True" ToolTip.Tip="The id cannot be edited."/>
+
+			<!-- File name -->
+			<Label Content="File name" Grid.Column="0" Grid.Row="1" Margin="0,0,0,10"/>
+			<TextBox Text="Stockerpel" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"/>
+
+			<!-- Date -->
+			<Label Content="Date" Grid.Column="0" Grid.Row="2" Margin="0,0,0,10"/>
+			<TextBox Text="2021-05-12" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+					 IsReadOnly="True" ToolTip.Tip="The date cannot be edited."/>
+
+			<!-- Location -->
+			<Label Content="Location" Grid.Column="0" Grid.Row="3" Margin="0,0,0,10"/>
+			<ComboBox Grid.Column="1" Grid.Row="3" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+			<Button Grid.Column="2" Grid.Row="3" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilityLocationCommand}">
+				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
+			</Button>
+			<TextBox Text="" Grid.Column="1" Grid.Row="4" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddLocation}"/>
+			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddLocation}" Command="{Binding SaveLocationCommand}">
+				<Image Source="/Assets/Drawables/save.png" Height="20"/>
+			</Button>
+
+			<!-- Category -->
+			<Label Content="Category" Grid.Column="0" Grid.Row="5" Margin="0,0,0,10"/>
+			<ComboBox Grid.Column="1" Grid.Row="5" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+			<Button Grid.Column="2" Grid.Row="5" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilityCategoryCommand}">
+				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
+			</Button>
+			<TextBox Text="" Grid.Column="1" Grid.Row="6" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddCategory}"/>
+			<Button Grid.Column="2" Grid.Row="6" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddCategory}" Command="{Binding SaveCategoryCommand}">
+				<Image Source="/Assets/Drawables/save.png" Height="20"/>
+			</Button>
+
+			<!-- Sub category 1 -->
+			<Label Content="Sub category 1" Grid.Column="0" Grid.Row="7" Margin="0,0,0,10"/>
+			<ComboBox Grid.Column="1" Grid.Row="7" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+			<Button Grid.Column="2" Grid.Row="7" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilitySubCategory1Command}">
+				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
+			</Button>
+			<TextBox Text="" Grid.Column="1" Grid.Row="8" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddSubCategory1}"/>
+			<Button Grid.Column="2" Grid.Row="8" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddSubCategory1}" Command="{Binding SaveSubCategory1Command}">
+				<Image Source="/Assets/Drawables/save.png" Height="20"/>
+			</Button>
+
+			<!-- Sub category 2 -->
+			<Label Content="Sub category 2" Grid.Column="0" Grid.Row="9" Margin="0,0,0,10"/>
+			<ComboBox Grid.Column="1" Grid.Row="9" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+			<Button Grid.Column="2" Grid.Row="9" Margin="2,-10,0,0" Command="{Binding ToggleVisibilitySubCategory2Command}">
+				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
+			</Button>
+			<TextBox Text="" Grid.Column="1" Grid.Row="10" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddSubCategory2}"/>
+			<Button Grid.Column="2" Grid.Row="10" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddSubCategory2}" Command="{Binding SaveSubCategory2Command}">
+				<Image Source="/Assets/Drawables/save.png" Height="20"/>
+			</Button>
+
+			<!-- Notes -->
+			<Label Content="Notes" Grid.Column="0" Grid.Row="11" Margin="0,0,0,10"/>
+			<TextBox Text="Bests Entenfoto" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" Margin="10,0,0,10" AcceptsReturn="True" TextWrapping="Wrap" Background="{Binding LightColor}"/>
+					
+		</Grid>
 		
 		
 
