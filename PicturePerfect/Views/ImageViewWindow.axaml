@@ -46,7 +46,7 @@
 			  ColumnDefinitions="auto,*,auto" RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, *" >
 			<!-- Id -->
 			<Label Content="Id" Grid.Column="0" Grid.Row="0" Margin="0,0,0,10"/>
-			<TextBox Text="123" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+			<TextBox Text="{Binding ImageId}" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
 					 IsReadOnly="True" ToolTip.Tip="The id cannot be edited."/>
 
 			<!-- File name -->

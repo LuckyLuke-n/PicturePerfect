@@ -64,10 +64,6 @@ namespace PicturePerfect.ViewModels
 
 
         private int imageId;
-        
-
-
-
         /// <summary>
         /// Get or set the image id for the image to be displayed in the image viewer.
         /// </summary>
