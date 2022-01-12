@@ -76,11 +76,12 @@ namespace PicturePerfect.ViewModels
             ShowImage(1);
         }
 
-        private void RunShowFavorite1Command()
+        private async void RunShowFavorite1Command()
         {
             // set the inherited static property to make the id available to the other view models
             SelectedImageId = SelectedImage;
             new ImageViewWindow().Show();
+            //var res = await MessageBox.Show(text: "Test message box", buttons: MessageBox.MessageBoxButtons.YesNoCancel, icon: MessageBox.MessageBoxIcon.Information);
         }
 
         private void RunShowFavorite2Command()

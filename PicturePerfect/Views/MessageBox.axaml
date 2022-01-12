@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="150"
+		MinWidth="350" MinHeight="150" MaxWidth="400" MaxHeight="800"
+		WindowStartupLocation="CenterScreen" Topmost="True"
+        x:Class="PicturePerfect.Views.MessageBox"
+        Title="MessageBox" SizeToContent="WidthAndHeight" CanResize="False">
+
+	<Grid RowDefinitions="*,auto" ColumnDefinitions="auto,*">
+		
+		<Border Grid.Row="0" Grid.ColumnSpan="2" Background="WhiteSmoke"/>
+		<Border Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"/>
+
+		<!-- Icon and text -->
+		<Image Name="imageIcon" Grid.Row="0" Grid.Column="0" Margin="20,10,10,10"/>
+		<TextBlock Name="textBlockMessage" Text="Message comes here." Margin="10"
+				   Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+		<!-- Buttons -->		
+		<StackPanel Name="stackPanelButtons" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="10" >
+			<StackPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="HorizontalContentAlignment" Value="Center"/>
+					<Setter Property="HorizontalAlignment" Value="Right"/>
+					<Setter Property="VerticalAlignment" Value="Center"/>
+					<Setter Property="Width" Value="75"/>
+				</Style>
+			</StackPanel.Styles>
+		</StackPanel>
+		
+	</Grid>
+
+</Window>

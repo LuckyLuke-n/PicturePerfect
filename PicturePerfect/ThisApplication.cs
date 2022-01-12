@@ -21,10 +21,7 @@ namespace PicturePerfect
         /// Get the current application Version.
         /// </summary>
         public static string ApplicationVersion { get; } = "V0.1.0";
-        /// <summary>
-        /// Get the array of alle released application versions.
-        /// </summary>
-        public static string[] ApplicationVersionList { get; } = new string[] { "V0.1.0" };
+        public static string ApplicationName = "Picture Perfect";
 
         /// <summary>
         /// Get or set the currently loaded project file.
