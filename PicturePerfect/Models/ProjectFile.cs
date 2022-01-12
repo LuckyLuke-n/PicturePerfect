@@ -15,17 +15,58 @@ namespace PicturePerfect.Models
         public string ProjectOwner { get; private set; } = string.Empty;
         public DateTime CreationDate { get; private set; } = DateTime.Now;
         public string Notes { get; private set; } = string.Empty;
+        public string ProjectFilePath { get; private set; } = string.Empty;
         public string ProjectFolder { get; private set; } = string.Empty;
         public string DatabasePath { get; private set; } = string.Empty;
         private string Release { get; set; } = string.Empty;
         #endregion
 
         #region Theme
-        public string DarkColor { get; set; } = ThisApplication.DarkColorDefault;
-        public string MediumColor { get; set; } = ThisApplication.MediumColorDefault;
-        public string LightColor { get; set; } = ThisApplication.LightColorDefault;
-        public string LightFontColor { get; set; } = ThisApplication.LightFontColorDefault;
-        public string DarkContrastColor { get; set; } = ThisApplication.DarkContrastColorDefault;
+        private string darkColor = ThisApplication.DarkColorDefault;
+        private string mediumColor = ThisApplication.MediumColorDefault;
+        private string lightColor = ThisApplication.LightColorDefault;
+        private string lightFontColor = ThisApplication.LightFontColorDefault;
+        private string darkContrastColor = ThisApplication.DarkContrastColorDefault;
+        /// <summary>
+        /// Get or set the value for the dark theme color.
+        /// </summary>
+        public string DarkColor
+        {
+            get { return darkColor; }
+            set { darkColor = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the value for the medium theme color.
+        /// </summary>
+        public string MediumColor
+        {
+            get { return mediumColor; }
+            set { mediumColor = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the value for the light theme color.
+        /// </summary>
+        public string LightColor
+        {
+            get { return lightColor; }
+            set { lightColor = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the value for the light font theme color.
+        /// </summary>
+        public string LightFontColor
+        {
+            get { return lightFontColor; }
+            set { lightFontColor = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the value for the dark contrast theme color.
+        /// </summary>
+        public string DarkContrastColor
+        {
+            get { return darkContrastColor; }
+            set { darkContrastColor = value; Save(); }
+        }
         #endregion
 
         /// <summary>
@@ -51,6 +92,7 @@ namespace PicturePerfect.Models
             {
                 Release = ThisApplication.ApplicationVersion,
                 ProjectName = name,
+                ProjectFilePath = path,
                 ProjectOwner = Environment.UserName,
                 CreationDate = DateTime.Now,
                 ProjectFolder = new FileInfo(path).Directory.FullName,
@@ -78,10 +120,11 @@ namespace PicturePerfect.Models
             // create new file object and carry over the information
             // this avoids compatibility issues in case the properties of this class are changed
             // update project file
-            ProjectFile newFile = new ProjectFile()
+            ProjectFile newFile = new()
             {
                 Release = ThisApplication.ApplicationVersion,
                 ProjectName = file.ProjectName,
+                ProjectFilePath = file.ProjectFilePath,
                 ProjectOwner = file.ProjectOwner,
                 CreationDate = file.CreationDate,
                 Notes = file.Notes,
@@ -104,6 +147,16 @@ namespace PicturePerfect.Models
                 ProjectName = "Load project"
             };
             return file;
+        }
+
+        /// <summary>
+        /// Method to save changed made to te project file.
+        /// </summary>
+        private void Save()
+        {
+            // save to json file
+            string jsonString = JsonConvert.SerializeObject(this);
+            File.WriteAllText(ProjectFilePath, jsonString);
         }
     }
 }
