@@ -6,11 +6,7 @@
         mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1200" MinHeight="450" MinWidth="800" WindowState="Maximized"
         x:Class="PicturePerfect.Views.MainWindow"
         Icon="/Assets/icon.ico"
-        Title="Picture Perfect">
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+        Title="PicturePerfect">
 
 	<!-- Styles for items in tab control https://docs.avaloniaui.net/docs/controls/tabcontrol -->
 	<Window.Styles>
@@ -72,15 +68,18 @@
 					<Image Grid.Column="1" Grid.Row="0" Margin="10" Source="{Binding ImageNo2}"/>
 					<Button Content="Favorite 2" FontSize="{Binding LargeFontSize}"
 							Grid.Column="1" Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" Height="50"
-							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							Command="{Binding ShowFavorite2Command}"/>
 					<Image Grid.Column="0" Grid.Row="2" Margin="10" Source="{Binding ImageNo3}"/>
 					<Button Content="Favorite 3" FontSize="{Binding LargeFontSize}"
 							Grid.Column="0" Grid.Row="3" Margin="10" HorizontalAlignment="Stretch" Height="50"
-							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							Command="{Binding ShowFavorite3Command}"/>
 					<Image Grid.Column="1" Grid.Row="2" Margin="10" Source="{Binding ImageNo4}"/>
 					<Button Content="Favorite 4" FontSize="{Binding LargeFontSize}"
 							Grid.Column="1" Grid.Row="3" Margin="10" HorizontalAlignment="Stretch" Height="50"
-							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+							HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+							Command="{Binding ShowFavorite4Command}"/>
 
 					<!-- Notebook -->
 					<Grid ColumnDefinitions="*" RowDefinitions="auto,*" Grid.Column="2" Grid.Row="0" Grid.RowSpan="4">
@@ -162,8 +161,8 @@
 		</StackPanel>
 		<Menu Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" >
 			<MenuItem Header="{Binding ProjectName}">
-				<MenuItem Header="New project"/>
-				<MenuItem Header="Select project file"/>
+				<MenuItem Header="New project" Click="MenuNewProject_Click"/>
+				<MenuItem Header="Select project file" Click="MenuSelectProject_Click"/>
 			</MenuItem>
 		</Menu>
 

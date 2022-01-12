@@ -88,7 +88,7 @@ namespace PicturePerfect.Views
 
             // check for buttons
             if (buttons == MessageBoxButtons.Ok || buttons == MessageBoxButtons.OkCancel)
-                AddButton("Ok", MessageBoxResult.Ok, true);
+                AddButton("OK", MessageBoxResult.Ok, true);
 
             if (buttons == MessageBoxButtons.YesNo || buttons == MessageBoxButtons.YesNoCancel)
             {

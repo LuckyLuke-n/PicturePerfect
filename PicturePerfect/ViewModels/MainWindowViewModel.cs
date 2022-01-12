@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using PicturePerfect.Models;
 using PicturePerfect.Views;
@@ -73,35 +74,37 @@ namespace PicturePerfect.ViewModels
 
         private void RunShowImageCommand()
         {
-            ShowImage(1);
+            ShowImage(SelectedImage);
         }
 
         private async void RunShowFavorite1Command()
         {
             // set the inherited static property to make the id available to the other view models
-            SelectedImageId = SelectedImage;
-            new ImageViewWindow().Show();
+            ShowImage(SelectedImage);
+            //SelectedImageId = SelectedImage;
+            //new ImageViewWindow().Show();
             //var res = await MessageBox.Show(text: "Test message box", buttons: MessageBox.MessageBoxButtons.YesNoCancel, icon: MessageBox.MessageBoxIcon.Information);
         }
 
         private void RunShowFavorite2Command()
         {
-            ShowImage(1);
+            ShowImage(SelectedImage);
         }
 
         private void RunShowFavorite3Command()
         {
-            ShowImage(1);
+            ShowImage(SelectedImage);
         }
 
         private void RunShowFavorite4Command()
         {
-            ShowImage(1);
+            ShowImage(SelectedImage);
         }
 
         private void ShowImage(int id)
         {
-
+            SelectedImageId = id;
+            new ImageViewWindow().Show();
         }
     }
 }
