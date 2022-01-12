@@ -13,11 +13,11 @@ namespace PicturePerfect.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         # region Color properties
-        public static string DarkColor => ThisApplication.DarkColor;
-        public static string MediumColor => ThisApplication.MediumColor;
-        public static string LightColor => ThisApplication.LightColor;
-        public static string LightFontColor => ThisApplication.LightFontColor;
-        public static string DarkContrastColor => ThisApplication.DarkContrastColor;
+        public static string DarkColor => ThisApplication.ProjectFile.DarkColor;
+        public static string MediumColor => ThisApplication.ProjectFile.MediumColor;
+        public static string LightColor => ThisApplication.ProjectFile.LightColor;
+        public static string LightFontColor => ThisApplication.ProjectFile.LightFontColor;
+        public static string DarkContrastColor => ThisApplication.ProjectFile.DarkContrastColor;
         #endregion
 
         #region Fonts and Sizes
@@ -46,7 +46,7 @@ namespace PicturePerfect.ViewModels
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar { get; private set; } = "100%";
         public bool IsIndeterminate { get; private set; } = false;
-        public string ProjectName { get; private set; } = "TestProjekt (Hard coded name)";
+        public string ProjectName { get; } ThisApplication.ProjectFile.ProjectName;
         public string InWorkItem { get; private set; } = "Item name (hard coded name)";
         #endregion
 

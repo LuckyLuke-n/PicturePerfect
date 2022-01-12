@@ -13,11 +13,11 @@ namespace PicturePerfect.ViewModels
     public class ImageViewWindowViewModel : ViewModelBase
     {
         #region Color properties
-        public static string DarkColor => ThisApplication.DarkColor;
-        public static string MediumColor => ThisApplication.MediumColor;
-        public static string LightColor => ThisApplication.LightColor;
-        public static string LightFontColor => ThisApplication.LightFontColor;
-        public static string DarkContrastColor => ThisApplication.DarkContrastColor;
+        public static string DarkColor => ThisApplication.ProjectFile.DarkColor;
+        public static string MediumColor => ThisApplication.ProjectFile.MediumColor;
+        public static string LightColor => ThisApplication.ProjectFile.LightColor;
+        public static string LightFontColor => ThisApplication.ProjectFile.LightFontColor;
+        public static string DarkContrastColor => ThisApplication.ProjectFile.DarkContrastColor;
         public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
         #endregion
 

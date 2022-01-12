@@ -9,13 +9,6 @@ namespace PicturePerfect
 {
     internal static class ThisApplication
     {
-
-        public static string DarkColor = "#232323"; // carbon
-        public static string MediumColor = "Gray";
-        public static string LightColor = "WhiteSmoke";
-        public static string LightFontColor = "WhiteSmoke";
-        public static string DarkContrastColor = "#2E3033"; // rich gray
-
         #region Default theme colors
         public static string DarkColorDefault = "#232323"; // carbon
         public static string MediumColorDefault = "Gray";
