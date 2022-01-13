@@ -27,51 +27,68 @@ namespace PicturePerfect.Views
             AvaloniaXamlLoader.Load(this);
         }
 
+        /// <summary>
+        /// Dialog types for folder and file selctions in this class.
+        /// </summary>
         private enum DialogType
         {
             NewProject,
             SelectProject
         }
 
+        /// <summary>
+        /// Event for new project button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void MenuNewProject_Click(object sender, RoutedEventArgs e)
         {
-            var path = GetPathAsync(DialogType.NewProject);
+            _ = GetPathAsync(DialogType.NewProject);
         }
 
+        /// <summary>
+        /// Event for select project button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void MenuSelectProject_Click(object sender, RoutedEventArgs e)
         {
-            var path = GetPathAsync(DialogType.SelectProject);
+            _ = GetPathAsync(DialogType.SelectProject);   
         }
 
+        /// <summary>
+        /// Async method to get a path for a folder or file selection.
+        /// </summary>
+        /// <param name="dialogType"></param>
+        /// <returns>Returns as string array or null.</returns>
         private async Task<object> GetPathAsync(DialogType dialogType)
         {
-
             if (dialogType == DialogType.NewProject)
             {
+                // file dialog to get the path to a new project folder
                 OpenFolderDialog dialogFolder = new();
                 var result = await dialogFolder.ShowAsync((Window)VisualRoot);
 
+                // check for null reference
                 if (result != null)
                 {
-                    await MessageBox.Show(result.ToString());
+                    viewModel.PathToProjectFolder = result.ToString(); 
                     return result.ToString();
                 }
-                else
-                {
-                    await MessageBox.Show(null);
-                    return null;
-                }
+                else { return null; }
             }
-            else
+            else // DialogType.SelectProject
             {
+                // file dialog to get the path to an exisiting project file
                 OpenFileDialog dialogFile = new();
                 dialogFile.AllowMultiple = false;
                 dialogFile.Filters.Add(new FileDialogFilter() { Name = "PicturePerfect-Project File", Extensions = { "ppp" } });
                 var result = await dialogFile.ShowAsync((Window)VisualRoot);
 
+                // check for null reference
                 if (result != null)
                 {
-                    MessageBox.Show(result[0].ToString());
+                    viewModel.PathToProjectFile = result[0].ToString();
                     return result;
                     
                 }

@@ -51,6 +51,27 @@ namespace PicturePerfect.ViewModels
         public string InWorkItem { get; private set; } = "Item name (hard coded name)";
         #endregion
 
+        #region Input from axaml.cs file
+        private string pathToProjectFile = string.Empty;
+        /// <summary>
+        /// Get the path to the project file or set the path which will trigger the LoadProject() method.
+        /// </summary>
+        public string PathToProjectFile
+        {
+            get { return pathToProjectFile; }
+            set { pathToProjectFile = value; LoadProject(); }
+        }
+        private string pathToProjectFolder = string.Empty;
+        /// <summary>
+        /// Get the path to the project folder or set the path which will trigger the NewProject() method.
+        /// </summary>
+        public string PathToProjectFolder
+        {
+            get { return pathToProjectFolder; }
+            set { pathToProjectFolder = value; NewProject(); }
+        }
+        #endregion
+
         #region Commands
         public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite1Command { get; }
@@ -105,6 +126,16 @@ namespace PicturePerfect.ViewModels
         {
             SelectedImageId = id;
             new ImageViewWindow().Show();
+        }
+
+        private async void LoadProject()
+        {
+            await MessageBox.Show(PathToProjectFile);
+        }
+
+        private async void NewProject()
+        {
+            await MessageBox.Show(PathToProjectFolder);
         }
     }
 }
