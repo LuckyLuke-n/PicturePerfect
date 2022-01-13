@@ -43,7 +43,7 @@ namespace PicturePerfect.Views
             var path = GetPathAsync(DialogType.SelectProject);
         }
 
-        private async Task<string> GetPathAsync(DialogType dialogType)
+        private async Task<object> GetPathAsync(DialogType dialogType)
         {
 
             if (dialogType == DialogType.NewProject)
@@ -53,11 +53,14 @@ namespace PicturePerfect.Views
 
                 if (result != null)
                 {
-                    MessageBox.Show(result.ToString());
-                    
+                    await MessageBox.Show(result.ToString());
+                    return result.ToString();
                 }
-
-                return result.ToString();
+                else
+                {
+                    await MessageBox.Show(null);
+                    return null;
+                }
             }
             else
             {
@@ -69,10 +72,10 @@ namespace PicturePerfect.Views
                 if (result != null)
                 {
                     MessageBox.Show(result[0].ToString());
+                    return result;
                     
                 }
-
-                return result.ToString();
+                else { return null; }
             }
         }
     }
