@@ -6,6 +6,7 @@
 		MinWidth="350" MinHeight="150" MaxWidth="400" MaxHeight="800"
 		WindowStartupLocation="CenterScreen" Topmost="True"
         x:Class="PicturePerfect.Views.MessageBox"
+		Icon="/Assets/icon.ico"
         Title="MessageBox" SizeToContent="WidthAndHeight" CanResize="False">
 
 	<Grid RowDefinitions="*,auto" ColumnDefinitions="auto,*">

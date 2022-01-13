@@ -69,6 +69,45 @@ namespace PicturePerfect.Models
         }
         #endregion
 
+        #region Favorite images
+        private int favorite1Id = 0;
+        private int favorite2Id = 0;
+        private int favorite3Id = 0;
+        private int favorite4Id = 0;
+        /// <summary>
+        /// Get or set the image id. Set id to 0 if no favorite is selected.
+        /// </summary>
+        public int Favorite1Id
+        {
+            get { return favorite1Id; }
+            set { favorite1Id = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the image id. Set id to 0 if no favorite is selected.
+        /// </summary>
+        public int Favorite2Id
+        {
+            get { return favorite2Id; }
+            set { favorite2Id = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the image id. Set id to 0 if no favorite is selected.
+        /// </summary>
+        public int Favorite3Id
+        {
+            get { return favorite3Id; }
+            set { favorite3Id = value; Save(); }
+        }
+        /// <summary>
+        /// Get or set the image id. Set id to 0 if no favorite is selected.
+        /// </summary>
+        public int Favorite4Id
+        {
+            get { return favorite4Id; }
+            set { favorite4Id = value; Save(); }
+        }
+        #endregion
+
         /// <summary>
         /// Creates a new instance of the class project file.
         /// This json file is used to store all relevant setings for a project.

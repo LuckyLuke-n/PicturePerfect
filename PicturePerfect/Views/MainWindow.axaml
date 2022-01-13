@@ -56,7 +56,7 @@
 
 		<!-- ROW 1: Tab Control and all their child elements -->
 		<TabControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2" TabStripPlacement="Left" Background="{Binding MediumColor}">
-			<!-- Home tab -->
+			<!-- HOME tab -->
 			<TabItem Name="itemTabHome" Header="Home" IsSelected="True" Margin="0,75,0,0">
 				<Grid ColumnDefinitions="*,*,*" RowDefinitions="*,auto,*,auto">
 					<!-- Images and buttons -->
@@ -89,7 +89,7 @@
 
 				</Grid>
 			</TabItem>
-			<!-- Image database tab -->
+			<!-- IMAGE database tab -->
 			<TabItem Name="itemTabImages" Header="Images">
 				<!-- sub grid -->
 				<Grid ColumnDefinitions="*,2*" RowDefinitions="*,auto">
@@ -138,19 +138,19 @@
 					</StackPanel>
 				</Grid>
 			</TabItem>
-			<!-- Ingredients database tab -->
+			<!-- RAW CONVERTER tab -->
 			<TabItem Header="Raw converter">
 
 				
 			</TabItem>
-			<!-- Settings tab -->
+			<!-- SETTINGS tab -->
 			<TabItem Header="Settings"/>
 		</TabControl>
 
 		<!-- ROW 2: Info button -->
-		<Button Content="Info" Grid.Row="2" CornerRadius="0" Padding="20, 5" HorizontalAlignment="Stretch"
-				Width="{Binding MenuBarWidth}"
-				Background="{Binding DarkColor}" FontSize="{Binding LargeFontSize}" Foreground="{Binding LightFontColor}" FontWeight="Light">
+		<Button Content="Info" Grid.Row="2" CornerRadius="0" Padding="20, 5" HorizontalAlignment="Stretch" Width="{Binding MenuBarWidth}"
+				Background="{Binding DarkColor}" FontSize="{Binding LargeFontSize}" Foreground="{Binding LightFontColor}" FontWeight="Light"
+				Click="ButtonInfo_Click">
 		</Button>
 
 		<!-- ROW 2: Date and week entry -->

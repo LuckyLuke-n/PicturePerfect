@@ -95,5 +95,11 @@ namespace PicturePerfect.Views
                 else { return null; }
             }
         }
+
+
+        public void ButtonInfo_Click(object sender, RoutedEventArgs e)
+        {
+            new InfoWindow().Show();
+        }
     }
 }
