@@ -22,6 +22,7 @@ namespace PicturePerfect
         /// </summary>
         public static string ApplicationVersion { get; } = "V0.1.0";
         public static string ApplicationName = "PicturePerfect";
+        public static string BuildDate = "2022-01-15";
 
         /// <summary>
         /// Get or set the currently loaded project file.

@@ -18,7 +18,6 @@
     <None Remove="Assets\edit_category.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\info.png" />
-    <None Remove="Assets\Info\license.txt" />
     <None Remove="Assets\load_images.png" />
     <None Remove="Assets\new_meal.png" />
     <None Remove="Assets\P5140045_Stockerpel.jpg" />
@@ -39,5 +38,16 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.11" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Resources\about.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\libraries.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

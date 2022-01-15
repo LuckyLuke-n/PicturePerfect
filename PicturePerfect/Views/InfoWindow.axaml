@@ -2,32 +2,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Height="600" Width="900" MinWidth="400" MinHeight="400"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Height="800" Width="700" MinWidth="400" MinHeight="400"
         x:Class="PicturePerfect.Views.InfoWindow"
+		Icon="/Assets/icon.ico"
         Title="InfoWindow">
 
 
-	<Grid ColumnDefinitions="*,*"  RowDefinitions="*,*,auto">
+	<Grid ColumnDefinitions="2*,*"  RowDefinitions="auto,2*,auto">
 		
-		<Border Grid.Row="0" Grid.ColumnSpan="2" Background="{Binding MediumColor}"/>
+		<Border Grid.Row="0" Grid.ColumnSpan="2" Background="{Binding DarkColor}"/>
 		<Border Grid.Row="1" Grid.ColumnSpan="2" Background="{Binding MediumColor}"/>
 		<Border Grid.Row="2" Grid.ColumnSpan="2" Background="{Binding LightColor}"/>
 
+		<!-- Stack Panel for information -->
+		<StackPanel Margin="10">
+			<Label Content="{Binding ApplicatonName}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
+			<Label Content="{Binding ApplicationVersion}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
+			<Label Content="{Binding BuildDate}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
+		</StackPanel>
 		
-		<Image Source="/Assets/icon.ico" Grid.Column="1" Grid.Row="0" Margin="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+		
+		
+		<Image Source="/Assets/icon.ico" Grid.Column="1" Grid.Row="0" Margin="0,10,20,10" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="200"/>
 
-
+		<!-- Tab control -->
 		<TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
 			<TabItem Header="About">
-				<TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+				<TextBox Text="{Binding About}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
 			</TabItem>
 
 			<TabItem Header="Libraries">
-				<TextBlock VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>			
+				<TextBox Text="{Binding Libraries}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>			
 			</TabItem>
 
 			<TabItem Header="License">
-				<TextBlock Text="{Binding License}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+				<TextBox Text="{Binding License}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
 			</TabItem>
 			
 		</TabControl>
