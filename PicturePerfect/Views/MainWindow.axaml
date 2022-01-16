@@ -149,20 +149,23 @@
 					<!-- Database settings -->
 					<StackPanel Margin="10">
 						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"
-							Text="Select the file types youo want to store in your project database. It is recommended to store raw formats. The application will convert them if needed." />
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding FileTypeDescription}" />
 						<CheckBox Content=".raw" IsChecked="True"/>
 						<CheckBox Content=".orf" IsChecked="True"/>
 						<CheckBox Content=".jpg" IsChecked="False"/>
 						<CheckBox Content=".png" IsChecked="False"/>
 						<CheckBox Content=".bitmap" IsChecked="False"/>
+						<TextBlock TextWrapping="Wrap" Margin="0,20,0,10" Text="{Binding NamingConventionDescription}"/>
+						<StackPanel Orientation="Horizontal">
+							<CheckBox Content="Use string separator" Margin="0,0,10,0" IsChecked="{Binding UseSeparator}"/>
+							<ComboBox SelectedItem="{Binding Separator}" Width="100" Items="{Binding Separators}" IsEnabled="{Binding UseSeparator}"/>
+						</StackPanel>						
 					</StackPanel>
 
 					<!-- Performance settings -->
 					<StackPanel Margin="10" Grid.Row="1">
 						<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"
-							Text="Select the buffer size while viewing images. The application will convert the next images in the background and store them in the local memory.&#x0a;Depending on the perfomance of you machine you might want to change the buffer size." />
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding BufferSizeDescription}" />
 						<StackPanel Orientation="Horizontal">
 							<Label Content="Current buffer size is:"/>
 							<Label Content="{Binding BufferSize}"/>

@@ -127,6 +127,26 @@ namespace PicturePerfect.Models
             get { return inputFormats; }
             private set { inputFormats = value; Save(); }
         }
+
+        private bool useSeparator = false;
+        /// <summary>
+        /// Get or set the use separator property.
+        /// </summary>
+        public bool UseSeparator
+        {
+            get { return useSeparator; }
+            set { useSeparator = value; Save(); }
+        }
+
+        private string? separator = null;
+        /// <summary>
+        /// Get or set the seprator character for folder naming.
+        /// </summary>
+        public string? Separator
+        {
+            get { return separator; }
+            set { separator = value; Save(); }
+        }
         #endregion
 
         /// <summary>
@@ -192,7 +212,8 @@ namespace PicturePerfect.Models
                 DatabasePath = file.DatabasePath,
                 // settings
                 InputFormats = file.InputFormats,
-                BufferSize = file.BufferSize
+                BufferSize = file.BufferSize,
+                Separator = file.Separator
             };
 
             return newFile;

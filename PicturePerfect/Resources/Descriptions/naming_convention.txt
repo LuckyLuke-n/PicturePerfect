@@ -1,0 +1,3 @@
+﻿The application creates sub folders in your project folder. Depending on your own naming convention for your input folders you can decide how to name the folders in your project folder.
+The automatic naming will be [date of first image]_to_[date of last image]. For example 2021-09-11_to_2021-09-28.
+You can add a suffix depending on your input folder. If your input folders are named like Date_FotoLocation you can define the _ as a splitter. The auto generated folder will then be name [date of first image]_to_[date of last image]. For example Backyard_2021-09-11_to_2021-09-28.

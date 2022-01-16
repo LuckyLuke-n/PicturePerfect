@@ -6,6 +6,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Reactive;
 using System.Text;
 
@@ -44,12 +45,42 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Settings
+        public static string NamingConventionDescription => File.ReadAllText("Resources/Descriptions/naming_convention.txt");
+        public static string FileTypeDescription => File.ReadAllText("Resources/Descriptions/file_types.txt");
+        public static string BufferSizeDescription => File.ReadAllText("Resources/Descriptions/buffer_size.txt");
+
         private int bufferSize = ThisApplication.ProjectFile.BufferSize;
+        /// <summary>
+        /// Get or set the buffer size. This value will be saved to the project file.
+        /// </summary>
         public int BufferSize
         {
             get { return bufferSize; }
             set { this.RaiseAndSetIfChanged(ref bufferSize, value); } //ThisApplication.ProjectFile.BufferSize = value; }
         }
+        /// <summary>
+        /// Get a list of possible separators. This value will be saved to the project file.
+        /// </summary>
+        public List<string> Separators { get; } = new() { "_", "-", "+", ".", ",", "Space"};
+        private string? separator = ThisApplication.ProjectFile.Separator;
+        /// <summary>
+        /// Get or set the separator character for folder naming. This value will be saved to the project file.
+        /// </summary> 
+        public string Separator
+        {
+            get { return separator; }
+            set { this.RaiseAndSetIfChanged(ref separator, value); } //ThisApplication.ProjectFile.Separator = value; }
+        }
+        private bool useSeparator = ThisApplication.ProjectFile.UseSeparator;
+        /// <summary>
+        /// Get or set the value if separtor suffix folder naming should be used. This value will be saved to the project file.
+        /// </summary>
+        public bool UseSeparator
+        {
+            get { return useSeparator; }
+            set { this.RaiseAndSetIfChanged(ref useSeparator, value); } //ThisApplication.ProjectFile.useSeparator = value; }
+        }
+
         #endregion
 
         #region Status Bar
@@ -127,6 +158,13 @@ namespace PicturePerfect.ViewModels
         {
             ShowImage(SelectedImage);
         }
+
+        private void RunUseSeparatorCommand()
+        {
+
+        }
+
+
 
         private void ShowImage(int id)
         {
