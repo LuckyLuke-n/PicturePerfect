@@ -93,41 +93,65 @@ namespace PicturePerfect.ViewModels
             SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
         }
 
+        /// <summary>
+        /// Command to toggle the add location line visiblity.
+        /// </summary>
         private void RunToggleVisibilityLocationCommand()
         {
             IsVisibleAddLocation = !IsVisibleAddLocation;
         }
 
+        /// <summary>
+        /// Command to toggle the add category visibility.
+        /// </summary>
         private void RunToggleVisibilityCategoryCommand()
         {
             IsVisibleAddCategory = !IsVisibleAddCategory;
         }
 
+        /// <summary>
+        /// Command to toggle the add sub category 1 visibility.
+        /// </summary>
         private void RunToggleVisibilitySubCategory1Command()
         {
             IsVisibleAddSubCategory1 = !IsVisibleAddSubCategory1;
         }
 
+        /// <summary>
+        /// Command to toggle the add subcategory 2 visibilty.
+        /// </summary>
         private void RunToggleVisibilitySubCategory2Command()
         {
             IsVisibleAddSubCategory2 = !IsVisibleAddSubCategory2;
         }
 
+        /// <summary>
+        /// Command save the new location location.
+        /// </summary>
         private void RunSaveLocationCommand()
         {
             RunToggleVisibilityLocationCommand();
         }
 
+        /// <summary>
+        /// Command to save the new category.
+        /// </summary>
         private void RunSaveCategoryCommand()
         {
             RunToggleVisibilityCategoryCommand();
         }
 
+        /// <summary>
+        /// Command to save the new sub category 1.
+        /// </summary>
         private void RunSaveSubCategory1Command()
         {
             RunToggleVisibilitySubCategory1Command();
         }
 
+        /// <summary>
+        /// Command to save the new sub category 2.
+        /// </summary>
         private void RunSaveSubCategory2Command()
         {
             RunToggleVisibilitySubCategory2Command();
