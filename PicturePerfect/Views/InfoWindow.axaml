@@ -28,15 +28,15 @@
 		<!-- Tab control -->
 		<TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
 			<TabItem Header="About">
-				<TextBox Text="{Binding About}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+				<TextBox Text="{Binding About}" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
 			</TabItem>
 
 			<TabItem Header="Libraries">
-				<TextBox Text="{Binding Libraries}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>			
+				<TextBox Text="{Binding Libraries}" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>			
 			</TabItem>
 
 			<TabItem Header="License">
-				<TextBox Text="{Binding License}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+				<TextBox Text="{Binding License}" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
 			</TabItem>
 			
 		</TabControl>

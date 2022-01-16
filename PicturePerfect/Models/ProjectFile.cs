@@ -108,6 +108,27 @@ namespace PicturePerfect.Models
         }
         #endregion
 
+        #region Settings
+        private int bufferSize = 5;
+        private List<string> inputFormats = new() { RawTypes.orf.ToString(), RawTypes.raw.ToString() };
+        /// <summary>
+        /// Get or set the buffer size for converting images while viewing.
+        /// </summary>
+        public int BufferSize
+        {
+            get { return bufferSize; }
+            set { bufferSize = value; Save(); }
+        }
+        /// <summary>
+        /// Get the input formats. To set use the public method SetInputFormats().
+        /// </summary>
+        public List<string> InputFormats
+        {
+            get { return inputFormats; }
+            private set { inputFormats = value; Save(); }
+        }
+        #endregion
+
         /// <summary>
         /// Creates a new instance of the class project file.
         /// This json file is used to store all relevant setings for a project.
@@ -168,8 +189,10 @@ namespace PicturePerfect.Models
                 CreationDate = file.CreationDate,
                 Notes = file.Notes,
                 ProjectFolder = file.ProjectFolder,
-                DatabasePath = file.DatabasePath
-                // add new properties and set the values!
+                DatabasePath = file.DatabasePath,
+                // settings
+                InputFormats = file.InputFormats,
+                BufferSize = file.BufferSize
             };
 
             return newFile;
@@ -186,6 +209,34 @@ namespace PicturePerfect.Models
                 ProjectName = "Load project"
             };
             return file;
+        }
+
+        /// <summary>
+        /// Method to set the input file types.
+        /// </summary>
+        /// <param name="rawInputs"></param>
+        /// <param name="otherInputs"></param>
+        public void SetInputFormats(List<RawTypes> rawInputs, List<ImageTypes>? otherInputs = null)
+        {
+            List<string>  fileTypes = new List<string>();
+            
+            // insert raw types in list
+            foreach (RawTypes rawInput in rawInputs)
+            {
+                fileTypes.Add(rawInput.ToString());
+            }
+
+            // insert oter inputs in list
+            if (otherInputs != null)
+            {
+                foreach (ImageTypes otherInput in otherInputs)
+                {
+                    fileTypes.Add(otherInput.ToString());
+                }
+            }
+
+            // set property
+            InputFormats = fileTypes;
         }
 
         /// <summary>

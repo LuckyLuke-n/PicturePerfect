@@ -84,7 +84,7 @@
 					<!-- Notebook -->
 					<Grid ColumnDefinitions="*" RowDefinitions="auto,*" Grid.Column="2" Grid.Row="0" Grid.RowSpan="4">
 						<Label Content="Notes" Grid.Row="0" FontSize="{Binding LargeFontSize}" Margin="10"/>
-						<TextBox Grid.Row="1" Background="{Binding LightColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+						<TextBox AcceptsReturn="True" Grid.Row="1" Background="{Binding LightColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
 					</Grid>
 
 				</Grid>
@@ -144,7 +144,33 @@
 				
 			</TabItem>
 			<!-- SETTINGS tab -->
-			<TabItem Header="Settings"/>
+			<TabItem Header="Settings">
+				<Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
+					<!-- Database settings -->
+					<StackPanel Margin="10">
+						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"
+							Text="Select the file types youo want to store in your project database. It is recommended to store raw formats. The application will convert them if needed." />
+						<CheckBox Content=".raw" IsChecked="True"/>
+						<CheckBox Content=".orf" IsChecked="True"/>
+						<CheckBox Content=".jpg" IsChecked="False"/>
+						<CheckBox Content=".png" IsChecked="False"/>
+						<CheckBox Content=".bitmap" IsChecked="False"/>
+					</StackPanel>
+
+					<!-- Performance settings -->
+					<StackPanel Margin="10" Grid.Row="1">
+						<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"
+							Text="Select the buffer size while viewing images. The application will convert the next images in the background and store them in the local memory.&#x0a;Depending on the perfomance of you machine you might want to change the buffer size." />
+						<StackPanel Orientation="Horizontal">
+							<Label Content="Current buffer size is:"/>
+							<Label Content="{Binding BufferSize}"/>
+						</StackPanel>
+						<Slider Minimum="1" Maximum="10" Value="{Binding BufferSize}" />				
+					</StackPanel>
+				</Grid>			
+			</TabItem>
 		</TabControl>
 
 		<!-- ROW 2: Info button -->

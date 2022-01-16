@@ -43,6 +43,15 @@ namespace PicturePerfect.ViewModels
         public int SelectedImage { get; set; } = 5;
         #endregion
 
+        #region Settings
+        private int bufferSize = ThisApplication.ProjectFile.BufferSize;
+        public int BufferSize
+        {
+            get { return bufferSize; }
+            set { this.RaiseAndSetIfChanged(ref bufferSize, value); } //ThisApplication.ProjectFile.BufferSize = value; }
+        }
+        #endregion
+
         #region Status Bar
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar { get; private set; } = "100%";
