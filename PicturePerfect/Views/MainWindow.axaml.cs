@@ -43,7 +43,7 @@ namespace PicturePerfect.Views
         /// <param name="e"></param>
         public void MenuNewProject_Click(object sender, RoutedEventArgs e)
         {
-            _ = GetPathAsync(DialogType.NewProject);
+            _ = GetPathAsync(DialogType.NewProject);     
         }
 
         /// <summary>
@@ -65,15 +65,22 @@ namespace PicturePerfect.Views
         {
             if (dialogType == DialogType.NewProject)
             {
-                // file dialog to get the path to a new project folder
-                OpenFolderDialog dialogFolder = new();
-                var result = await dialogFolder.ShowAsync((Window)VisualRoot);
+                string text = "Please select a folder for your new project. The folder name will be the name of your project.";
+                MessageBox.MessageBoxResult result = await MessageBox.Show(text, null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Information);
 
-                // check for null reference
-                if (result != null)
+                if (result == MessageBox.MessageBoxResult.Ok)
                 {
-                    viewModel.PathToProjectFolder = result.ToString(); 
-                    return result.ToString();
+                    // file dialog to get the path to a new project folder
+                    OpenFolderDialog dialogFolder = new();
+                    var resultFolder = await dialogFolder.ShowAsync((Window)VisualRoot);
+
+                    // check for null reference
+                    if (resultFolder != null)
+                    {
+                        viewModel.PathToProjectFolder = resultFolder.ToString();
+                        return resultFolder.ToString();
+                    }
+                    else { return null; }
                 }
                 else { return null; }
             }

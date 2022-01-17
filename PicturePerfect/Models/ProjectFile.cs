@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +18,7 @@ namespace PicturePerfect.Models
         public DateTime CreationDate { get; private set; } = DateTime.Now;
         public string Notes { get; private set; } = string.Empty;
         public string ProjectFilePath { get; private set; } = string.Empty;
-        public string ProjectFolder { get; private set; } = string.Empty;
+        public string ImageFolder { get; private set; } = string.Empty;
         public string DatabasePath { get; private set; } = string.Empty;
         private string Release { get; set; } = string.Empty;
         #endregion
@@ -160,28 +162,33 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to create a new project file. The file is saved to the selected folder.
+        /// Method to create a new project file. The folders and subfolders for the project are created.
+        /// The file is saved to the selected folder.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="name"></param>
         /// <returns>Return the project file.</returns>
-        public static ProjectFile New(string path, string name)
+        public static ProjectFile New(string path)
         {
             // new project file object
             ProjectFile file = new()
             {
                 Release = ThisApplication.ApplicationVersion,
-                ProjectName = name,
-                ProjectFilePath = path,
+                ProjectName = new DirectoryInfo(path).Name,
+                ProjectFilePath = Path.Combine(path, new DirectoryInfo(path).Name + ".ppp"),
                 ProjectOwner = Environment.UserName,
                 CreationDate = DateTime.Now,
-                ProjectFolder = new FileInfo(path).Directory.FullName,
-                DatabasePath = Path.Combine(new FileInfo(path).Directory.FullName, "database.sqlite")
+                ImageFolder = Path.Combine(path, "images"),
+                DatabasePath = Path.Combine(path, "sqlite", "database.sqlite")
             };
 
-            // save to json file
+            // create basic folders
+            Directory.CreateDirectory(new FileInfo(file.DatabasePath).DirectoryName);
+            Directory.CreateDirectory(file.ImageFolder);
+
+            // save object to json file
             string jsonString = JsonConvert.SerializeObject(file);
-            File.WriteAllText(path, jsonString);
+            File.WriteAllText(file.ProjectFilePath, jsonString);
 
             return file;
         }
@@ -204,12 +211,12 @@ namespace PicturePerfect.Models
             {
                 Release = ThisApplication.ApplicationVersion,
                 ProjectName = file.ProjectName,
-                ProjectFilePath = file.ProjectFilePath,
+                ProjectFilePath = path,
                 ProjectOwner = file.ProjectOwner,
                 CreationDate = file.CreationDate,
                 Notes = file.Notes,
-                ProjectFolder = file.ProjectFolder,
-                DatabasePath = file.DatabasePath,
+                ImageFolder = Path.Combine(new FileInfo(path).DirectoryName, "images"),
+                DatabasePath = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "database.sqlite"),
                 // settings
                 InputFormats = file.InputFormats,
                 BufferSize = file.BufferSize,

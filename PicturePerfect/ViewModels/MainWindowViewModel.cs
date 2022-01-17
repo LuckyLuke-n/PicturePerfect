@@ -91,7 +91,7 @@ namespace PicturePerfect.ViewModels
         public string InWorkItem { get; private set; } = "Item name (hard coded name)";
         #endregion
 
-        #region Input from axaml.cs file
+        #region Input for paths from axaml.cs file
         private string pathToProjectFile = string.Empty;
         /// <summary>
         /// Get the path to the project file or set the path which will trigger the LoadProject() method.
@@ -175,11 +175,13 @@ namespace PicturePerfect.ViewModels
         private async void LoadProject()
         {
             await MessageBox.Show(PathToProjectFile);
+            ThisApplication.ProjectFile = ProjectFile.Load(PathToProjectFile);
         }
 
         private async void NewProject()
         {
-            await MessageBox.Show(PathToProjectFolder);
+            ThisApplication.ProjectFile = ProjectFile.New(PathToProjectFolder);
+            await MessageBox.Show(ThisApplication.ProjectFile.ProjectName);
         }
     }
 }
