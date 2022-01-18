@@ -39,11 +39,14 @@ namespace PicturePerfect.ViewModels
         public static Bitmap ImageNo2 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo3 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
-        private static string notes = "notes come here";
+        private static string notes = string.Empty;
+        /// <summary>
+        /// Get the notes to be displayed in the home tab.
+        /// </summary>
         public string Notes
         {
             get { return notes; }
-            set { this.RaiseAndSetIfChanged(ref notes, value); }
+            private set { this.RaiseAndSetIfChanged(ref notes, value); }
         }
         #endregion
 
@@ -63,7 +66,7 @@ namespace PicturePerfect.ViewModels
         public int BufferSize
         {
             get { return bufferSize; }
-            set { this.RaiseAndSetIfChanged(ref bufferSize, value); } //ThisApplication.ProjectFile.BufferSize = value; }
+            set { this.RaiseAndSetIfChanged(ref bufferSize, value); ThisApplication.ProjectFile.BufferSize = value; ThisApplication.ProjectFile.Save(); }
         }
         /// <summary>
         /// Get a list of possible separators. This value will be saved to the project file.
@@ -76,7 +79,7 @@ namespace PicturePerfect.ViewModels
         public string Separator
         {
             get { return separator; }
-            set { this.RaiseAndSetIfChanged(ref separator, value); } //ThisApplication.ProjectFile.Separator = value; }
+            set { this.RaiseAndSetIfChanged(ref separator, value); ThisApplication.ProjectFile.Separator = value; ThisApplication.ProjectFile.Save(); }
         }
         private bool useSeparator = ThisApplication.ProjectFile.UseSeparator;
         /// <summary>
@@ -85,7 +88,7 @@ namespace PicturePerfect.ViewModels
         public bool UseSeparator
         {
             get { return useSeparator; }
-            set { this.RaiseAndSetIfChanged(ref useSeparator, value); } //ThisApplication.ProjectFile.useSeparator = value; }
+            set { this.RaiseAndSetIfChanged(ref useSeparator, value); ThisApplication.ProjectFile.UseSeparator = value; ThisApplication.ProjectFile.Save(); }
         }
         #endregion
 
@@ -110,6 +113,16 @@ namespace PicturePerfect.ViewModels
         {
             get { return inWorkItem; }
             private set { this.RaiseAndSetIfChanged(ref inWorkItem, value); }
+        }
+        private bool projectIsLoaded = false;
+        /// <summary>
+        /// Get the property indicating weather a project is loaded.
+        /// This is used to make the settings page read-only in case no project file is loaded.
+        /// </summary>
+        public bool ProjectIsLoaded
+        {
+            get { return projectIsLoaded; }
+            set { this.RaiseAndSetIfChanged(ref projectIsLoaded, value); }
         }
         #endregion
 
@@ -226,6 +239,7 @@ namespace PicturePerfect.ViewModels
                 InWorkProject = ThisApplication.ProjectFile.ProjectName;
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
+                ProjectIsLoaded = true;
             }
             else
             {
@@ -245,6 +259,7 @@ namespace PicturePerfect.ViewModels
                 InWorkProject = ThisApplication.ProjectFile.ProjectName;
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
+                ProjectIsLoaded = true;
             }
             else
             {

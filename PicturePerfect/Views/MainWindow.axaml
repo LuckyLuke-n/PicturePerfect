@@ -147,9 +147,9 @@
 			<TabItem Header="Settings">
 				<Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
 					<!-- Database settings -->
-					<StackPanel Margin="10">
+					<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding FileTypeDescription}" />
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"/>
 						<CheckBox Content=".raw" IsChecked="True"/>
 						<CheckBox Content=".orf" IsChecked="True"/>
 						<CheckBox Content=".jpg" IsChecked="False"/>
@@ -163,7 +163,7 @@
 					</StackPanel>
 
 					<!-- Performance settings -->
-					<StackPanel Margin="10" Grid.Row="1">
+					<StackPanel Margin="10" Grid.Row="1" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
 						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding BufferSizeDescription}" />
 						<StackPanel Orientation="Horizontal">
