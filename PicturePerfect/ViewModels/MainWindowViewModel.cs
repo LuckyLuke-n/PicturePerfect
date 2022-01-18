@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Reactive;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PicturePerfect.ViewModels
 {
@@ -92,38 +93,44 @@ namespace PicturePerfect.ViewModels
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar { get; private set; } = "100%";
         public bool IsIndeterminate { get; private set; } = false;
-        private string projectName = "Load project";
-        public string ProjectName
+        private bool hideFileDialog = false;
+        /// <summary>
+        /// Get or set the property to hilde or show the file dialog in the bottom row.
+        /// </summary>
+        public bool HideFileDialog
         {
-            get { return projectName; }
-            set { this.RaiseAndSetIfChanged(ref projectName, value); }
+            get { return hideFileDialog; }
+            private set { this.RaiseAndSetIfChanged(ref hideFileDialog, value); }
         }
         public string inWorkItem = "No project loaded";
-        public string InWorkItem
+        /// <summary>
+        /// Get the current in work project.
+        /// </summary>
+        public string InWorkProject
         {
             get { return inWorkItem; }
-            set { this.RaiseAndSetIfChanged(ref inWorkItem, value); }
+            private set { this.RaiseAndSetIfChanged(ref inWorkItem, value); }
         }
         #endregion
 
         #region Input for paths from axaml.cs file
-        private string pathToProjectFile = string.Empty;
+        private string pathToProjectFile = "Select a project file";
         /// <summary>
-        /// Get the path to the project file or set the path which will trigger the LoadProject() method.
+        /// Get and set the path to the project file or set the path which will trigger the LoadProject() method.
         /// </summary>
         public string PathToProjectFile
         {
             get { return pathToProjectFile; }
-            set { pathToProjectFile = value; }
+            set { this.RaiseAndSetIfChanged(ref pathToProjectFile, value); }
         }
-        private string pathToProjectFolder = string.Empty;
+        private string pathToProjectFolder = "Select a folder for your project";
         /// <summary>
-        /// Get the path to the project folder or set the path which will trigger the NewProject() method.
+        /// Get and set the path to the project folder or set the path which will trigger the NewProject() method.
         /// </summary>
         public string PathToProjectFolder
         {
             get { return pathToProjectFolder; }
-            set { pathToProjectFolder = value; }
+            set { this.RaiseAndSetIfChanged(ref pathToProjectFolder, value); }
         }
         #endregion
 
@@ -133,6 +140,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> ShowFavorite2Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite3Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite4Command { get; }
+        public ReactiveCommand<Unit, Unit> ToggleFileDialogCommand { get; }
         public ReactiveCommand<Unit, Unit> NewProjectCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadProjectCommand { get; }
         #endregion
@@ -147,11 +155,14 @@ namespace PicturePerfect.ViewModels
             ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
             ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
             ShowFavorite4Command = ReactiveCommand.Create(RunShowFavorite4Command);
-            NewProjectCommand = ReactiveCommand.Create(RunNewProjectCommand);
-            LoadProjectCommand = ReactiveCommand.Create(RunLoadProjectCommand);
+            ToggleFileDialogCommand = ReactiveCommand.Create(RunToggleFileDialogCommand);
+            NewProjectCommand = ReactiveCommand.Create(RunNewProjectCommandAsync);
+            LoadProjectCommand = ReactiveCommand.Create(RunLoadProjectCommandAsync);
         }
 
-
+        /// <summary>
+        /// Method to open a new instance of the image view window.
+        /// </summary>
         private void RunShowImageCommand()
         {
             ShowImage(SelectedImage);
@@ -183,22 +194,62 @@ namespace PicturePerfect.ViewModels
 
         }
 
-        private void RunNewProjectCommand()
-        {
-            ThisApplication.ProjectFile = ProjectFile.New(PathToProjectFolder);
-            InWorkItem = ThisApplication.ProjectFile.ProjectName;
-        }
-
+        /// <summary>
+        /// Method to show the image view window.
+        /// </summary>
+        /// <param name="id"></param>
         private void ShowImage(int id)
         {
             SelectedImageId = id;
             new ImageViewWindow().Show();
         }
 
-        public void RunLoadProjectCommand()
+        /// <summary>
+        /// Method to toggle the show file dialog bool.
+        /// </summary>
+        private void RunToggleFileDialogCommand()
         {
-            ThisApplication.ProjectFile = ProjectFile.Load(PathToProjectFile);
-            InWorkItem = ThisApplication.ProjectFile.ProjectName;
+            HideFileDialog = !HideFileDialog;
+            PathToProjectFolder = "Select a folder for your project";
+            PathToProjectFile = "Select a project file";
+        }
+
+        /// <summary>
+        /// Method to create a new project.
+        /// </summary>
+        private async void RunNewProjectCommandAsync()
+        {
+            if (PathToProjectFolder != "Select a folder for your project")
+            {
+                // set the global project file property
+                ThisApplication.ProjectFile = ProjectFile.New(PathToProjectFolder);
+                InWorkProject = ThisApplication.ProjectFile.ProjectName;
+                // hide menu bar and clear boxes
+                RunToggleFileDialogCommand();
+            }
+            else
+            {
+                _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }      
+        }
+
+        /// <summary>
+        /// Method to load an existing project.
+        /// </summary>
+        private async void RunLoadProjectCommandAsync()
+        {
+            if (PathToProjectFile != "Select a project file")
+            {
+                // set the global project file property
+                ThisApplication.ProjectFile = ProjectFile.Load(PathToProjectFile);
+                InWorkProject = ThisApplication.ProjectFile.ProjectName;
+                // hide menu bar and clear boxes
+                RunToggleFileDialogCommand();
+            }
+            else
+            {
+                _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
         }
     }
 }

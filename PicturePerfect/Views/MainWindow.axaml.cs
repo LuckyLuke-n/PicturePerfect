@@ -109,7 +109,11 @@ namespace PicturePerfect.Views
             }
         }
 
-
+        /// <summary>
+        /// Event to trigger the info window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void ButtonInfo_Click(object sender, RoutedEventArgs e)
         {
             new InfoWindow().Show();
