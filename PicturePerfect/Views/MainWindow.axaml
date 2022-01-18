@@ -84,7 +84,7 @@
 					<!-- Notebook -->
 					<Grid ColumnDefinitions="*" RowDefinitions="auto,*" Grid.Column="2" Grid.Row="0" Grid.RowSpan="4">
 						<Label Content="Notes" Grid.Row="0" FontSize="{Binding LargeFontSize}" Margin="10"/>
-						<TextBox AcceptsReturn="True" Grid.Row="1" Background="{Binding LightColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
+						<TextBox Text="{Binding Notes}" AcceptsReturn="True" Grid.Row="1" Background="{Binding LightColor}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10"/>
 					</Grid>
 
 				</Grid>
@@ -188,12 +188,27 @@
 			<ProgressBar Value="{Binding PercentageProgressBar}" Maximum="100" Margin="0,0,10,0" IsIndeterminate="{Binding IsIndeterminate}"/>
 			<Label Content="{Binding LabelProgressBar}" Margin="0,0,10,0"/>
 		</StackPanel>
+		<StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+			<Button Width="100" Content="File" Margin="10"/>
+			<StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+				<TextBox Name="textBoxNewProject" Text="{Binding PathToProjectFolder}" Width="300" Margin="0,0,5,0"/>
+				<Button Content="Select" Click="ButtonNewProject_Click"/>
+				<Button Content="New" Command="{Binding NewProjectCommand}"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+				<TextBox Name="textBoxLoadProject" Text="{Binding PathToProjectFile}" Width="300" Margin="0,0,5,0" />
+				<Button Content="Select" Click="ButtonSelectProject_Click"/>
+				<Button Content="Load" Command="{Binding LoadProjectCommand}"/>
+			</StackPanel>
+		</StackPanel>
+
+		<!--
 		<Menu Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" >
 			<MenuItem Header="{Binding ProjectName}">
 				<MenuItem Header="New project" Click="MenuNewProject_Click"/>
 				<MenuItem Header="Select project file" Click="MenuSelectProject_Click"/>
 			</MenuItem>
-		</Menu>
+		</Menu>-->
 
 		<!-- ROW 0: Seach box over other elements -->
 		<StackPanel Name="stackPlanelSearch" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5,0,0">

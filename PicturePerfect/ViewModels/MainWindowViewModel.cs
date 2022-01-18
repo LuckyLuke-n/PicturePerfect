@@ -38,6 +38,12 @@ namespace PicturePerfect.ViewModels
         public static Bitmap ImageNo2 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo3 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
         public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+        private static string notes = "notes come here";
+        public string Notes
+        {
+            get { return notes; }
+            set { this.RaiseAndSetIfChanged(ref notes, value); }
+        }
         #endregion
 
         #region Page "Images" Properties
@@ -80,15 +86,24 @@ namespace PicturePerfect.ViewModels
             get { return useSeparator; }
             set { this.RaiseAndSetIfChanged(ref useSeparator, value); } //ThisApplication.ProjectFile.useSeparator = value; }
         }
-
         #endregion
 
         #region Status Bar
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar { get; private set; } = "100%";
         public bool IsIndeterminate { get; private set; } = false;
-        public string ProjectName { get; } = ThisApplication.ProjectFile.ProjectName;
-        public string InWorkItem { get; private set; } = "Item name (hard coded name)";
+        private string projectName = "Load project";
+        public string ProjectName
+        {
+            get { return projectName; }
+            set { this.RaiseAndSetIfChanged(ref projectName, value); }
+        }
+        public string inWorkItem = "No project loaded";
+        public string InWorkItem
+        {
+            get { return inWorkItem; }
+            set { this.RaiseAndSetIfChanged(ref inWorkItem, value); }
+        }
         #endregion
 
         #region Input for paths from axaml.cs file
@@ -99,7 +114,7 @@ namespace PicturePerfect.ViewModels
         public string PathToProjectFile
         {
             get { return pathToProjectFile; }
-            set { pathToProjectFile = value; LoadProject(); }
+            set { pathToProjectFile = value; }
         }
         private string pathToProjectFolder = string.Empty;
         /// <summary>
@@ -108,7 +123,7 @@ namespace PicturePerfect.ViewModels
         public string PathToProjectFolder
         {
             get { return pathToProjectFolder; }
-            set { pathToProjectFolder = value; NewProject(); }
+            set { pathToProjectFolder = value; }
         }
         #endregion
 
@@ -118,6 +133,8 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> ShowFavorite2Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite3Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite4Command { get; }
+        public ReactiveCommand<Unit, Unit> NewProjectCommand { get; }
+        public ReactiveCommand<Unit, Unit> LoadProjectCommand { get; }
         #endregion
 
         /// <summary>
@@ -130,6 +147,8 @@ namespace PicturePerfect.ViewModels
             ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
             ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
             ShowFavorite4Command = ReactiveCommand.Create(RunShowFavorite4Command);
+            NewProjectCommand = ReactiveCommand.Create(RunNewProjectCommand);
+            LoadProjectCommand = ReactiveCommand.Create(RunLoadProjectCommand);
         }
 
 
@@ -164,7 +183,11 @@ namespace PicturePerfect.ViewModels
 
         }
 
-
+        private void RunNewProjectCommand()
+        {
+            ThisApplication.ProjectFile = ProjectFile.New(PathToProjectFolder);
+            InWorkItem = ThisApplication.ProjectFile.ProjectName;
+        }
 
         private void ShowImage(int id)
         {
@@ -172,16 +195,10 @@ namespace PicturePerfect.ViewModels
             new ImageViewWindow().Show();
         }
 
-        private async void LoadProject()
+        public void RunLoadProjectCommand()
         {
-            await MessageBox.Show(PathToProjectFile);
             ThisApplication.ProjectFile = ProjectFile.Load(PathToProjectFile);
-        }
-
-        private async void NewProject()
-        {
-            ThisApplication.ProjectFile = ProjectFile.New(PathToProjectFolder);
-            await MessageBox.Show(ThisApplication.ProjectFile.ProjectName);
+            InWorkItem = ThisApplication.ProjectFile.ProjectName;
         }
     }
 }

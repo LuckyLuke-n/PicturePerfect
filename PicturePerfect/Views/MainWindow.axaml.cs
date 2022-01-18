@@ -13,6 +13,9 @@ namespace PicturePerfect.Views
     public partial class MainWindow : Window
     {
         private MainWindowViewModel viewModel = new();
+        private TextBox textBoxNewProject;
+        private TextBox textBoxLoadProject;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -25,6 +28,9 @@ namespace PicturePerfect.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+
+            textBoxNewProject = this.FindControl<TextBox>("textBoxNewProject");
+            textBoxLoadProject = this.FindControl<TextBox>("textBoxLoadProject");
         }
 
         /// <summary>
@@ -41,9 +47,9 @@ namespace PicturePerfect.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void MenuNewProject_Click(object sender, RoutedEventArgs e)
+        public void ButtonNewProject_Click(object sender, RoutedEventArgs e)
         {
-            _ = GetPathAsync(DialogType.NewProject);     
+            _ = GetPathAsync(DialogType.NewProject);
         }
 
         /// <summary>
@@ -51,9 +57,9 @@ namespace PicturePerfect.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void MenuSelectProject_Click(object sender, RoutedEventArgs e)
+        public void ButtonSelectProject_Click(object sender, RoutedEventArgs e)
         {
-            _ = GetPathAsync(DialogType.SelectProject);   
+            _ = GetPathAsync(DialogType.SelectProject);
         }
 
         /// <summary>
@@ -77,7 +83,8 @@ namespace PicturePerfect.Views
                     // check for null reference
                     if (resultFolder != null)
                     {
-                        viewModel.PathToProjectFolder = resultFolder.ToString();
+                        //viewModel.PathToProjectFolder = resultFolder.ToString();
+                        textBoxNewProject.Text = resultFolder.ToString();
                         return resultFolder.ToString();
                     }
                     else { return null; }
@@ -95,9 +102,8 @@ namespace PicturePerfect.Views
                 // check for null reference
                 if (result != null)
                 {
-                    viewModel.PathToProjectFile = result[0].ToString();
-                    return result;
-                    
+                    textBoxLoadProject.Text = result[0].ToString();
+                    return result;                  
                 }
                 else { return null; }
             }

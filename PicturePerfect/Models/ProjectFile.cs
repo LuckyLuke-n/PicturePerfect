@@ -35,7 +35,7 @@ namespace PicturePerfect.Models
         public string DarkColor
         {
             get { return darkColor; }
-            set { darkColor = value; Save(); }
+            set { darkColor = value; }
         }
         /// <summary>
         /// Get or set the value for the medium theme color.
@@ -43,7 +43,7 @@ namespace PicturePerfect.Models
         public string MediumColor
         {
             get { return mediumColor; }
-            set { mediumColor = value; Save(); }
+            set { mediumColor = value;}
         }
         /// <summary>
         /// Get or set the value for the light theme color.
@@ -51,7 +51,7 @@ namespace PicturePerfect.Models
         public string LightColor
         {
             get { return lightColor; }
-            set { lightColor = value; Save(); }
+            set { lightColor = value; }
         }
         /// <summary>
         /// Get or set the value for the light font theme color.
@@ -59,7 +59,7 @@ namespace PicturePerfect.Models
         public string LightFontColor
         {
             get { return lightFontColor; }
-            set { lightFontColor = value; Save(); }
+            set { lightFontColor = value; }
         }
         /// <summary>
         /// Get or set the value for the dark contrast theme color.
@@ -67,7 +67,7 @@ namespace PicturePerfect.Models
         public string DarkContrastColor
         {
             get { return darkContrastColor; }
-            set { darkContrastColor = value; Save(); }
+            set { darkContrastColor = value; }
         }
         #endregion
 
@@ -82,7 +82,7 @@ namespace PicturePerfect.Models
         public int Favorite1Id
         {
             get { return favorite1Id; }
-            set { favorite1Id = value; Save(); }
+            set { favorite1Id = value; }
         }
         /// <summary>
         /// Get or set the image id. Set id to 0 if no favorite is selected.
@@ -90,7 +90,7 @@ namespace PicturePerfect.Models
         public int Favorite2Id
         {
             get { return favorite2Id; }
-            set { favorite2Id = value; Save(); }
+            set { favorite2Id = value;}
         }
         /// <summary>
         /// Get or set the image id. Set id to 0 if no favorite is selected.
@@ -98,7 +98,7 @@ namespace PicturePerfect.Models
         public int Favorite3Id
         {
             get { return favorite3Id; }
-            set { favorite3Id = value; Save(); }
+            set { favorite3Id = value;  }
         }
         /// <summary>
         /// Get or set the image id. Set id to 0 if no favorite is selected.
@@ -106,7 +106,7 @@ namespace PicturePerfect.Models
         public int Favorite4Id
         {
             get { return favorite4Id; }
-            set { favorite4Id = value; Save(); }
+            set { favorite4Id = value; }
         }
         #endregion
 
@@ -119,7 +119,7 @@ namespace PicturePerfect.Models
         public int BufferSize
         {
             get { return bufferSize; }
-            set { bufferSize = value; Save(); }
+            set { bufferSize = value; }
         }
         /// <summary>
         /// Get the input formats. To set use the public method SetInputFormats().
@@ -127,7 +127,7 @@ namespace PicturePerfect.Models
         public List<string> InputFormats
         {
             get { return inputFormats; }
-            private set { inputFormats = value; Save(); }
+            private set { inputFormats = value;}
         }
 
         private bool useSeparator = false;
@@ -137,7 +137,7 @@ namespace PicturePerfect.Models
         public bool UseSeparator
         {
             get { return useSeparator; }
-            set { useSeparator = value; Save(); }
+            set { useSeparator = value; }
         }
 
         private string? separator = null;
@@ -147,7 +147,7 @@ namespace PicturePerfect.Models
         public string? Separator
         {
             get { return separator; }
-            set { separator = value; Save(); }
+            set { separator = value; }
         }
         #endregion
 
@@ -223,6 +223,10 @@ namespace PicturePerfect.Models
                 Separator = file.Separator
             };
 
+            // save object to json file
+            jsonString = JsonConvert.SerializeObject(newFile);
+            File.WriteAllText(newFile.ProjectFilePath, jsonString);
+
             return newFile;
         }
 
@@ -270,7 +274,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Method to save changed made to te project file.
         /// </summary>
-        private void Save()
+        public void Save()
         {
             // save to json file
             string jsonString = JsonConvert.SerializeObject(this);
