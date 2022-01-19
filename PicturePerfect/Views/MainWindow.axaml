@@ -92,7 +92,7 @@
 			<!-- IMAGE database tab -->
 			<TabItem Name="itemTabImages" Header="Images">
 				<!-- sub grid -->
-				<Grid ColumnDefinitions="*,2*" RowDefinitions="*,auto">
+				<Grid ColumnDefinitions="*,4*" RowDefinitions="*,auto">
 					<!-- TreeView https://github.com/AvaloniaUI/Avalonia/discussions/5585 -->
 					<TreeView VerticalAlignment="Stretch" Margin="0, 10, 5, 10" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
 							  BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}">
@@ -106,9 +106,13 @@
 					<DataGrid VerticalAlignment="Stretch" Margin="0, 10, 5, 10" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1"
 							  BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}">
 						<DataGrid.Columns>
-							<DataGridTextColumn Header="Name" Width="2*"/>
+							<DataGridTextColumn Header="Name" Width="*"/>
 							<DataGridTextColumn Header="Size" Width="*"/>
-							<DataGridTextColumn Header="Creation date" Width="*"/>
+							<DataGridTextColumn Header="File type" Width="*"/>
+							<DataGridTextColumn Header="Date taken" Width="*"/>
+							<DataGridTextColumn Header="Category" Width="*"/>
+							<DataGridTextColumn Header="Sub category #1" Width="*"/>
+							<DataGridTextColumn Header="Sub category #2" Width="*"/>
 							<DataGridTextColumn Header="Camera" Width="*"/>
 						</DataGrid.Columns>
 					</DataGrid>

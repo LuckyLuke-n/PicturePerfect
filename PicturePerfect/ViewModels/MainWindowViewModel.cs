@@ -51,7 +51,8 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Page "Images" Properties
-        public int SelectedImage { get; set; } = 5;
+        public int ImageId { get; set; } = 1999;
+        public ImageFile ImageFile { get; set; }
         #endregion
 
         #region Settings
@@ -178,28 +179,28 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunShowImageCommand()
         {
-            ShowImage(SelectedImage);
+            ShowImage(ImageId);
         }
 
         private async void RunShowFavorite1Command()
         {
             // set the inherited static property to make the id available to the other view models
-            ShowImage(SelectedImage);
+            ShowImage(ImageId);
         }
 
         private void RunShowFavorite2Command()
         {
-            ShowImage(SelectedImage);
+            ShowImage(ImageId);
         }
 
         private void RunShowFavorite3Command()
         {
-            ShowImage(SelectedImage);
+            ShowImage(ImageId);
         }
 
         private void RunShowFavorite4Command()
         {
-            ShowImage(SelectedImage);
+            ShowImage(SelectedImageId);
         }
 
         private void RunUseSeparatorCommand()
@@ -213,7 +214,9 @@ namespace PicturePerfect.ViewModels
         /// <param name="id"></param>
         private void ShowImage(int id)
         {
+            // set the properties in the view model base
             SelectedImageId = id;
+            //SelectedImageFile = new ImageFile();
             new ImageViewWindow().Show();
         }
 

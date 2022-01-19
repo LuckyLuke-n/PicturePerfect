@@ -25,28 +25,34 @@ namespace PicturePerfect.ViewModels
 
         #region Visibilty of gui elements
         private bool isVisibleAddLocation = false;
-        private bool isVisibleAddCategory = false;
-        private bool isVisibleAddSubCategory1 = false;
-        private bool isVisibleAddSubCategory2 = false;
         public bool IsVisibleAddLocation
         {
             get { return isVisibleAddLocation; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddLocation, value); }
         }
+        private bool isVisibleAddCategory = false;
         public bool IsVisibleAddCategory
         {
             get { return isVisibleAddCategory; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddCategory, value); }
         }
+        private bool isVisibleAddSubCategory1 = false;
         public bool IsVisibleAddSubCategory1
         {
             get { return isVisibleAddSubCategory1; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory1, value); }
         }
+        private bool isVisibleAddSubCategory2 = false;
         public bool IsVisibleAddSubCategory2
         {
             get { return isVisibleAddSubCategory2; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory2, value); }
+        }
+        private bool moreInfoVisible = false;
+        public bool MoreInfoVisible
+        {
+            get { return moreInfoVisible; }
+            set { this.RaiseAndSetIfChanged(ref moreInfoVisible, value); }
         }
         #endregion
 
@@ -55,6 +61,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> ToggleVisibilityCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategory1Command { get; }
         public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategory2Command { get; }
+        public ReactiveCommand<Unit, Unit> ToggleVisibilityMoreInfoCommand { get; }
 
         public ReactiveCommand<Unit, Unit> SaveLocationCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveCategoryCommand { get; }
@@ -73,6 +80,16 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref imageId, value); }
         }
 
+        private ImageFile imageFile;
+        /// <summary>
+        /// Get or set the image file for the image to currently be viewed.
+        /// </summary>
+        public ImageFile ImageFile
+        {
+            get { return imageFile; }
+            set { this.RaiseAndSetIfChanged(ref this.imageFile, value); }
+        }
+
         /// <summary>
         /// Created a new instance of the image view view model.
         /// </summary>
@@ -81,11 +98,13 @@ namespace PicturePerfect.ViewModels
         {
             // inherited from base view model
             ImageId = SelectedImageId;
+            ImageFile = SelectedImageFile;
 
             ToggleVisibilityLocationCommand = ReactiveCommand.Create(RunToggleVisibilityLocationCommand);
             ToggleVisibilityCategoryCommand = ReactiveCommand.Create(RunToggleVisibilityCategoryCommand);
             ToggleVisibilitySubCategory1Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory1Command);
             ToggleVisibilitySubCategory2Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory2Command);
+            ToggleVisibilityMoreInfoCommand = ReactiveCommand.Create(RunToggleVisibilityMoreInfoCommand);
 
             SaveLocationCommand = ReactiveCommand.Create(RunSaveLocationCommand);
             SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
@@ -123,6 +142,14 @@ namespace PicturePerfect.ViewModels
         private void RunToggleVisibilitySubCategory2Command()
         {
             IsVisibleAddSubCategory2 = !IsVisibleAddSubCategory2;
+        }
+
+        /// <summary>
+        /// Command to toggle the visibility of the more info section.
+        /// </summary>
+        private void RunToggleVisibilityMoreInfoCommand()
+        {
+            MoreInfoVisible = !MoreInfoVisible;
         }
 
         /// <summary>
