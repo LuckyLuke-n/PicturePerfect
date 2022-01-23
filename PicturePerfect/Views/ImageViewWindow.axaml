@@ -109,7 +109,7 @@
 
 			<!-- More info -->
 			<Label Grid.Column="0" Grid.Row="12" Margin="0,0,0,10" Content="More" IsVisible="{Binding MoreInfoVisible}"/>
-			<TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="12" Margin="10,0,0,10" Height="200"
+			<TextBox Text="{Binding MoreInfo}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="12" Margin="10,0,0,10" Height="200"
 					 ToolTip.Tip="This cannot be edited." IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
 					 Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}"/>
 

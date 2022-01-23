@@ -80,6 +80,16 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref imageId, value); }
         }
 
+        private string moreInfo = "";
+        /// <summary>
+        /// Get or set the more information section in the image view window. 
+        /// </summary>
+        public string MoreInfo
+        {
+            get => GetMoreInfo();
+            set { this.RaiseAndSetIfChanged(ref moreInfo, value); }
+        }
+
         private ImageFile imageFile;
         /// <summary>
         /// Get or set the image file for the image to currently be viewed.
@@ -182,6 +192,32 @@ namespace PicturePerfect.ViewModels
         private void RunSaveSubCategory2Command()
         {
             RunToggleVisibilitySubCategory2Command();
+        }
+
+
+
+
+        private string GetMoreInfo()
+        {
+            string moreInfo = string.Empty;
+
+            if (ImageFile != null)
+            {
+                // get and concatenate from file properties
+                moreInfo = "";
+            }
+            else
+            {
+                moreInfo = "Camera maker: " + Environment.NewLine +
+                    "ISO: " + Environment.NewLine +
+                    "F-stop: " + Environment.NewLine +
+                    "Exposure time: " + Environment.NewLine +
+                    "Exposure bias: " + Environment.NewLine + 
+                    "Focal length: ";
+            }
+
+
+            return moreInfo;
         }
     }
 }
