@@ -27,7 +27,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the file size of this image.
         /// </summary>
-        public string Size { get; set; }
+        public double Size { get; set; }
         /// <summary>
         /// Get or set the camera manufacturer and model.
         /// </summary>
@@ -38,20 +38,21 @@ namespace PicturePerfect.Models
         public int ISO { get; set; }
         /// <summary>
         /// Get or set the F-stop value for this image.
+        /// It should be displayed as f/[value]
         /// </summary>
-        public string FStop { get; set; }
+        public double FStop { get; set; }
         /// <summary>
-        /// Get or set the exposure time in 1/xxx sec.
+        /// Get or set the exposure time in milli-sec.
         /// </summary>
-        public string ExposureTime { get; set; }
+        public double ExposureTime { get; set; }
         /// <summary>
         /// Get or set the exposure bias in steps for this image.
         /// </summary>
-        public string ExposureBias { get; set; }
+        public double ExposureBias { get; set; }
         /// <summary>
         /// Get or set the focal length in mm for this image.
         /// </summary>
-        public int FocalLength { get; set; }
+        public double FocalLength { get; set; }
 
         /// <summary>
         /// Get or set the loacation where this image was taken.
