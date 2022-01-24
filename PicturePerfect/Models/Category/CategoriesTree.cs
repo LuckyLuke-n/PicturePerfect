@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get a list of categories.
         /// </summary>
-        public List<Category> Tree { get; private set; } = new() { new Category() { Name = "All" } };
+        public ObservableCollection<Category> Tree { get; private set; } = new() { new Category() { Name = "All" }, new Category() { Name = "None" } };
 
         /// <summary>
         /// Creates a new instance of the categories tree class.

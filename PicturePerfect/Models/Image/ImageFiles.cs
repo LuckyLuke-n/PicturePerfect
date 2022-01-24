@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get the list of currently loaded image files.
         /// </summary>
-        public List<ImageFiles> ImageList { get; private set; } = new();
+        public ObservableCollection<ImageFiles> List { get; private set; } = new();
 
         /// <summary>
         /// Creates a new instance of the images files class.
@@ -54,17 +55,9 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Load image files from a folder
+        /// Load image files from a folder and store them to the database.
         /// </summary>
         public void ReadFromFolder()
-        {
-
-        }
-
-        /// <summary>
-        /// Store newly loaded images to the database.
-        /// </summary>
-        public void StoreToDatabase()
         {
 
         }

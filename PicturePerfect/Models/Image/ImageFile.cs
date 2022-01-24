@@ -88,6 +88,22 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Create a sqlite entry for this image.
+        /// </summary>
+        public void CreateDatabaseEntry()
+        {
+
+        }
+
+        /// <summary>
+        /// Save changed properties to the database.
+        /// </summary>
+        public void CommitChanges()
+        {
+
+        }
+
+        /// <summary>
         /// Method to convert a raw file image to jpg-format.
         /// </summary>
         /// <param name="outputType"></param>

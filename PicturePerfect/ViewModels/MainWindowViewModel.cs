@@ -53,6 +53,7 @@ namespace PicturePerfect.ViewModels
         #region Page "Images" Properties
         public int ImageId { get; set; } = 1999;
         public ImageFile ImageFile { get; set; }
+        public ImageFiles ImageFiles { get; set; }
         public CategoriesTree CategoriesTree { get; private set; } = new();
         #endregion
 
