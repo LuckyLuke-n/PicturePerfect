@@ -9,7 +9,7 @@ namespace PicturePerfect.Models
     /// <summary>
     /// Supported non-raw image types.
     /// </summary>
-    enum ImageTypes
+    public enum ImageTypes
     {
         jpg,
         png,
