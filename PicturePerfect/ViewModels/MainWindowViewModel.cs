@@ -53,6 +53,7 @@ namespace PicturePerfect.ViewModels
         #region Page "Images" Properties
         public int ImageId { get; set; } = 1999;
         public ImageFile ImageFile { get; set; }
+        public CategoriesTree CategoriesTree { get; private set; } = new();
         #endregion
 
         #region Settings
@@ -243,6 +244,9 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
+
+                // create new database
+                Database.NewDatabase();
             }
             else
             {

@@ -13,13 +13,34 @@ namespace PicturePerfect.Models
     internal class ProjectFile
     {
         #region General
+        /// <summary>
+        /// Get the project name.
+        /// </summary>
         public string ProjectName { get; set; } = string.Empty;
+        /// <summary>
+        /// Get the name of the project owner.
+        /// </summary>
         public string ProjectOwner { get; private set; } = string.Empty;
         public DateTime CreationDate { get; private set; } = DateTime.Now;
+        /// <summary>
+        /// Get the notes for this project.
+        /// </summary>
         public string Notes { get; private set; } = string.Empty;
+        /// <summary>
+        /// Get the absolute path to the project file.
+        /// </summary>
         public string ProjectFilePath { get; private set; } = string.Empty;
+        /// <summary>
+        /// Get the absolute path to the image folder.
+        /// </summary>
         public string ImageFolder { get; private set; } = string.Empty;
+        /// <summary>
+        /// Get the absolute path to the database sqlite file.
+        /// </summary>
         public string DatabasePath { get; private set; } = string.Empty;
+        /// <summary>
+        /// Get the release number of the application this project file was last edited with.
+        /// </summary>
         private string Release { get; set; } = string.Empty;
         #endregion
 
