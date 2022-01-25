@@ -111,6 +111,16 @@ namespace PicturePerfect.ViewModels
                 LoadedCategoriesTree = value;
             }
         }
+
+        private bool hideImagesDialog = false;
+        /// <summary>
+        /// Get or set the property to hide or show the select images section.
+        /// </summary>
+        public bool HideImagesDialog
+        {
+            get { return hideImagesDialog; }
+            set { this.RaiseAndSetIfChanged(ref hideImagesDialog, value); }
+        }
         #endregion
 
         #region Settings
@@ -188,7 +198,7 @@ namespace PicturePerfect.ViewModels
         #region Input for paths from axaml.cs file
         private string pathToProjectFile = "Select a project file";
         /// <summary>
-        /// Get and set the path to the project file or set the path which will trigger the LoadProject() method.
+        /// Get and set the path to the project file or set the path.
         /// </summary>
         public string PathToProjectFile
         {
@@ -197,12 +207,21 @@ namespace PicturePerfect.ViewModels
         }
         private string pathToProjectFolder = "Select a folder for your project";
         /// <summary>
-        /// Get and set the path to the project folder or set the path which will trigger the NewProject() method.
+        /// Get and set the path to the project folder or set the path.
         /// </summary>
         public string PathToProjectFolder
         {
             get { return pathToProjectFolder; }
             set { this.RaiseAndSetIfChanged(ref pathToProjectFolder, value); }
+        }
+        private string pathToImageSourceFolder = "Select a source folder";
+        /// <summary>
+        /// Get and set the path to the project load images folder or set the path.
+        /// </summary>
+        public string PathToImageSourceFolder
+        {
+            get { return pathToImageSourceFolder; }
+            set { this.RaiseAndSetIfChanged(ref pathToImageSourceFolder, value); }
         }
         #endregion
 
@@ -215,6 +234,8 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> ToggleFileDialogCommand { get; }
         public ReactiveCommand<Unit, Unit> NewProjectCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadProjectCommand { get; }
+        public ReactiveCommand<Unit, Unit> ToggleLoadImagesCommand { get; }
+        public ReactiveCommand<Unit, Unit> LoadImagesCommand { get; }       
         #endregion
 
         /// <summary>
@@ -230,6 +251,8 @@ namespace PicturePerfect.ViewModels
             ToggleFileDialogCommand = ReactiveCommand.Create(RunToggleFileDialogCommand);
             NewProjectCommand = ReactiveCommand.Create(RunNewProjectCommandAsync);
             LoadProjectCommand = ReactiveCommand.Create(RunLoadProjectCommandAsync);
+            LoadImagesCommand = ReactiveCommand.Create(RunLoadImagesCommandAsync);
+            ToggleLoadImagesCommand = ReactiveCommand.Create(RunToggleLoadImagesCommand);
         }
 
         /// <summary>
@@ -330,6 +353,33 @@ namespace PicturePerfect.ViewModels
             {
                 _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
             }
+        }
+
+        /// <summary>
+        /// Method to select a folder to load images from.
+        /// </summary>
+        private async void RunLoadImagesCommandAsync()
+        {
+            if (PathToImageSourceFolder != "Select a source folder")
+            {
+                // add the files to the database
+                // code comes here
+                // hide load folder section
+                RunToggleLoadImagesCommand();
+            }
+            else
+            {
+                _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+        }
+
+        /// <summary>
+        /// Method to hide or show the load images section.
+        /// </summary>
+        private void RunToggleLoadImagesCommand()
+        {
+            HideImagesDialog = !HideImagesDialog;
+            PathToImageSourceFolder = "Select a source folder";
         }
     }
 }

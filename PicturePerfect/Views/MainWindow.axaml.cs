@@ -15,6 +15,7 @@ namespace PicturePerfect.Views
         private MainWindowViewModel viewModel = new();
         private TextBox textBoxNewProject;
         private TextBox textBoxLoadProject;
+        private TextBox textBoxLoadImages;
 
         public MainWindow()
         {
@@ -31,6 +32,7 @@ namespace PicturePerfect.Views
 
             textBoxNewProject = this.FindControl<TextBox>("textBoxNewProject");
             textBoxLoadProject = this.FindControl<TextBox>("textBoxLoadProject");
+            textBoxLoadImages = this.FindControl<TextBox>("textBoxLoadImages");
         }
 
         /// <summary>
@@ -39,7 +41,8 @@ namespace PicturePerfect.Views
         private enum DialogType
         {
             NewProject,
-            SelectProject
+            SelectProject,
+            LoadImages
         }
 
         /// <summary>
@@ -61,6 +64,17 @@ namespace PicturePerfect.Views
         {
             _ = GetPathAsync(DialogType.SelectProject);
         }
+
+        /// <summary>
+        /// Event for selecting images to load them into the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ButtonLoadImages_Click(object sender, RoutedEventArgs e)
+        {
+            _ = GetPathAsync(DialogType.LoadImages);
+        }
+
 
         /// <summary>
         /// Async method to get a path for a folder or file selection.
@@ -91,7 +105,7 @@ namespace PicturePerfect.Views
                 }
                 else { return null; }
             }
-            else // DialogType.SelectProject
+            else if (dialogType == DialogType.SelectProject)
             {
                 // file dialog to get the path to an exisiting project file
                 OpenFileDialog dialogFile = new();
@@ -104,6 +118,21 @@ namespace PicturePerfect.Views
                 {
                     textBoxLoadProject.Text = result[0].ToString();
                     return result;                  
+                }
+                else { return null; }
+            }
+            else // DialogType.LoadImages
+            {
+                // file dialog to get the path to a folder
+                OpenFolderDialog dialogFolder = new();
+                var resultFolder = await dialogFolder.ShowAsync((Window)VisualRoot);
+
+                // check for null reference
+                if (resultFolder != null)
+                {
+                    //viewModel.PathToProjectFolder = resultFolder.ToString();
+                    textBoxLoadImages.Text = resultFolder.ToString();
+                    return resultFolder.ToString();
                 }
                 else { return null; }
             }
