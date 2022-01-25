@@ -51,10 +51,66 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Page "Images" Properties
-        public int ImageId { get; set; } = 1999;
-        public ImageFile ImageFile { get; set; }
-        public ImageFiles ImageFiles { get; set; }
-        public CategoriesTree CategoriesTree { get; private set; } = new();
+        private int imageId = 1999;
+        /// <summary>
+        /// Get the image Id of the selected image. Set the id and the static property in the view model base for hand over to other windows.
+        /// </summary>
+        public int ImageId
+        {
+            get { return imageId; }
+            set
+            {
+                // this.RaiseAndSetIfChanged(ref imageId, value);
+                imageId = value;
+                // set the properties in the view model base
+                SelectedImageId = value;
+            }
+        }
+
+        private ImageFile imageFile = new();
+        /// <summary>
+        /// Get the image file object of the selected image. Set the object and the static property in the view model base for hand over to other windows.
+        /// </summary>
+        public ImageFile ImageFile
+        {
+            get { return imageFile; }
+            set
+            {
+                imageFile = value;
+                // set the properties in the view model base
+                SelectedImageFile = value;
+            }
+        }
+
+        private ImageFiles imageFiles = new();
+        /// <summary>
+        /// Get the image files object of the selected images. Set the object and the static property in the view model base for hand over to other windows.
+        /// </summary>
+        public ImageFiles ImageFiles
+        { 
+            get { return imageFiles; }
+            set
+            {
+                imageFiles = value;
+                // set the properties in the view model base
+                LoadedImageFiles = value;
+            }
+        }
+
+        private CategoriesTree categoriesTree = new();
+        /// <summary>
+        /// Get the categories tree object of the selected data. Set the object and the static property in the view model base for hand over to other windows.
+        /// </summary>
+        public CategoriesTree CategoriesTree
+        {
+            get { return categoriesTree; }
+            set
+            {
+                categoriesTree = value;
+                // set the properties in the view model base
+                LoadedCategoriesTree = value;
+            }
+        }
         #endregion
 
         #region Settings
@@ -184,7 +240,7 @@ namespace PicturePerfect.ViewModels
             ShowImage(ImageId);
         }
 
-        private async void RunShowFavorite1Command()
+        private void RunShowFavorite1Command()
         {
             // set the inherited static property to make the id available to the other view models
             ShowImage(ImageId);
@@ -217,7 +273,8 @@ namespace PicturePerfect.ViewModels
         private void ShowImage(int id)
         {
             // set the properties in the view model base
-            SelectedImageId = id;
+            // this is temporary to trigger the setter to change the inheritated SelectedImageId
+            ImageId = id;
             //SelectedImageFile = new ImageFile();
             new ImageViewWindow().Show();
         }
