@@ -157,8 +157,8 @@
 					<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
 						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"/>
-						<CheckBox Content=".raw" IsChecked="True"/>
-						<CheckBox Content=".orf" IsChecked="True"/>
+						<CheckBox Content=".raw (Raw file)" IsChecked="True"/>
+						<CheckBox Content=".orf (Olympus raw file)" IsChecked="True"/>
 						<CheckBox Content=".jpg" IsChecked="False"/>
 						<CheckBox Content=".png" IsChecked="False"/>
 						<CheckBox Content=".bitmap" IsChecked="False"/>

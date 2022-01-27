@@ -82,16 +82,16 @@ namespace PicturePerfect.ViewModels
             }
         }
 
-        private ImageFiles imageFiles = new();
+        private ImageFiles imageFilesDatabase = new();
         /// <summary>
-        /// Get the image files object of the selected images. Set the object and the static property in the view model base for hand over to other windows.
+        /// Get the image files object of the images in the database. Set the object and the static property in the view model base for hand over to other windows.
         /// </summary>
-        public ImageFiles ImageFiles
+        public ImageFiles ImageFilesDatabase
         { 
-            get { return imageFiles; }
+            get { return imageFilesDatabase; }
             set
             {
-                imageFiles = value;
+                imageFilesDatabase = value;
                 // set the properties in the view model base
                 LoadedImageFiles = value;
             }
@@ -360,16 +360,32 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private async void RunLoadImagesCommandAsync()
         {
-            if (PathToImageSourceFolder != "Select a source folder")
+            if (ProjectFile.IsLoaded == true)
             {
-                // add the files to the database
-                // code comes here
-                // hide load folder section
-                RunToggleLoadImagesCommand();
+                if (PathToImageSourceFolder != "Select a source folder")
+                {
+                    // count files in the folder
+                    FolderChecker folderChecker = new();
+                    int count = folderChecker.CountFiles(PathToImageSourceFolder, ThisApplication.ProjectFile.InputFormats);
+                    string message = $"{count} files will be added to your database." + Environment.NewLine + "Do you want to go on?";
+                    MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Question);
+
+                    if (result == MessageBox.MessageBoxResult.Ok)
+                    {
+                        // add the files to the database
+                        // code comes here
+                    }
+                    // hide load folder section
+                    RunToggleLoadImagesCommand();
+                }
+                else
+                {
+                    _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+                }
             }
             else
             {
-                _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
             }
         }
 

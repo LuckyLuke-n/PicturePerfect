@@ -12,6 +12,11 @@ namespace PicturePerfect.Models
 {
     internal class ProjectFile
     {
+        /// <summary>
+        /// Get the boolean indicating weather a project file is loaded.
+        /// </summary>
+        public static bool IsLoaded { get; private set; } = false;
+
         #region General
         /// <summary>
         /// Get the project name.
@@ -133,7 +138,6 @@ namespace PicturePerfect.Models
 
         #region Settings
         private int bufferSize = 5;
-        private List<string> inputFormats = new() { RawTypes.orf.ToString(), RawTypes.raw.ToString() };
         /// <summary>
         /// Get or set the buffer size for converting images while viewing.
         /// </summary>
@@ -142,13 +146,14 @@ namespace PicturePerfect.Models
             get { return bufferSize; }
             set { bufferSize = value; }
         }
+        private List<string> inputFormats = new() { RawTypes.orf.ToString(), RawTypes.raw.ToString() };
         /// <summary>
         /// Get the input formats. To set use the public method SetInputFormats().
         /// </summary>
         public List<string> InputFormats
         {
             get { return inputFormats; }
-            private set { inputFormats = value;}
+            private set { inputFormats = value; }
         }
 
         private bool useSeparator = false;
@@ -225,6 +230,8 @@ namespace PicturePerfect.Models
             string jsonString = File.ReadAllText(path);
             ProjectFile file = JsonConvert.DeserializeObject<ProjectFile>(jsonString);
 
+            List<string> inputList;
+
             // create new file object and carry over the information
             // this avoids compatibility issues in case the properties of this class are changed
             // update project file
@@ -239,14 +246,18 @@ namespace PicturePerfect.Models
                 ImageFolder = Path.Combine(new FileInfo(path).DirectoryName, "images"),
                 DatabasePath = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "database.sqlite"),
                 // settings
-                InputFormats = file.InputFormats,
+                InputFormats = file.InputFormats.Distinct().ToList(), // fix for duplicating bug. this is no good solution
                 BufferSize = file.BufferSize,
                 Separator = file.Separator
             };
+            //newFile.InputFormats = null;
+            //newFile.InputFormats = file.InputFormats;
 
             // save object to json file
             jsonString = JsonConvert.SerializeObject(newFile);
             File.WriteAllText(newFile.ProjectFilePath, jsonString);
+
+            IsLoaded = true;
 
             return newFile;
         }
@@ -290,6 +301,8 @@ namespace PicturePerfect.Models
 
             // set property
             InputFormats = fileTypes;
+
+            Save();
         }
 
         /// <summary>

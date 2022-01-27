@@ -34,7 +34,5 @@ namespace PicturePerfect
         /// Get or set the currently loaded project file.
         /// </summary>
         public static ProjectFile ProjectFile { get; set; } = ProjectFile.AtStartup();
-
-
     }
 }
