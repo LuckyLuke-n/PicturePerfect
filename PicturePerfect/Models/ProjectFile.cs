@@ -12,11 +12,6 @@ namespace PicturePerfect.Models
 {
     internal class ProjectFile
     {
-        /// <summary>
-        /// Get the boolean indicating weather a project file is loaded.
-        /// </summary>
-        public static bool IsLoaded { get; private set; } = false;
-
         #region General
         /// <summary>
         /// Get the project name.
@@ -250,14 +245,10 @@ namespace PicturePerfect.Models
                 BufferSize = file.BufferSize,
                 Separator = file.Separator
             };
-            //newFile.InputFormats = null;
-            //newFile.InputFormats = file.InputFormats;
 
             // save object to json file
             jsonString = JsonConvert.SerializeObject(newFile);
             File.WriteAllText(newFile.ProjectFilePath, jsonString);
-
-            IsLoaded = true;
 
             return newFile;
         }

@@ -159,6 +159,41 @@ namespace PicturePerfect.ViewModels
             get { return useSeparator; }
             set { this.RaiseAndSetIfChanged(ref useSeparator, value); ThisApplication.ProjectFile.UseSeparator = value; ThisApplication.ProjectFile.Save(); }
         }
+
+        private bool rawFilesChecked = false;
+        public bool RawFilesChecked
+        {
+            get { return rawFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref rawFilesChecked, value); }
+        }
+
+        private bool orfFilesChecked = false;
+        public bool OrfFilesChecked
+        {
+            get { return orfFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref orfFilesChecked, value); }
+        }
+
+        private bool jpgFilesChecked = false;
+        public bool JpgFilesChecked
+        {
+            get { return jpgFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref jpgFilesChecked, value);  }
+        }
+
+        private bool pngFilesChecked = false;
+        public bool PngFilesChecked
+        {
+            get { return pngFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref pngFilesChecked, value); }
+        }
+
+        private bool bitmapFilesChecked = false;
+        public bool BitmapFilesChecked
+        {
+            get { return bitmapFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref bitmapFilesChecked, value); }
+        }
         #endregion
 
         #region Status Bar
@@ -256,6 +291,24 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
+        /// Method to  set the input file formats in the ppp file.
+        /// </summary>
+        private void SetInputFileFormats()
+        {
+            List<RawTypes> rawTypes = new();
+            List<ImageTypes> imageTypes = new();
+
+            if (RawFilesChecked == true) { rawTypes.Add(RawTypes.raw); }
+            if (OrfFilesChecked == true) { rawTypes.Add(RawTypes.orf); }
+            if (JpgFilesChecked == true) { imageTypes.Add(ImageTypes.jpg); }
+            if (PngFilesChecked == true) { imageTypes.Add(ImageTypes.png); }
+            if (BitmapFilesChecked == true) { imageTypes.Add(ImageTypes.bitmap); }
+
+            if (imageTypes.Count == 0) { ThisApplication.ProjectFile.SetInputFormats(rawTypes); }
+            else { ThisApplication.ProjectFile.SetInputFormats(rawTypes, imageTypes); }
+        }
+
+        /// <summary>
         /// Method to open a new instance of the image view window.
         /// </summary>
         private void RunShowImageCommand()
@@ -348,6 +401,12 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
+
+                if (ThisApplication.ProjectFile.InputFormats.Contains(RawTypes.raw.ToString()) == true) { RawFilesChecked = true; }
+                if (ThisApplication.ProjectFile.InputFormats.Contains(RawTypes.orf.ToString()) == true) { OrfFilesChecked = true; }
+                if (ThisApplication.ProjectFile.InputFormats.Contains(ImageTypes.jpg.ToString()) == true) { JpgFilesChecked = true; }
+                if (ThisApplication.ProjectFile.InputFormats.Contains(ImageTypes.png.ToString()) == true) { PngFilesChecked = true; }
+                if (ThisApplication.ProjectFile.InputFormats.Contains(ImageTypes.bitmap.ToString()) == true) { BitmapFilesChecked = true; }
             }
             else
             {
@@ -360,7 +419,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private async void RunLoadImagesCommandAsync()
         {
-            if (ProjectFile.IsLoaded == true)
+            if (ProjectIsLoaded == true)
             {
                 if (PathToImageSourceFolder != "Select a source folder")
                 {
