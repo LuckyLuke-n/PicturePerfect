@@ -135,64 +135,79 @@ namespace PicturePerfect.ViewModels
         public int BufferSize
         {
             get { return bufferSize; }
-            set { this.RaiseAndSetIfChanged(ref bufferSize, value); ThisApplication.ProjectFile.BufferSize = value; ThisApplication.ProjectFile.Save(); }
+            set { this.RaiseAndSetIfChanged(ref bufferSize, value); ThisApplication.ProjectFile.BufferSize = value; }
         }
         /// <summary>
         /// Get a list of possible separators. This value will be saved to the project file.
         /// </summary>
         public List<string> Separators { get; } = new() { "_", "-", "+", ".", ",", "Space"};
-        private string? separator = ThisApplication.ProjectFile.Separator;
+        private string? separator = null;
         /// <summary>
         /// Get or set the separator character for folder naming. This value will be saved to the project file.
         /// </summary> 
         public string Separator
         {
             get { return separator; }
-            set { this.RaiseAndSetIfChanged(ref separator, value); ThisApplication.ProjectFile.Separator = value; ThisApplication.ProjectFile.Save(); }
+            set { this.RaiseAndSetIfChanged(ref separator, value); ThisApplication.ProjectFile.Separator = value; }
         }
-        private bool useSeparator = ThisApplication.ProjectFile.UseSeparator;
+        private bool useSeparator = false;
         /// <summary>
         /// Get or set the value if separtor suffix folder naming should be used. This value will be saved to the project file.
         /// </summary>
         public bool UseSeparator
         {
             get { return useSeparator; }
-            set { this.RaiseAndSetIfChanged(ref useSeparator, value); ThisApplication.ProjectFile.UseSeparator = value; ThisApplication.ProjectFile.Save(); }
+            set { this.RaiseAndSetIfChanged(ref useSeparator, value); ThisApplication.ProjectFile.UseSeparator = value; }
         }
 
         private bool rawFilesChecked = false;
+        /// <summary>
+        /// Get or set the property for using raw files as input.
+        /// </summary>
         public bool RawFilesChecked
         {
             get { return rawFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref rawFilesChecked, value); }
+            set { this.RaiseAndSetIfChanged(ref rawFilesChecked, value); ThisApplication.ProjectFile.RawFilesChecked = value; }
         }
 
         private bool orfFilesChecked = false;
+        /// <summary>
+        /// Get or set the property for using orf files as input.
+        /// </summary>
         public bool OrfFilesChecked
         {
             get { return orfFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref orfFilesChecked, value); }
+            set { this.RaiseAndSetIfChanged(ref orfFilesChecked, value); ThisApplication.ProjectFile.OrfFilesChecked = value; }
         }
 
         private bool jpgFilesChecked = false;
+        /// <summary>
+        /// Get or set the property for using jpg files as input.
+        /// </summary>
         public bool JpgFilesChecked
         {
             get { return jpgFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref jpgFilesChecked, value);  }
+            set { this.RaiseAndSetIfChanged(ref jpgFilesChecked, value); ThisApplication.ProjectFile.JpgFilesChecked = value; }
         }
 
         private bool pngFilesChecked = false;
+        /// <summary>
+        /// Get or set the property for using png files as input.
+        /// </summary>
         public bool PngFilesChecked
         {
             get { return pngFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref pngFilesChecked, value); }
+            set { this.RaiseAndSetIfChanged(ref pngFilesChecked, value); ThisApplication.ProjectFile.PngFilesChecked = value; }
         }
 
         private bool bitmapFilesChecked = false;
+        /// <summary>
+        /// Get or set the property for using bitmap files as input.
+        /// </summary>
         public bool BitmapFilesChecked
         {
             get { return bitmapFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref bitmapFilesChecked, value); }
+            set { this.RaiseAndSetIfChanged(ref bitmapFilesChecked, value); ThisApplication.ProjectFile.BitmapFilesChecked = value; }
         }
         #endregion
 
@@ -291,21 +306,18 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to  set the input file formats in the ppp file.
+        /// Method to set the control properties for the settings page.
         /// </summary>
-        private void SetInputFileFormats()
+        private void SetSettingsPage()
         {
-            List<RawTypes> rawTypes = new();
-            List<ImageTypes> imageTypes = new();
-
-            if (RawFilesChecked == true) { rawTypes.Add(RawTypes.raw); }
-            if (OrfFilesChecked == true) { rawTypes.Add(RawTypes.orf); }
-            if (JpgFilesChecked == true) { imageTypes.Add(ImageTypes.jpg); }
-            if (PngFilesChecked == true) { imageTypes.Add(ImageTypes.png); }
-            if (BitmapFilesChecked == true) { imageTypes.Add(ImageTypes.bitmap); }
-
-            if (imageTypes.Count == 0) { ThisApplication.ProjectFile.SetInputFormats(rawTypes); }
-            else { ThisApplication.ProjectFile.SetInputFormats(rawTypes, imageTypes); }
+            RawFilesChecked = ThisApplication.ProjectFile.RawFilesChecked;
+            OrfFilesChecked = ThisApplication.ProjectFile.OrfFilesChecked;
+            JpgFilesChecked = ThisApplication.ProjectFile.JpgFilesChecked;
+            PngFilesChecked = ThisApplication.ProjectFile.PngFilesChecked;
+            BitmapFilesChecked = ThisApplication.ProjectFile.BitmapFilesChecked;
+            BufferSize = ThisApplication.ProjectFile.BufferSize;
+            UseSeparator = ThisApplication.ProjectFile.UseSeparator;
+            if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
         }
 
         /// <summary>
@@ -378,6 +390,7 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
+                SetSettingsPage();
 
                 // create new database
                 Database.NewDatabase();
@@ -401,12 +414,7 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
-
-                if (ThisApplication.ProjectFile.InputFormats.Contains(RawTypes.raw.ToString()) == true) { RawFilesChecked = true; }
-                if (ThisApplication.ProjectFile.InputFormats.Contains(RawTypes.orf.ToString()) == true) { OrfFilesChecked = true; }
-                if (ThisApplication.ProjectFile.InputFormats.Contains(ImageTypes.jpg.ToString()) == true) { JpgFilesChecked = true; }
-                if (ThisApplication.ProjectFile.InputFormats.Contains(ImageTypes.png.ToString()) == true) { PngFilesChecked = true; }
-                if (ThisApplication.ProjectFile.InputFormats.Contains(ImageTypes.bitmap.ToString()) == true) { BitmapFilesChecked = true; }
+                SetSettingsPage();
             }
             else
             {
@@ -425,7 +433,7 @@ namespace PicturePerfect.ViewModels
                 {
                     // count files in the folder
                     FolderChecker folderChecker = new();
-                    int count = folderChecker.CountFiles(PathToImageSourceFolder, ThisApplication.ProjectFile.InputFormats);
+                    int count = folderChecker.CountFiles(PathToImageSourceFolder, ThisApplication.ProjectFile.GetInputFileTypes());
                     string message = $"{count} files will be added to your database." + Environment.NewLine + "Do you want to go on?";
                     MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Question);
 

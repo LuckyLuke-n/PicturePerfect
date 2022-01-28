@@ -139,16 +139,7 @@ namespace PicturePerfect.Models
         public int BufferSize
         {
             get { return bufferSize; }
-            set { bufferSize = value; }
-        }
-        private List<string> inputFormats = new() { RawTypes.orf.ToString(), RawTypes.raw.ToString() };
-        /// <summary>
-        /// Get the input formats. To set use the public method SetInputFormats().
-        /// </summary>
-        public List<string> InputFormats
-        {
-            get { return inputFormats; }
-            private set { inputFormats = value; }
+            set { bufferSize = value; Save(); }
         }
 
         private bool useSeparator = false;
@@ -158,7 +149,7 @@ namespace PicturePerfect.Models
         public bool UseSeparator
         {
             get { return useSeparator; }
-            set { useSeparator = value; }
+            set { useSeparator = value; Save(); }
         }
 
         private string? separator = null;
@@ -168,7 +159,53 @@ namespace PicturePerfect.Models
         public string? Separator
         {
             get { return separator; }
-            set { separator = value; }
+            set { separator = value; Save(); }
+        }
+
+        private bool rawFilesChecked = false;
+        /// <summary>
+        /// Get or set the raw files property. The change will be saved to the project file.
+        /// </summary>
+        public bool RawFilesChecked
+        {
+            get { return rawFilesChecked; }
+            set { rawFilesChecked = value; Save(); }
+        }
+        private bool orfFilesChecked = false;
+        /// <summary>
+        /// Get or set the orf files property. The change will be saved to the project file.
+        /// </summary>
+        public bool OrfFilesChecked
+        {
+            get { return orfFilesChecked; }
+            set { orfFilesChecked = value; Save(); }
+        }
+        private bool jpgFilesChecked = false;
+        /// <summary>
+        /// Get or set the jpg files property. The change will be saved to the project file.
+        /// </summary>
+        public bool JpgFilesChecked
+        {
+            get { return jpgFilesChecked; }
+            set { jpgFilesChecked = value; Save(); }
+        }
+        private bool pngFilesChecked = false;
+        /// <summary>
+        /// Get or set the png files property. The change will be saved to the project file.
+        /// </summary>
+        public bool PngFilesChecked
+        {
+            get { return pngFilesChecked; }
+            set { pngFilesChecked = value; Save(); }
+        }
+        private bool bitmapFilesChecked = false;
+        /// <summary>
+        /// Get or bitmap the raw files property. The change will be saved to the project file.
+        /// </summary>
+        public bool BitmapFilesChecked
+        {
+            get { return bitmapFilesChecked; }
+            set { bitmapFilesChecked = value; Save(); }
         }
         #endregion
 
@@ -200,7 +237,9 @@ namespace PicturePerfect.Models
                 ProjectOwner = Environment.UserName,
                 CreationDate = DateTime.Now,
                 ImageFolder = Path.Combine(path, "images"),
-                DatabasePath = Path.Combine(path, "sqlite", "database.sqlite")
+                DatabasePath = Path.Combine(path, "sqlite", "database.sqlite"),
+                OrfFilesChecked = true,
+                RawFilesChecked = true
             };
 
             // create basic folders
@@ -208,14 +247,15 @@ namespace PicturePerfect.Models
             Directory.CreateDirectory(file.ImageFolder);
 
             // save object to json file
-            string jsonString = JsonConvert.SerializeObject(file);
+            Dictionary<string, string?> dictionary = file.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(file)?.ToString());
+            string jsonString = JsonConvert.SerializeObject(dictionary);
             File.WriteAllText(file.ProjectFilePath, jsonString);
 
             return file;
         }
 
         /// <summary>
-        /// Method to load the project file.
+        /// Method to load the project file. The file will be resaved as a dictionary.
         /// </summary>
         /// <param name="path"></param>
         /// <returns>Returns the project file object.</returns>
@@ -223,9 +263,8 @@ namespace PicturePerfect.Models
         {
             // load current file
             string jsonString = File.ReadAllText(path);
-            ProjectFile file = JsonConvert.DeserializeObject<ProjectFile>(jsonString);
-
-            List<string> inputList;
+            //ProjectFile file = JsonConvert.DeserializeObject<ProjectFile>(jsonString);
+            Dictionary<string, string?> projectFile = JsonConvert.DeserializeObject<Dictionary<string, string?>>(jsonString);
 
             // create new file object and carry over the information
             // this avoids compatibility issues in case the properties of this class are changed
@@ -233,21 +272,27 @@ namespace PicturePerfect.Models
             ProjectFile newFile = new()
             {
                 Release = ThisApplication.ApplicationVersion,
-                ProjectName = file.ProjectName,
-                ProjectFilePath = path,
-                ProjectOwner = file.ProjectOwner,
-                CreationDate = file.CreationDate,
-                Notes = file.Notes,
+                ProjectName = projectFile["ProjectName"],
+                ProjectFilePath = projectFile["ProjectFilePath"],
+                ProjectOwner = projectFile["ProjectOwner"],
+                CreationDate = DateTime.Parse(projectFile["CreationDate"]),
+                Notes = projectFile["Notes"],
                 ImageFolder = Path.Combine(new FileInfo(path).DirectoryName, "images"),
                 DatabasePath = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "database.sqlite"),
                 // settings
-                InputFormats = file.InputFormats.Distinct().ToList(), // fix for duplicating bug. this is no good solution
-                BufferSize = file.BufferSize,
-                Separator = file.Separator
+                RawFilesChecked = bool.Parse(projectFile["RawFilesChecked"]),
+                OrfFilesChecked = bool.Parse(projectFile["OrfFilesChecked"]),
+                JpgFilesChecked = bool.Parse(projectFile["JpgFilesChecked"]),
+                PngFilesChecked = bool.Parse(projectFile["PngFilesChecked"]),
+                BitmapFilesChecked = bool.Parse(projectFile["BitmapFilesChecked"]),
+                BufferSize = Convert.ToInt32(projectFile["BufferSize"]),
+                UseSeparator = bool.Parse(projectFile["UseSeparator"]),
+                Separator = projectFile["Separator"]
             };
 
             // save object to json file
-            jsonString = JsonConvert.SerializeObject(newFile);
+            Dictionary<string, string?> dictionary = newFile.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(newFile)?.ToString());
+            jsonString = JsonConvert.SerializeObject(dictionary);
             File.WriteAllText(newFile.ProjectFilePath, jsonString);
 
             return newFile;
@@ -273,6 +318,7 @@ namespace PicturePerfect.Models
         /// <param name="otherInputs"></param>
         public void SetInputFormats(List<RawTypes> rawInputs, List<ImageTypes>? otherInputs = null)
         {
+            /*
             List<string>  fileTypes = new List<string>();
             
             // insert raw types in list
@@ -294,6 +340,25 @@ namespace PicturePerfect.Models
             InputFormats = fileTypes;
 
             Save();
+            */
+        }
+
+        /// <summary>
+        /// Method to generate a list of currently selected input file types.
+        /// </summary>
+        /// <returns>Returns a list of string indicating the file formats.</returns>
+        public List<string> GetInputFileTypes()
+        {
+            List<string> inputList = new();
+
+            // add file types to list
+            if (RawFilesChecked == true) { inputList.Add(RawTypes.raw.ToString()); }
+            if (OrfFilesChecked == true) { inputList.Add(RawTypes.orf.ToString()); }
+            if (JpgFilesChecked == true) { inputList.Add(ImageTypes.jpg.ToString()); }
+            if (PngFilesChecked == true) { inputList.Add(ImageTypes.png.ToString()); }
+            if (BitmapFilesChecked == true) { inputList.Add(ImageTypes.bitmap.ToString()); }
+
+            return inputList;
         }
 
         /// <summary>
@@ -301,8 +366,9 @@ namespace PicturePerfect.Models
         /// </summary>
         public void Save()
         {
-            // save to json file
-            string jsonString = JsonConvert.SerializeObject(this);
+            // save object to json file
+            Dictionary<string, string?> dictionary = GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(this)?.ToString());
+            string jsonString = JsonConvert.SerializeObject(dictionary);
             File.WriteAllText(ProjectFilePath, jsonString);
         }
     }
