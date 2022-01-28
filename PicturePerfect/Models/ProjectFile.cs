@@ -22,10 +22,17 @@ namespace PicturePerfect.Models
         /// </summary>
         public string ProjectOwner { get; private set; } = string.Empty;
         public DateTime CreationDate { get; private set; } = DateTime.Now;
+
+        private string notes = string.Empty;
         /// <summary>
-        /// Get the notes for this project.
+        /// Get or set the notes for this project. The change will be saved to the project file.
         /// </summary>
-        public string Notes { get; private set; } = string.Empty;
+        public string Notes
+        {
+            get { return notes; }
+            set { notes = value; Save(); }
+        }
+
         /// <summary>
         /// Get the absolute path to the project file.
         /// </summary>

@@ -41,12 +41,12 @@ namespace PicturePerfect.ViewModels
         public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
         private static string notes = string.Empty;
         /// <summary>
-        /// Get the notes to be displayed in the home tab.
+        /// Get the notes to be displayed in the home tab. When the setter is used, the notes will be saved to the project file when a project is loaded.
         /// </summary>
         public string Notes
         {
             get { return notes; }
-            private set { this.RaiseAndSetIfChanged(ref notes, value); }
+            set { this.RaiseAndSetIfChanged(ref notes, value); if (ProjectIsLoaded == true) { ThisApplication.ProjectFile.Notes = value; } }
         }
         #endregion
 
@@ -308,8 +308,12 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Method to set the control properties for the settings page.
         /// </summary>
-        private void SetSettingsPage()
+        private void SetMainWindowPages()
         {
+            // home page
+            Notes = ThisApplication.ProjectFile.Notes;
+
+            // settings page
             RawFilesChecked = ThisApplication.ProjectFile.RawFilesChecked;
             OrfFilesChecked = ThisApplication.ProjectFile.OrfFilesChecked;
             JpgFilesChecked = ThisApplication.ProjectFile.JpgFilesChecked;
@@ -390,7 +394,7 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
-                SetSettingsPage();
+                SetMainWindowPages();
 
                 // create new database
                 Database.NewDatabase();
@@ -414,7 +418,7 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
-                SetSettingsPage();
+                SetMainWindowPages();
             }
             else
             {
