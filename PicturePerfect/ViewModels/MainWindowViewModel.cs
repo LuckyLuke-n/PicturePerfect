@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
+using System.Linq;
 using PicturePerfect.Models;
 using PicturePerfect.Views;
 using ReactiveUI;
@@ -437,14 +438,48 @@ namespace PicturePerfect.ViewModels
                 {
                     // count files in the folder
                     FolderChecker folderChecker = new();
-                    int count = folderChecker.CountFiles(PathToImageSourceFolder, ThisApplication.ProjectFile.GetInputFileTypes());
+                    int count = folderChecker.CountFiles(PathToImageSourceFolder);
                     string message = $"{count} files will be added to your database." + Environment.NewLine + "Do you want to go on?";
                     MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Question);
 
-                    if (result == MessageBox.MessageBoxResult.Ok)
+                    // check user selection and image count
+                    if (result == MessageBox.MessageBoxResult.Ok && count > 0)
                     {
-                        // add the files to the database
-                        // code comes here
+                        List<string> filesToAdd = new();
+                        List<DateTime> creationDates = new();
+                        // check if files are of correct files tye.
+                        foreach (string path in Directory.GetFiles(PathToImageSourceFolder))
+                        {
+                            FileInfo fileInfo = new(path);
+                            // check if the file is the type of the selected input files
+                            if (ThisApplication.ProjectFile.GetInputFileTypes().Contains(fileInfo.Extension) == true)
+                            {
+                                // files is of correct file type
+                                // can be added to database
+                                filesToAdd.Add(path);
+                                ImageFile image = new();
+                                image.NewFromPath(path);
+                                creationDates.Add(image.DateTaken);
+                            }
+                        }
+
+                        // subfolder name string based on settings
+                        string name = string.Empty;
+                        string minDate = creationDates.Min(date => date).ToString("yyyy-MM-dd");
+                        string maxDate = creationDates.Max(date => date).ToString("yyyy-MM-dd");
+                        if (ThisApplication.ProjectFile.UseSeparator == true)
+                        {
+                            // get the name of the directory and split it by using the separator. Take string before first separator occurence.
+                            string prefix = new DirectoryInfo(PathToImageSourceFolder).Name.Split(ThisApplication.ProjectFile.Separator)[0];
+                            name = $"{prefix}_{minDate}_to_{maxDate}";
+                        }
+                        else
+                        {
+                            name = $"{minDate}_to_{maxDate}";
+                        }       
+                        
+                        // add files to database
+                        ImageFilesDatabase.AddImages(files: filesToAdd, subfolderName: name);
                     }
                     // hide load folder section
                     RunToggleLoadImagesCommand();

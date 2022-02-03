@@ -351,12 +351,13 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to generate a list of currently selected input file types.
+        /// Method to generate a list of currently selected input file types. The formats are of type .jpg and .JPG. Always with leading dot and upper and lower case version of the extension.
         /// </summary>
-        /// <returns>Returns a list of string indicating the file formats.</returns>
+        /// <returns>Returns a list of strings indicating the file formats.</returns>
         public List<string> GetInputFileTypes()
         {
             List<string> inputList = new();
+            List<string> inputListWithUpperCase = new();
 
             // add file types to list
             if (RawFilesChecked == true) { inputList.Add(RawTypes.raw.ToString()); }
@@ -365,7 +366,9 @@ namespace PicturePerfect.Models
             if (PngFilesChecked == true) { inputList.Add(ImageTypes.png.ToString()); }
             if (BitmapFilesChecked == true) { inputList.Add(ImageTypes.bitmap.ToString()); }
 
-            return inputList;
+            inputList.ForEach(fileType => inputListWithUpperCase.AddRange(new List<string>() { $".{fileType}", $".{fileType.ToUpper()}" }));
+
+            return inputListWithUpperCase;
         }
 
         /// <summary>

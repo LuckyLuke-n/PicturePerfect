@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,10 +56,15 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Load image files from a folder and store them to the database.
+        /// Copy image files from a folder to \images\subfolder\ and store the information to the database.
         /// </summary>
-        public void ReadFromFolder()
+        /// <param name="files">List of files to be added.</param>
+        /// <param name="subfolderName">Name of the subfolder created in \images\</param>
+        public void AddImages(List<string> files, string subfolderName)
         {
+            // create subfolder in \images\
+            string newDirectory = Path.Combine(ThisApplication.ProjectFile.ImageFolder, subfolderName);
+            Directory.CreateDirectory(newDirectory);
 
         }
 

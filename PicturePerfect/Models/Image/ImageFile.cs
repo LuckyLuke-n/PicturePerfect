@@ -1,5 +1,9 @@
-﻿using System;
+﻿using ImageMagick;
+using PicturePerfect.Views;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,6 +88,42 @@ namespace PicturePerfect.Models
         /// </summary>
         public ImageFile()
         {
+
+        }
+
+        public void NewFromPath(string path)
+        {
+            //MagickImage image = new(path);
+            /*
+            foreach (IExifValue exifValue in image.GetExifProfile().Values)
+            {
+                if (exifValue.Tag == ExifTag.DateTimeOriginal)
+                {
+                    DateTaken = DateTime.Parse(exifValue.GetValue().ToString());
+                }
+            }
+
+            foreach (IIptcValue exifValue in image.GetIptcProfile().Values)
+                {
+                    if (exifValue.Tag == IptcTag.CreatedDate)
+                    {
+                        DateTaken = DateTime.Parse(exifValue.Value);
+                    }
+                }
+            */
+
+            MagickImage rawImage = new(path);
+            rawImage.Write(path, MagickFormat.Jpg);
+            Image image = new Bitmap(path);
+            PropertyItem[] properties = image.PropertyItems;
+
+            foreach (PropertyItem property in properties)
+            {
+                if (property.Id == 0x9003)
+                {
+                    DateTaken = DateTime.Parse(property.Value.ToString());
+                }
+            }
 
         }
 

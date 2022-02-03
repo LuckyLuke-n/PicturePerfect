@@ -21,9 +21,8 @@ namespace PicturePerfect.Models
         /// Method to count the images files in a given folder.
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="fileTypes"></param>
         /// <returns>Returns the number of files.</returns>
-        public int CountFiles(string path, List<string> fileTypes)
+        public int CountFiles(string path)
         {
             int counter = 0;
 
@@ -31,13 +30,13 @@ namespace PicturePerfect.Models
 
             // add the leading dot for checking with filesInfo.Extension
             // also add the extension in upper case letters
-            List<string> filesExtensions = new() { };
-            fileTypes.ForEach(fileType => filesExtensions.AddRange(new List<string>() { $".{fileType}", $".{fileType.ToUpper()}" }));
+            //List<string> filesExtensions = new() { };
+            //ThisApplication.ProjectFile.GetInputFileTypes().ForEach(fileType => filesExtensions.AddRange(new List<string>() { $".{fileType}", $".{fileType.ToUpper()}" }));
 
             foreach ( string file in files )
             {
                 FileInfo fileInfo = new(file);
-                if (filesExtensions.Contains(fileInfo.Extension) == true) { counter++; }
+                if (ThisApplication.ProjectFile.GetInputFileTypes().Contains(fileInfo.Extension) == true) { counter++; }
             }
 
             return counter;
