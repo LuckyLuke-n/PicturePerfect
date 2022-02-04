@@ -13,7 +13,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get the list of currently loaded image files.
         /// </summary>
-        public ObservableCollection<ImageFiles> List { get; private set; } = new();
+        public ObservableCollection<ImageFile> List { get; private set; } = new();
 
         /// <summary>
         /// Creates a new instance of the images files class.
@@ -65,6 +65,16 @@ namespace PicturePerfect.Models
             // create subfolder in \images\
             string newDirectory = Path.Combine(ThisApplication.ProjectFile.ImageFolder, subfolderName);
             Directory.CreateDirectory(newDirectory);
+
+            foreach (string file in files)
+            {
+                // copy
+
+                // create image file oject
+                ImageFile image = new();
+                image.NewFromPath(file, subfolderName);
+                List.Add(image);
+            }
 
         }
 

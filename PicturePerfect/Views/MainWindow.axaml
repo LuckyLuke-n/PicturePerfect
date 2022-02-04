@@ -98,7 +98,7 @@
 						</TreeView.DataTemplates>
 					</TreeView>
 					<!-- DataGrid -->
-					<DataGrid Items="{Binding ImageFiles}"
+					<DataGrid Items="{Binding ImageFilesDatabase.List}" IsReadOnly="True"
 							VerticalAlignment="Stretch" Margin="0, 10, 5, 10" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1"
 							BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}">
 						<DataGrid.Columns>

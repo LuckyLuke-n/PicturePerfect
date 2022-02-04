@@ -457,14 +457,19 @@ namespace PicturePerfect.ViewModels
                                 // files is of correct file type
                                 // can be added to database
                                 filesToAdd.Add(path);
+                                /*
                                 ImageFile image = new();
                                 image.NewFromPath(path);
                                 creationDates.Add(image.DateTaken);
+                                */
                             }
                         }
 
                         // subfolder name string based on settings
                         string name = string.Empty;
+                        name = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss");
+
+                        /*
                         string minDate = creationDates.Min(date => date).ToString("yyyy-MM-dd");
                         string maxDate = creationDates.Max(date => date).ToString("yyyy-MM-dd");
                         if (ThisApplication.ProjectFile.UseSeparator == true)
@@ -476,8 +481,9 @@ namespace PicturePerfect.ViewModels
                         else
                         {
                             name = $"{minDate}_to_{maxDate}";
-                        }       
-                        
+                        }      
+                        */
+
                         // add files to database
                         ImageFilesDatabase.AddImages(files: filesToAdd, subfolderName: name);
                     }

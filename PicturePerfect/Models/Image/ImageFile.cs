@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,7 +92,7 @@ namespace PicturePerfect.Models
 
         }
 
-        public void NewFromPath(string path)
+        public void NewFromPath(string path, string subfolderName)
         {
             //MagickImage image = new(path);
             /*
@@ -110,7 +111,6 @@ namespace PicturePerfect.Models
                         DateTaken = DateTime.Parse(exifValue.Value);
                     }
                 }
-            */
 
             MagickImage rawImage = new(path);
             rawImage.Write(path, MagickFormat.Jpg);
@@ -124,6 +124,14 @@ namespace PicturePerfect.Models
                     DateTaken = DateTime.Parse(property.Value.ToString());
                 }
             }
+            */
+
+            FileInfo fileInfo = new(path);
+            Name = fileInfo.Name;
+            Subfolder = subfolderName;
+            FileType = fileInfo.Extension;
+            DateTaken = fileInfo.CreationTime;
+            Size = fileInfo.Length/1000000;
 
         }
 
