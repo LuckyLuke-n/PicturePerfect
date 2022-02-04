@@ -1,4 +1,6 @@
 ﻿using ImageMagick;
+using MetadataExtractor;
+using MetadataExtractor.Formats.Exif;
 using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
@@ -94,45 +96,30 @@ namespace PicturePerfect.Models
 
         public void NewFromPath(string path, string subfolderName)
         {
-            //MagickImage image = new(path);
-            /*
-            foreach (IExifValue exifValue in image.GetExifProfile().Values)
-            {
-                if (exifValue.Tag == ExifTag.DateTimeOriginal)
-                {
-                    DateTaken = DateTime.Parse(exifValue.GetValue().ToString());
-                }
-            }
-
-            foreach (IIptcValue exifValue in image.GetIptcProfile().Values)
-                {
-                    if (exifValue.Tag == IptcTag.CreatedDate)
-                    {
-                        DateTaken = DateTime.Parse(exifValue.Value);
-                    }
-                }
-
-            MagickImage rawImage = new(path);
-            rawImage.Write(path, MagickFormat.Jpg);
-            Image image = new Bitmap(path);
-            PropertyItem[] properties = image.PropertyItems;
-
-            foreach (PropertyItem property in properties)
-            {
-                if (property.Id == 0x9003)
-                {
-                    DateTaken = DateTime.Parse(property.Value.ToString());
-                }
-            }
-            */
-
             FileInfo fileInfo = new(path);
             Name = fileInfo.Name;
             Subfolder = subfolderName;
             FileType = fileInfo.Extension;
-            DateTaken = fileInfo.CreationTime;
+            //DateTaken = fileInfo.CreationTime;
             Size = fileInfo.Length/1000000;
 
+            /*
+            /// DEBUG: INSERT DIRECTORY NAMES IN NAME PROPERTY
+            // get metadata directories for this image
+            IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
+            //var subIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
+
+            List<string> types = new();
+            foreach (var dir in directories)
+            {
+                types.Add(dir.GetType().Name);
+            }
+
+            foreach (string name in types)
+            {
+                Name += $"__{name}__";
+            }
+            */
         }
 
         /// <summary>
@@ -158,10 +145,10 @@ namespace PicturePerfect.Models
         /// <returns>Returns the converted images of type jpg, png, or bitmap.</returns>
         public object Convert(ImageTypes outputType = ImageTypes.jpg)
         {
-            object convertedImage = "";
+        object convertedImage = "";
 
 
-            return convertedImage;
+        return convertedImage;
         }
 
         /// <summary>
