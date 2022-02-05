@@ -1,9 +1,11 @@
 ﻿using ImageMagick;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
+using MetadataExtractor.Formats.Exif.Makernotes;
 using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -94,32 +96,19 @@ namespace PicturePerfect.Models
 
         }
 
+        /// <summary>
+        /// Method to populate the properties with file info from a given path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="subfolderName"></param>
         public void NewFromPath(string path, string subfolderName)
         {
             FileInfo fileInfo = new(path);
             Name = fileInfo.Name;
             Subfolder = subfolderName;
             FileType = fileInfo.Extension;
-            //DateTaken = fileInfo.CreationTime;
-            Size = fileInfo.Length/1000000;
-
-            /*
-            /// DEBUG: INSERT DIRECTORY NAMES IN NAME PROPERTY
-            // get metadata directories for this image
-            IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
-            //var subIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
-
-            List<string> types = new();
-            foreach (var dir in directories)
-            {
-                types.Add(dir.GetType().Name);
-            }
-
-            foreach (string name in types)
-            {
-                Name += $"__{name}__";
-            }
-            */
+            DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
+            Size = Math.Round(fileInfo.Length/1000000.00, 3);
         }
 
         /// <summary>

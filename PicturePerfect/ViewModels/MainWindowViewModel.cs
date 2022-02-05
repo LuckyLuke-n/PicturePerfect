@@ -457,21 +457,22 @@ namespace PicturePerfect.ViewModels
                                 // files is of correct file type
                                 // can be added to database
                                 filesToAdd.Add(path);
-                                /*
-                                ImageFile image = new();
-                                image.NewFromPath(path);
-                                creationDates.Add(image.DateTaken);
-                                */
+                                
+                                // last write time is a work around since it was not possible to read the create date from exifdirectory
+                                // last write time is the creation date for un.edited files.
+                                // this list is needed for the folder naming in the next step.
+                                creationDates.Add(fileInfo.LastWriteTime);
                             }
                         }
 
                         // subfolder name string based on settings
                         string name = string.Empty;
-                        name = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss");
 
-                        /*
+                        // get min and max date
                         string minDate = creationDates.Min(date => date).ToString("yyyy-MM-dd");
                         string maxDate = creationDates.Max(date => date).ToString("yyyy-MM-dd");
+
+                        // check folder naming convention
                         if (ThisApplication.ProjectFile.UseSeparator == true)
                         {
                             // get the name of the directory and split it by using the separator. Take string before first separator occurence.
@@ -482,7 +483,6 @@ namespace PicturePerfect.ViewModels
                         {
                             name = $"{minDate}_to_{maxDate}";
                         }      
-                        */
 
                         // add files to database
                         ImageFilesDatabase.AddImages(files: filesToAdd, subfolderName: name);
