@@ -109,6 +109,9 @@ namespace PicturePerfect.Models
             FileType = fileInfo.Extension;
             DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
             Size = Math.Round(fileInfo.Length/1000000.00, 3);
+
+            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, subfolderName, Name);
+            File.Copy(path, destination, true);
         }
 
         /// <summary>
