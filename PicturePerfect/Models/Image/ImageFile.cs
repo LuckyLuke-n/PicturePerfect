@@ -53,7 +53,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the exposure time in milli-sec.
         /// </summary>
-        public double ExposureTime { get; set; }
+        public int ExposureTime { get; set; }
         /// <summary>
         /// Get or set the exposure bias in steps for this image.
         /// </summary>

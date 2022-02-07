@@ -72,7 +72,7 @@ namespace PicturePerfect.Models
         {
             SQLiteConnector connector = new();
 
-            string[] queries = {"CREATE TABLE images (id INTEGER PRIMARY KEY, name TEXT, subfolder TEXT, file_type TEXT, date_taken TEXT, size REAL, camera TEXT, iso REAL, fstop REAL, exposure_time REAL, exposure_bias REAL, focal_length REAL, notes TEXT)",
+            string[] queries = {"CREATE TABLE images (id INTEGER PRIMARY KEY, name TEXT, subfolder TEXT, file_type TEXT, date_taken TEXT, size REAL, camera TEXT, iso INTEGER, fstop REAL, exposure_time INTEGER, exposure_bias REAL, focal_length REAL, notes TEXT)",
                                 "CREATE TABLE categories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
                                 "CREATE TABLE subcategories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
                                 "CREATE TABLE locations (id INTEGER PRIMARY KEY, name TEXT, geo_tag TEXT, notes TEXT)",
