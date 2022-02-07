@@ -158,11 +158,10 @@
 					<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
 						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"/>
-						<CheckBox Content=".raw (Raw file)" IsChecked="{Binding RawFilesChecked}"/>
+						<CheckBox Content=".nef (Nikon raw file)" IsChecked="{Binding NefFilesChecked}"/>
 						<CheckBox Content=".orf (Olympus raw file)" IsChecked="{Binding OrfFilesChecked}"/>
 						<CheckBox Content=".jpg" IsChecked="{Binding JpgFilesChecked}"/>
 						<CheckBox Content=".png" IsChecked="{Binding PngFilesChecked}"/>
-						<CheckBox Content=".bitmap" IsChecked="{Binding BitmapFilesChecked}"/>
 						<TextBlock TextWrapping="Wrap" Margin="0,20,0,10" Text="{Binding NamingConventionDescription}"/>
 						<StackPanel Orientation="Horizontal">
 							<CheckBox Content="Use string separator" Margin="0,0,10,0" IsChecked="{Binding UseSeparator}"/>

@@ -12,6 +12,6 @@ namespace PicturePerfect.Models
     enum RawTypes
     {
         orf,
-        raw
+        nef
     }
 }

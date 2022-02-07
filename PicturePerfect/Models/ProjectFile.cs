@@ -169,14 +169,14 @@ namespace PicturePerfect.Models
             set { separator = value; Save(); }
         }
 
-        private bool rawFilesChecked = false;
+        private bool nefFilesChecked = false;
         /// <summary>
         /// Get or set the raw files property. The change will be saved to the project file.
         /// </summary>
-        public bool RawFilesChecked
+        public bool NefFilesChecked
         {
-            get { return rawFilesChecked; }
-            set { rawFilesChecked = value; Save(); }
+            get { return nefFilesChecked; }
+            set { nefFilesChecked = value; Save(); }
         }
         private bool orfFilesChecked = false;
         /// <summary>
@@ -204,15 +204,6 @@ namespace PicturePerfect.Models
         {
             get { return pngFilesChecked; }
             set { pngFilesChecked = value; Save(); }
-        }
-        private bool bitmapFilesChecked = false;
-        /// <summary>
-        /// Get or bitmap the raw files property. The change will be saved to the project file.
-        /// </summary>
-        public bool BitmapFilesChecked
-        {
-            get { return bitmapFilesChecked; }
-            set { bitmapFilesChecked = value; Save(); }
         }
         #endregion
 
@@ -246,7 +237,7 @@ namespace PicturePerfect.Models
                 ImageFolder = Path.Combine(path, "images"),
                 DatabasePath = Path.Combine(path, "sqlite", "database.sqlite"),
                 OrfFilesChecked = true,
-                RawFilesChecked = true
+                NefFilesChecked = true
             };
 
             // create basic folders
@@ -275,6 +266,43 @@ namespace PicturePerfect.Models
 
             // create new file object and carry over the information
             // this avoids compatibility issues in case the properties of this class are changed
+            // removing properties is no problem, adding will cause a crash --> therfor CheckSomePropertyException()
+
+            // catch errors for possibly changed properties
+            // set default value if error occures
+            bool CatchNefFilesCheckedException()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["NefFilesChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
+            bool CheckOrfFilesCheckedException()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["OrfFilesChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
+            bool CheckJpgFilesCheckedException()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["JpgFilesChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
+            bool CheckPngFilesCheckedException()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["PngFilesChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
+
             // update project file
             ProjectFile newFile = new()
             {
@@ -287,11 +315,10 @@ namespace PicturePerfect.Models
                 ImageFolder = Path.Combine(new FileInfo(path).DirectoryName, "images"),
                 DatabasePath = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "database.sqlite"),
                 // settings
-                RawFilesChecked = bool.Parse(projectFile["RawFilesChecked"]),
-                OrfFilesChecked = bool.Parse(projectFile["OrfFilesChecked"]),
-                JpgFilesChecked = bool.Parse(projectFile["JpgFilesChecked"]),
-                PngFilesChecked = bool.Parse(projectFile["PngFilesChecked"]),
-                BitmapFilesChecked = bool.Parse(projectFile["BitmapFilesChecked"]),
+                NefFilesChecked = CatchNefFilesCheckedException(),
+                OrfFilesChecked = CheckOrfFilesCheckedException(),
+                JpgFilesChecked = CheckJpgFilesCheckedException(),
+                PngFilesChecked = CheckPngFilesCheckedException(),
                 BufferSize = Convert.ToInt32(projectFile["BufferSize"]),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
                 Separator = projectFile["Separator"]
@@ -360,11 +387,10 @@ namespace PicturePerfect.Models
             List<string> inputListWithUpperCase = new();
 
             // add file types to list
-            if (RawFilesChecked == true) { inputList.Add(RawTypes.raw.ToString()); }
+            if (NefFilesChecked == true) { inputList.Add(RawTypes.nef.ToString()); }
             if (OrfFilesChecked == true) { inputList.Add(RawTypes.orf.ToString()); }
             if (JpgFilesChecked == true) { inputList.Add(ImageTypes.jpg.ToString()); }
             if (PngFilesChecked == true) { inputList.Add(ImageTypes.png.ToString()); }
-            if (BitmapFilesChecked == true) { inputList.Add(ImageTypes.bitmap.ToString()); }
 
             inputList.ForEach(fileType => inputListWithUpperCase.AddRange(new List<string>() { $".{fileType}", $".{fileType.ToUpper()}" }));
 

@@ -161,14 +161,14 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref useSeparator, value); ThisApplication.ProjectFile.UseSeparator = value; }
         }
 
-        private bool rawFilesChecked = false;
+        private bool nefFilesChecked = false;
         /// <summary>
         /// Get or set the property for using raw files as input.
         /// </summary>
-        public bool RawFilesChecked
+        public bool NefFilesChecked
         {
-            get { return rawFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref rawFilesChecked, value); ThisApplication.ProjectFile.RawFilesChecked = value; }
+            get { return nefFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref nefFilesChecked, value); ThisApplication.ProjectFile.NefFilesChecked = value; }
         }
 
         private bool orfFilesChecked = false;
@@ -199,16 +199,6 @@ namespace PicturePerfect.ViewModels
         {
             get { return pngFilesChecked; }
             set { this.RaiseAndSetIfChanged(ref pngFilesChecked, value); ThisApplication.ProjectFile.PngFilesChecked = value; }
-        }
-
-        private bool bitmapFilesChecked = false;
-        /// <summary>
-        /// Get or set the property for using bitmap files as input.
-        /// </summary>
-        public bool BitmapFilesChecked
-        {
-            get { return bitmapFilesChecked; }
-            set { this.RaiseAndSetIfChanged(ref bitmapFilesChecked, value); ThisApplication.ProjectFile.BitmapFilesChecked = value; }
         }
         #endregion
 
@@ -315,11 +305,10 @@ namespace PicturePerfect.ViewModels
             Notes = ThisApplication.ProjectFile.Notes;
 
             // settings page
-            RawFilesChecked = ThisApplication.ProjectFile.RawFilesChecked;
+            NefFilesChecked = ThisApplication.ProjectFile.NefFilesChecked;
             OrfFilesChecked = ThisApplication.ProjectFile.OrfFilesChecked;
             JpgFilesChecked = ThisApplication.ProjectFile.JpgFilesChecked;
             PngFilesChecked = ThisApplication.ProjectFile.PngFilesChecked;
-            BitmapFilesChecked = ThisApplication.ProjectFile.BitmapFilesChecked;
             BufferSize = ThisApplication.ProjectFile.BufferSize;
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
