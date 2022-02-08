@@ -89,5 +89,32 @@ namespace PicturePerfect.Models
 
             connector.CloseConnection();
         }
+
+        /// <summary>
+        /// Method to add a image to the SQLite table "images".
+        /// </summary>
+        public static void AddImage(ImageFile imageFile)
+        {
+            //  values and parameters
+            List<string> paramters = new() { "@name", "@subfolder", "@file_type", "@date_taken", "@size", "@camera", "@iso", "@fstop", @"exposure_time", @"exposure_bias", @"focal_length", @"notes" };
+            object[] values = { imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString("G"), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
+
+            // new command
+            SQLiteConnector connector = new();
+            // new command
+            SqliteCommand command = new()
+            {
+                CommandText = "INSERT INTO images (name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes ) " +
+                    " VALUES (@name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
+                Connection = connector.Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute command and close connection
+            command.ExecuteNonQuery();
+            connector.CloseConnection();           
+        }
     }
 }
