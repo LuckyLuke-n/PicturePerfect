@@ -304,6 +304,9 @@ namespace PicturePerfect.ViewModels
             // home page
             Notes = ThisApplication.ProjectFile.Notes;
 
+            // images page
+            ImageFilesDatabase.LoadAll();
+
             // settings page
             NefFilesChecked = ThisApplication.ProjectFile.NefFilesChecked;
             OrfFilesChecked = ThisApplication.ProjectFile.OrfFilesChecked;

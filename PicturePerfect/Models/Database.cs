@@ -66,6 +66,26 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Enum for the column numbers of the tables images.
+        /// </summary>
+        private enum TableImagesOrdinals
+        {
+            Id, // = 0
+            Name,
+            Subfolder,
+            FileType,
+            DateTaken,
+            Size,
+            Camera,
+            ISO,
+            FStop,
+            ExposureTime,
+            ExposureBias,
+            FocalLength,
+            Notes //  12
+        }
+
+        /// <summary>
         /// Method to create a new database in the selected location.
         /// </summary>
         public static void NewDatabase()
@@ -97,14 +117,14 @@ namespace PicturePerfect.Models
         {
             //  values and parameters
             List<string> paramters = new() { "@name", "@subfolder", "@file_type", "@date_taken", "@size", "@camera", "@iso", "@fstop", @"exposure_time", @"exposure_bias", @"focal_length", @"notes" };
-            object[] values = { imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString("G"), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
+            object[] values = { imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
 
             // new command
             SQLiteConnector connector = new();
             // new command
             SqliteCommand command = new()
             {
-                CommandText = "INSERT INTO images (name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes ) " +
+                CommandText = "INSERT INTO images (name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes) " +
                     " VALUES (@name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
                 Connection = connector.Connection
             };
@@ -115,6 +135,86 @@ namespace PicturePerfect.Models
             // execute command and close connection
             command.ExecuteNonQuery();
             connector.CloseConnection();           
+        }
+
+        /// <summary>
+        /// Method to load all images file data from the database.
+        /// </summary>
+        /// <returns>Returns the list of image files.</returns>
+        public static List<ImageFile> LoadAll()
+        {
+            List<ImageFile> list = new();
+            string commandText = @"SELECT id, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images ORDER BY date_taken ASC";
+
+            // Connect to the Sqlite database
+            SQLiteConnector connector = new();
+            SqliteCommand command = new(commandText, connector.Connection);
+
+            // execute reader
+            SqliteDataReader reader = command.ExecuteReader();
+
+            // step through reader
+            while (reader.Read())
+            {
+                ImageFile imageFile = new()
+                {
+                    Name = reader.GetString((int)TableImagesOrdinals.Name),
+                    Subfolder = reader.GetString((int)TableImagesOrdinals.Subfolder),
+                    FileType = reader.GetString((int)TableImagesOrdinals.FileType),
+                    DateTaken = DateTime.Parse(reader.GetString((int)TableImagesOrdinals.DateTaken)),
+                    Size = reader.GetDouble((int)TableImagesOrdinals.Size),
+                    Camera = reader.GetString((int)TableImagesOrdinals.Camera),
+                    ISO = reader.GetInt32((int)TableImagesOrdinals.ISO),
+                    FStop = reader.GetDouble((int)TableImagesOrdinals.FStop),
+                    ExposureTime = reader.GetInt32((int)TableImagesOrdinals.ExposureTime),
+                    ExposureBias = reader.GetDouble((int)TableImagesOrdinals.ExposureBias),
+                    FocalLength = reader.GetDouble((int)TableImagesOrdinals.FocalLength),
+                    Notes = reader.GetString((int)TableImagesOrdinals.Notes)
+                };
+                imageFile.SetId(reader.GetInt32((int)TableImagesOrdinals.Id));
+
+                list.Add(imageFile);
+            }
+
+            // close connection
+            connector.CloseConnection();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Method to load all image file data for files without category assignment.
+        /// </summary>
+        /// <returns>Returns the list of image files.</returns>
+        public static List<ImageFile> LoadAllWithoutCategory()
+        {
+            List<ImageFile> list = new();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Method to load all image file data for files with a specific category assignment.
+        /// </summary>
+        /// /// <param name="Category"></param>
+        /// <returns>Returns the list of image files.</returns>
+        public static List<ImageFile> LoadByCategory(Category category)
+        {
+            List<ImageFile> list = new();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Method to load all image file data for files with a specific sub-category assignment.
+        /// </summary>
+        /// <param name="subCategory"></param>
+        /// <returns>Returns the list of image files.</returns>
+        public static List<ImageFile> LoadBySubCategory(SubCategory subCategory)
+        {
+            List<ImageFile> list = new();
+
+            return list;
         }
     }
 }

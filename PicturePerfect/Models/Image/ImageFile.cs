@@ -110,8 +110,17 @@ namespace PicturePerfect.Models
             DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
             Size = Math.Round(fileInfo.Length/1000000.00, 3);
 
+            // create the entry
+            CreateDatabaseEntry(this, path);
+        }
+
+        /// <summary>
+        /// Method to copy the files and create a sqlite entry for this image.
+        /// </summary>
+        private void CreateDatabaseEntry(ImageFile imageFile, string path)
+        {
             // copy the file to the image folder's subfolder
-            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, subfolderName, Name);
+            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
             File.Copy(path, destination, true);
 
             // add to sqlite
@@ -119,11 +128,13 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Create a sqlite entry for this image.
+        /// Method to set the value for the Id property. The property has a private setter to avoid mis-use.
+        /// This method is a work around.
         /// </summary>
-        public void CreateDatabaseEntry()
+        /// <param name="id"></param>
+        public void SetId(int id)
         {
-
+            Id = id;
         }
 
         /// <summary>

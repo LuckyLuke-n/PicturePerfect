@@ -28,7 +28,8 @@ namespace PicturePerfect.Models
         /// </summary>
         public void LoadAll()
         {
-
+            List.Clear();
+            Database.LoadAll().ForEach(imageFile => List.Add(imageFile));
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace PicturePerfect.Models
         /// </summary>
         public void LoadByCategory()
         {
-
+            List.Clear();
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace PicturePerfect.Models
         /// </summary>
         public void LoadBySubCategory()
         {
-
+            List.Clear();
         }
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace PicturePerfect.Models
         /// </summary>
         public void LoadByLocation()
         {
-
+            List.Clear();
         }
 
         /// <summary>
@@ -68,14 +69,11 @@ namespace PicturePerfect.Models
 
             foreach (string file in files)
             {
-                // copy
-
                 // create image file oject
                 ImageFile image = new();
                 image.NewFromPath(file, subfolderName);
                 List.Add(image);
             }
-
         }
 
         /// <summary>
