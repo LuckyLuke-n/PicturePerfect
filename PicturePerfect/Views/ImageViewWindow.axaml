@@ -47,16 +47,16 @@
 			  ColumnDefinitions="auto,*,auto" RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, *, auto" >
 			<!-- Id -->
 			<Label Content="Id" Grid.Column="0" Grid.Row="0" Margin="0,0,0,10"/>
-			<TextBox Text="{Binding ImageId}" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+			<TextBox Text="{Binding ImageFile.Id}" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
 					 IsReadOnly="True" ToolTip.Tip="The id cannot be edited."/>
 
 			<!-- File name -->
 			<Label Content="File name" Grid.Column="0" Grid.Row="1" Margin="0,0,0,10"/>
-			<TextBox Text="Stockerpel" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"/>
+			<TextBox Text="{Binding ImageFile.Name}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"/>
 
 			<!-- Date -->
 			<Label Content="Date" Grid.Column="0" Grid.Row="2" Margin="0,0,0,10"/>
-			<TextBox Text="2021-05-12" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+			<TextBox Text="{Binding ImageFile.DateTaken}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
 					 IsReadOnly="True" ToolTip.Tip="The date cannot be edited."/>
 
 			<!-- Location -->

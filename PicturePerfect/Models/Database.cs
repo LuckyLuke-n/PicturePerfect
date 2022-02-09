@@ -71,6 +71,7 @@ namespace PicturePerfect.Models
         private enum TableImagesOrdinals
         {
             Id, // = 0
+            CustomName,
             Name,
             Subfolder,
             FileType,
@@ -92,7 +93,7 @@ namespace PicturePerfect.Models
         {
             SQLiteConnector connector = new();
 
-            string[] queries = {"CREATE TABLE images (id INTEGER PRIMARY KEY, name TEXT, subfolder TEXT, file_type TEXT, date_taken TEXT, size REAL, camera TEXT, iso INTEGER, fstop REAL, exposure_time INTEGER, exposure_bias REAL, focal_length REAL, notes TEXT)",
+            string[] queries = {"CREATE TABLE images (id INTEGER PRIMARY KEY, custom_name TEXT, name TEXT, subfolder TEXT, file_type TEXT, date_taken TEXT, size REAL, camera TEXT, iso INTEGER, fstop REAL, exposure_time INTEGER, exposure_bias REAL, focal_length REAL, notes TEXT)",
                                 "CREATE TABLE categories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
                                 "CREATE TABLE subcategories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
                                 "CREATE TABLE locations (id INTEGER PRIMARY KEY, name TEXT, geo_tag TEXT, notes TEXT)",
@@ -116,16 +117,16 @@ namespace PicturePerfect.Models
         public static void AddImage(ImageFile imageFile)
         {
             //  values and parameters
-            List<string> paramters = new() { "@name", "@subfolder", "@file_type", "@date_taken", "@size", "@camera", "@iso", "@fstop", @"exposure_time", @"exposure_bias", @"focal_length", @"notes" };
-            object[] values = { imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
+            List<string> paramters = new() { "@custom_name", "@name", "@subfolder", "@file_type", "@date_taken", "@size", "@camera", "@iso", "@fstop", @"exposure_time", @"exposure_bias", @"focal_length", @"notes" };
+            object[] values = { imageFile.CustomName, imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
 
             // new command
             SQLiteConnector connector = new();
             // new command
             SqliteCommand command = new()
             {
-                CommandText = "INSERT INTO images (name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes) " +
-                    " VALUES (@name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
+                CommandText = "INSERT INTO images ( custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes) " +
+                    " VALUES (@custom_name, @name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
                 Connection = connector.Connection
             };
 
@@ -144,7 +145,7 @@ namespace PicturePerfect.Models
         public static List<ImageFile> LoadAll()
         {
             List<ImageFile> list = new();
-            string commandText = @"SELECT id, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images ORDER BY date_taken ASC";
+            string commandText = @"SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images ORDER BY date_taken ASC";
 
             // Connect to the Sqlite database
             SQLiteConnector connector = new();
@@ -158,7 +159,7 @@ namespace PicturePerfect.Models
             {
                 ImageFile imageFile = new()
                 {
-                    Name = reader.GetString((int)TableImagesOrdinals.Name),
+                    CustomName = reader.GetString((int)TableImagesOrdinals.CustomName),
                     Subfolder = reader.GetString((int)TableImagesOrdinals.Subfolder),
                     FileType = reader.GetString((int)TableImagesOrdinals.FileType),
                     DateTaken = DateTime.Parse(reader.GetString((int)TableImagesOrdinals.DateTaken)),
@@ -172,6 +173,7 @@ namespace PicturePerfect.Models
                     Notes = reader.GetString((int)TableImagesOrdinals.Notes)
                 };
                 imageFile.SetId(reader.GetInt32((int)TableImagesOrdinals.Id));
+                imageFile.SetFileName(reader.GetString((int)TableImagesOrdinals.Name));
 
                 list.Add(imageFile);
             }

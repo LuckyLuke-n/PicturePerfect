@@ -107,7 +107,6 @@ namespace PicturePerfect.ViewModels
         public ImageViewWindowViewModel()
         {
             // inherited from base view model
-            ImageId = SelectedImageId;
             ImageFile = SelectedImageFile;
 
             ToggleVisibilityLocationCommand = ReactiveCommand.Create(RunToggleVisibilityLocationCommand);

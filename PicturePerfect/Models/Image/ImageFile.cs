@@ -18,9 +18,14 @@ namespace PicturePerfect.Models
     public class ImageFile
     {
         /// <summary>
-        /// Get or set the filename. Per default this is the filename and can be reset to a custom name.
+        /// Get or set the custom name. This will not change the file name.
+        /// Per default this equals the file name.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string CustomName { get; set; }
+        /// <summary>
+        /// Get the filename. Per default this is the filename.
+        /// </summary>
+        public string Name { get; private set; } = string.Empty;
         /// <summary>
         /// Get or set the subfolder name located in .../images/
         /// </summary>
@@ -104,6 +109,7 @@ namespace PicturePerfect.Models
         public void NewFromPath(string path, string subfolderName)
         {
             FileInfo fileInfo = new(path);
+            CustomName = fileInfo.Name;
             Name = fileInfo.Name;
             Subfolder = subfolderName;
             FileType = fileInfo.Extension;
@@ -135,6 +141,16 @@ namespace PicturePerfect.Models
         public void SetId(int id)
         {
             Id = id;
+        }
+
+        /// <summary>
+        /// Method to set the value for the Name property. The property has a private setter to avoid mis-use.
+        /// This method is a work around.
+        /// </summary>
+        /// <param name="name"></param>
+        public void SetFileName(string name)
+        {
+            Name = name;
         }
 
         /// <summary>

@@ -322,28 +322,29 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunShowImageCommand()
         {
-            ShowImage(ImageId);
+            // launch the view image window by using the ImageFile object stored int he ViewModelBase class
+            new ImageViewWindow().Show();
         }
 
         private void RunShowFavorite1Command()
         {
             // set the inherited static property to make the id available to the other view models
-            ShowImage(ImageId);
+            //ShowImage(ImageId);
         }
 
         private void RunShowFavorite2Command()
         {
-            ShowImage(ImageId);
+            //ShowImage(ImageId);
         }
 
         private void RunShowFavorite3Command()
         {
-            ShowImage(ImageId);
+            //ShowImage(ImageId);
         }
 
         private void RunShowFavorite4Command()
         {
-            ShowImage(SelectedImageId);
+            //ShowImage(SelectedImageId);
         }
 
         private void RunUseSeparatorCommand()
@@ -355,13 +356,13 @@ namespace PicturePerfect.ViewModels
         /// Method to show the image view window.
         /// </summary>
         /// <param name="id"></param>
-        private void ShowImage(int id)
+        private void ShowFavoriteImage(int favoriteId)
         {
-            // set the properties in the view model base
-            // this is temporary to trigger the setter to change the inheritated SelectedImageId
-            ImageId = id;
-            //SelectedImageFile = new ImageFile();
-            new ImageViewWindow().Show();
+            // get image file object by id from project file
+
+            // set object in view model base
+
+            // new ImageViewWindow().Show();
         }
 
         /// <summary>
@@ -387,10 +388,11 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
-                SetMainWindowPages();
 
-                // create new database
+                // create new database before setting the main window pages
                 Database.NewDatabase();
+
+                SetMainWindowPages();
             }
             else
             {

@@ -98,9 +98,10 @@
 						</TreeView.DataTemplates>
 					</TreeView>
 					<!-- DataGrid -->
-					<DataGrid Items="{Binding ImageFilesDatabase.List}" IsReadOnly="True"
+					<DataGrid Items="{Binding ImageFilesDatabase.List}" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding ImageFile}"
 							VerticalAlignment="Stretch" Margin="0, 10, 5, 10" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1"
-							BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}">
+							BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}"
+							CanUserResizeColumns="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
 						<DataGrid.Columns>
 							<DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*"/>
 							<DataGridTextColumn Header="Size in MB" Binding="{Binding Size}" Width="*"/>
@@ -137,7 +138,7 @@
 						<Button ToolTip.Tip="Add images to your database." Command="{Binding ToggleLoadImagesCommand}">
 							<Image Source="/Assets/Drawables/load_images.png" Height="40"/>
 						</Button>
-						<Button ToolTip.Tip="Open the selected image an review the properties.">
+						<Button ToolTip.Tip="Open the selected image an review the properties." Command="{Binding ShowImageCommand}">
 							<Image Source="/Assets/Drawables/properties.png" Height="40"/>
 						</Button>
 						<Button ToolTip.Tip="Delete the selected image from your database.">
