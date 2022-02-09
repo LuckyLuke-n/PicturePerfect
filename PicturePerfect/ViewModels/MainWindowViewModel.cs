@@ -30,15 +30,10 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
-        #region Defaults
-        private static string PaceholderImagePath = "avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg";
-        public static Bitmap PlaceholderImage => BitmapValueConverter.Convert("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
-        #endregion
-
         #region Favorite images for home page
         public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
-        public static Bitmap ImageNo2 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
-        public static Bitmap ImageNo3 { get; private set; } = BitmapValueConverter.Convert(PaceholderImagePath);
+        public static Bitmap ImageNo2 { get; private set; } = ThisApplication.PlaceholderImage;
+        public static Bitmap ImageNo3 { get; private set; } = ThisApplication.PlaceholderImage;
         public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
         private static string notes = string.Empty;
         /// <summary>

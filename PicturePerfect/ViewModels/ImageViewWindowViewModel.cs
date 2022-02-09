@@ -20,7 +20,7 @@ namespace PicturePerfect.ViewModels
         public static string LightColor => ThisApplication.ProjectFile.LightColor;
         public static string LightFontColor => ThisApplication.ProjectFile.LightFontColor;
         public static string DarkContrastColor => ThisApplication.ProjectFile.DarkContrastColor;
-        public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
+        //public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
         #endregion
 
         #region Visibilty of gui elements
@@ -69,6 +69,8 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> SaveSubCategory2Command { get; }
         #endregion
 
+        #region Image info
+        public static Bitmap BitmapToDraw { get; private set; } = ThisApplication.PlaceholderImage;
 
         private int imageId;
         /// <summary>
@@ -90,7 +92,7 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref moreInfo, value); }
         }
 
-        private ImageFile imageFile;
+        private ImageFile imageFile = new();
         /// <summary>
         /// Get or set the image file for the image to currently be viewed.
         /// </summary>
@@ -99,6 +101,8 @@ namespace PicturePerfect.ViewModels
             get { return imageFile; }
             set { this.RaiseAndSetIfChanged(ref this.imageFile, value); }
         }
+        #endregion
+
 
         /// <summary>
         /// Created a new instance of the image view view model.
@@ -193,30 +197,30 @@ namespace PicturePerfect.ViewModels
             RunToggleVisibilitySubCategory2Command();
         }
 
-
-
-
+        /// <summary>
+        /// Method to get more metadate info.
+        /// </summary>
+        /// <returns>Returns a string containg the metadata.</returns>
         private string GetMoreInfo()
         {
             string moreInfo = string.Empty;
 
-            if (ImageFile != null)
+            if (ImageFile == null)
             {
-                // get and concatenate from file properties
-                moreInfo = "";
+                return moreInfo = "";
             }
             else
             {
-                moreInfo = "Camera maker: " + Environment.NewLine +
-                    "ISO: " + Environment.NewLine +
-                    "F-stop: " + Environment.NewLine +
-                    "Exposure time: " + Environment.NewLine +
-                    "Exposure bias: " + Environment.NewLine + 
-                    "Focal length: ";
+                moreInfo = $"Camera maker: {ImageFile.Camera}" + Environment.NewLine +
+                    $"ISO: {ImageFile.ISO}" + Environment.NewLine +
+                    $"F-stop: {ImageFile.FStop}" + Environment.NewLine +
+                    $"Exposure time: {ImageFile.ExposureTime}" + Environment.NewLine +
+                    $"Exposure bias: {ImageFile.ExposureBias}" + Environment.NewLine +
+                    $"Focal length: {ImageFile.FocalLength}";
+
+                return moreInfo;
             }
-
-
-            return moreInfo;
+           
         }
     }
 }

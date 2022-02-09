@@ -71,19 +71,19 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the loacation where this image was taken.
         /// </summary>
-        public string Location { get; set; } = string.Empty;
+        public Location Location { get; set; } = new();
         /// <summary>
         /// Get or set the category for this window.
         /// </summary>
-        public string Category { get; set; } = string.Empty;
+        public Category Category { get; set; } = new();
         /// <summary>
         /// Get or set the sub category #1.
         /// </summary>
-        public string SubCategory1 { get; set; } = string.Empty;
+        public SubCategory SubCategory1 { get; set; } = new();
         /// <summary>
         /// Get or set the sub category #2.
         /// </summary>
-        public string SubCategory2 { get; set; } = string.Empty;
+        public SubCategory SubCategory2 { get; set; } = new();
         /// <summary>
         /// Get or set the notes for this image.
         /// </summary>
@@ -159,6 +159,16 @@ namespace PicturePerfect.Models
         public void CommitChanges()
         {
 
+        }
+
+
+        public Bitmap DrawBitmap()
+        {
+            Bitmap bitmap = null;
+
+
+
+            return bitmap;
         }
 
         /// <summary>

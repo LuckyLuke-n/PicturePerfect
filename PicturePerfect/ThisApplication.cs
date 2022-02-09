@@ -1,4 +1,5 @@
-﻿using PicturePerfect.Models;
+﻿using Avalonia.Media.Imaging;
+using PicturePerfect.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace PicturePerfect
         public static string LightColorDefault => "WhiteSmoke";
         public static string LightFontColorDefault => "WhiteSmoke";
         public static string DarkContrastColorDefault => "#2E3033"; // rich gray
+        public static Bitmap PlaceholderImage => BitmapValueConverter.Convert("avares://PicturePerfect/Assets/Drawables/image_placeholder.jpg");
         #endregion
 
         /// <summary>
