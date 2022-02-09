@@ -47,7 +47,7 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Page "Images" Properties
-        private int imageId = 1999;
+        private int imageId;
         /// <summary>
         /// Get the image Id of the selected image. Set the id and the static property in the view model base for hand over to other windows.
         /// </summary>
@@ -279,7 +279,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
-            ShowImageCommand = ReactiveCommand.Create(RunShowImageCommand);
+            ShowImageCommand = ReactiveCommand.Create(RunShowImageCommandAsync);
             ShowFavorite1Command = ReactiveCommand.Create(RunShowFavorite1Command);
             ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
             ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
@@ -315,10 +315,19 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Method to open a new instance of the image view window.
         /// </summary>
-        private void RunShowImageCommand()
+        private async void RunShowImageCommandAsync()
         {
             // launch the view image window by using the ImageFile object stored int he ViewModelBase class
-            new ImageViewWindow().Show();
+            if (ProjectIsLoaded == true)
+            {
+                new ImageViewWindow().Show();
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
+                
         }
 
         private void RunShowFavorite1Command()

@@ -1,4 +1,5 @@
-﻿using ImageMagick;
+﻿using Avalonia.Media.Imaging;
+using ImageMagick;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
 using MetadataExtractor.Formats.Exif.Makernotes;
@@ -6,7 +7,6 @@ using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -92,6 +92,17 @@ namespace PicturePerfect.Models
         /// Get the image id. This is the id number from the sqlite database.
         /// </summary>
         public int Id { get; private set; }
+        /// <summary>
+        /// Get the absolute path to this image file.
+        /// </summary>
+        public string AbsolutePath => Path.Combine(ThisApplication.ProjectFile.ImageFolder, Subfolder, Name);
+
+        // file type arrays
+        private readonly string[] orf = { ".orf", ".ORF" };
+        private readonly string[] nef = { ".nef", ".NEF" };
+        private readonly string[] jpg = { ".jpg", ".JPG" };
+        private readonly string[] png = { ".png", ".PNG" };
+
 
         /// <summary>
         /// Creates a new instance of the image file class.
@@ -161,12 +172,26 @@ namespace PicturePerfect.Models
 
         }
 
-
-        public Bitmap DrawBitmap()
+        /// <summary>
+        /// Method to get this image to a bitmap.
+        /// </summary>
+        /// <returns>Returns the bitmap.</returns>
+        public Bitmap ToBitmap()
         {
-            Bitmap bitmap = null;
-
-
+            Bitmap bitmap;
+            if (orf.Contains(FileType) || nef.Contains(FileType))
+            {
+                MagickImage magickImage = new(AbsolutePath);
+                bitmap = magickImage.ToBitmap();
+            }
+            else if (jpg.Contains(FileType) || png.Contains(FileType))
+            {
+                bitmap = BitmapValueConverter.Convert(AbsolutePath);
+            }
+            else
+            {
+                bitmap = ThisApplication.PlaceholderImage;
+            }
 
             return bitmap;
         }

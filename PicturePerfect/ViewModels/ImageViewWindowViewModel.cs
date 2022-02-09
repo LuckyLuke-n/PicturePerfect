@@ -20,7 +20,6 @@ namespace PicturePerfect.ViewModels
         public static string LightColor => ThisApplication.ProjectFile.LightColor;
         public static string LightFontColor => ThisApplication.ProjectFile.LightFontColor;
         public static string DarkContrastColor => ThisApplication.ProjectFile.DarkContrastColor;
-        //public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
         #endregion
 
         #region Visibilty of gui elements
@@ -70,8 +69,6 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Image info
-        public static Bitmap BitmapToDraw { get; private set; } = ThisApplication.PlaceholderImage;
-
         private int imageId;
         /// <summary>
         /// Get or set the image id for the image to be displayed in the image viewer.
@@ -100,6 +97,15 @@ namespace PicturePerfect.ViewModels
         {
             get { return imageFile; }
             set { this.RaiseAndSetIfChanged(ref this.imageFile, value); }
+        }
+
+        private Bitmap bitmapToDraw = ThisApplication.PlaceholderImage;
+        /// <summary>
+        /// Get the bitmap object for the image file object.
+        /// </summary>
+        public Bitmap BitmapToDraw
+        {
+            get { return ImageFile.ToBitmap(); }
         }
         #endregion
 
