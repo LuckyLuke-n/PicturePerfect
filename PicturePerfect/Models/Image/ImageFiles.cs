@@ -29,7 +29,7 @@ namespace PicturePerfect.Models
         public void LoadAll()
         {
             List.Clear();
-            Database.LoadAll().ForEach(imageFile => List.Add(imageFile));
+            Database.LoadAllImageFiles().ForEach(imageFile => List.Add(imageFile));
         }
 
         /// <summary>

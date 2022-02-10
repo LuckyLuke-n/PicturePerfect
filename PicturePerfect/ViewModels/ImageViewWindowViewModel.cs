@@ -107,6 +107,13 @@ namespace PicturePerfect.ViewModels
         {
             get { return ImageFile.ToBitmap(); }
         }
+
+        private string locationName = "";
+        public string LocationName
+        {
+            get { return locationName; }
+            set { this.RaiseAndSetIfChanged(ref locationName, value); }
+        }
         #endregion
 
 
@@ -176,6 +183,9 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveLocationCommand()
         {
+            Location location = new();
+            location.Name = LocationName;
+            location.Create();
             RunToggleVisibilityLocationCommand();
         }
 

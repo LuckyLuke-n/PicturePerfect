@@ -138,11 +138,36 @@ namespace PicturePerfect.Models
             connector.CloseConnection();           
         }
 
+
+        public static void AddLocation(Location location)
+        {
+            //  values and parameters
+            List<string> paramters = new() { "@name", "@geo_tag", @"notes" };
+            object[] values = { location.Name, location.GeoTag, location.Notes };
+
+            // new command
+            SQLiteConnector connector = new();
+            // new command
+            SqliteCommand command = new()
+            {
+                CommandText = "INSERT INTO locations ( name, geo_tag, notes) " +
+                    " VALUES (@name, @geo_tag, @notes)",
+                Connection = connector.Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute command and close connection
+            command.ExecuteNonQuery();
+            connector.CloseConnection();
+        }
+
         /// <summary>
         /// Method to load all images file data from the database.
         /// </summary>
         /// <returns>Returns the list of image files.</returns>
-        public static List<ImageFile> LoadAll()
+        public static List<ImageFile> LoadAllImageFiles()
         {
             List<ImageFile> list = new();
             string commandText = @"SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images ORDER BY date_taken ASC";

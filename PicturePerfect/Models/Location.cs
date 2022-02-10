@@ -17,6 +17,10 @@ namespace PicturePerfect.Models
         /// </summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>
+        /// Get or set the geo tag for this location. E.g. coordinates.
+        /// </summary>
+        public string GeoTag { get; set; } = string.Empty;
+        /// <summary>
         /// Get or set the notex for this location.
         /// </summary>
         public string Notes { get; set; } = string.Empty;
@@ -27,6 +31,14 @@ namespace PicturePerfect.Models
         public Location()
         {
 
+        }
+
+        /// <summary>
+        /// Method to create an entry for this instance in the sqlite table.
+        /// </summary>
+        public void Create()
+        {
+            Database.AddLocation(this);
         }
     }
 }

@@ -65,7 +65,7 @@
 			<Button Grid.Column="2" Grid.Row="3" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilityLocationCommand}">
 				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
 			</Button>
-			<TextBox Text="" Grid.Column="1" Grid.Row="4" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddLocation}"/>
+			<TextBox Text="{Binding LocationName}" Grid.Column="1" Grid.Row="4" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddLocation}"/>
 			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddLocation}" Command="{Binding SaveLocationCommand}">
 				<Image Source="/Assets/Drawables/save.png" Height="20"/>
 			</Button>
