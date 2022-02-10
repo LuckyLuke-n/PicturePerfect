@@ -183,7 +183,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveLocationCommand()
         {
-            Location location = new();
+            Locations.Location location = new();
             location.Name = LocationName;
             location.Create();
             RunToggleVisibilityLocationCommand();

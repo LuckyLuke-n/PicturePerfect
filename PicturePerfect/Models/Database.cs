@@ -139,7 +139,7 @@ namespace PicturePerfect.Models
         }
 
 
-        public static void AddLocation(Location location)
+        public static void AddLocation(Locations.Location location)
         {
             //  values and parameters
             List<string> paramters = new() { "@name", "@geo_tag", @"notes" };

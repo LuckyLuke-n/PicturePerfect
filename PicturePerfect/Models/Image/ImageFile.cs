@@ -71,7 +71,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the loacation where this image was taken.
         /// </summary>
-        public Location Location { get; set; } = new();
+        public Locations.Location Location { get; set; } = new();
         /// <summary>
         /// Get or set the category for this window.
         /// </summary>
