@@ -15,5 +15,13 @@ namespace PicturePerfect.Models
         {
 
         }
+
+        /// <summary>
+        /// Method to add a new subcategory to the database.
+        /// </summary>
+        public void Create()
+        {
+            Database.AddSubcategory(this);
+        }
     }
 }

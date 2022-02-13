@@ -107,12 +107,47 @@ namespace PicturePerfect.ViewModels
         {
             get { return ImageFile.ToBitmap(); }
         }
+        #endregion Image info
 
-        private string locationName = "";
-        public string LocationName
+        #region new location catrogory or sub-category
+        private string newLocationName = string.Empty;
+        /// <summary>
+        /// Get or set the name for the new location.
+        /// </summary>
+        public string NewLocationName
         {
-            get { return locationName; }
-            set { this.RaiseAndSetIfChanged(ref locationName, value); }
+            get { return newLocationName; }
+            set { this.RaiseAndSetIfChanged(ref newLocationName, value); }
+        }
+
+        private string newCategoryName = string.Empty;
+        /// <summary>
+        /// Get or set the name for the new category.
+        /// </summary>
+        public string NewCategoryName
+        {
+            get { return newCategoryName; }
+            set { this.RaiseAndSetIfChanged(ref newCategoryName, value); }
+        }
+
+        private string newSubCategory1Name = string.Empty;
+        /// <summary>
+        /// Get or set the name for the new subcategory 1.
+        /// </summary>
+        public string NewSubCategory1Name
+        {
+            get { return newSubCategory1Name; }
+            set { this.RaiseAndSetIfChanged(ref newSubCategory1Name, value); }
+        }
+
+        private string newSubCategory2Name = string.Empty;
+        /// <summary>
+        /// Get or set the name for the new subcategory 2.
+        /// </summary>
+        public string NewSubCategory2Name
+        {
+            get { return newSubCategory2Name; }
+            set { this.RaiseAndSetIfChanged(ref newSubCategory2Name, value); }
         }
         #endregion
 
@@ -184,7 +219,7 @@ namespace PicturePerfect.ViewModels
         private void RunSaveLocationCommand()
         {
             Locations.Location location = new();
-            location.Name = LocationName;
+            location.Name = NewLocationName;
             location.Create();
             RunToggleVisibilityLocationCommand();
         }
@@ -194,6 +229,9 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveCategoryCommand()
         {
+            Category category = new();
+            category.Name = NewCategoryName;
+            category.Create();
             RunToggleVisibilityCategoryCommand();
         }
 
@@ -202,6 +240,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveSubCategory1Command()
         {
+            SaveSubCategory(NewSubCategory1Name);
             RunToggleVisibilitySubCategory1Command();
         }
 
@@ -210,6 +249,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveSubCategory2Command()
         {
+            SaveSubCategory(NewSubCategory2Name);
             RunToggleVisibilitySubCategory2Command();
         }
 
@@ -237,6 +277,14 @@ namespace PicturePerfect.ViewModels
                 return moreInfo;
             }
            
+        }
+
+
+        private void SaveSubCategory(string name)
+        {
+            SubCategory subCategory = new();
+            subCategory.Name = name;
+            subCategory.Create();
         }
     }
 }

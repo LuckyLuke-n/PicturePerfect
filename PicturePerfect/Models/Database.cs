@@ -138,7 +138,10 @@ namespace PicturePerfect.Models
             connector.CloseConnection();           
         }
 
-
+        /// <summary>
+        /// Method to add a new entry to the locations table.
+        /// </summary>
+        /// <param name="location"></param>
         public static void AddLocation(Locations.Location location)
         {
             //  values and parameters
@@ -152,6 +155,62 @@ namespace PicturePerfect.Models
             {
                 CommandText = "INSERT INTO locations ( name, geo_tag, notes) " +
                     " VALUES (@name, @geo_tag, @notes)",
+                Connection = connector.Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute command and close connection
+            command.ExecuteNonQuery();
+            connector.CloseConnection();
+        }
+
+        /// <summary>
+        /// Method to add a new entry to the categories table.
+        /// </summary>
+        /// <param name="category"></param>
+        public static void AddCategory(Category category)
+        {
+            //  values and parameters
+            List<string> paramters = new() { "@name", @"notes" };
+            object[] values = { category.Name, category.Notes };
+
+            // new command
+            SQLiteConnector connector = new();
+            // new command
+            SqliteCommand command = new()
+            {
+                CommandText = "INSERT INTO categories ( name, notes) " +
+                    " VALUES (@name, @notes)",
+                Connection = connector.Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute command and close connection
+            command.ExecuteNonQuery();
+            connector.CloseConnection();
+        }
+
+        /// <summary>
+        /// Method to add a new entry to the table subcategories.
+        /// </summary>
+        /// <param name="subCategory"></param>
+        public static void AddSubcategory(SubCategory subCategory)
+        {
+            //  values and parameters
+            List<string> paramters = new() { "@name", @"notes" };
+            object[] values = { subCategory.Name, subCategory.Notes };
+
+            // new command
+            SQLiteConnector connector = new();
+            // new command
+            SqliteCommand command = new()
+            {
+                CommandText = "INSERT INTO subcategories ( name, notes) " +
+                    " VALUES (@name, @notes)",
                 Connection = connector.Connection
             };
 

@@ -65,7 +65,7 @@
 			<Button Grid.Column="2" Grid.Row="3" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilityLocationCommand}">
 				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
 			</Button>
-			<TextBox Text="{Binding LocationName}" Grid.Column="1" Grid.Row="4" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddLocation}"/>
+			<TextBox Text="{Binding NewLocationName}" Grid.Column="1" Grid.Row="4" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddLocation}"/>
 			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddLocation}" Command="{Binding SaveLocationCommand}">
 				<Image Source="/Assets/Drawables/save.png" Height="20"/>
 			</Button>
@@ -76,7 +76,7 @@
 			<Button Grid.Column="2" Grid.Row="5" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilityCategoryCommand}">
 				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
 			</Button>
-			<TextBox Text="" Grid.Column="1" Grid.Row="6" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddCategory}"/>
+			<TextBox Text="{Binding NewCategoryName}" Grid.Column="1" Grid.Row="6" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddCategory}"/>
 			<Button Grid.Column="2" Grid.Row="6" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddCategory}" Command="{Binding SaveCategoryCommand}">
 				<Image Source="/Assets/Drawables/save.png" Height="20"/>
 			</Button>
@@ -87,7 +87,7 @@
 			<Button Grid.Column="2" Grid.Row="7" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilitySubCategory1Command}">
 				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
 			</Button>
-			<TextBox Text="" Grid.Column="1" Grid.Row="8" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddSubCategory1}"/>
+			<TextBox Text="{Binding NewSubCategory1Name}" Grid.Column="1" Grid.Row="8" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddSubCategory1}"/>
 			<Button Grid.Column="2" Grid.Row="8" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddSubCategory1}" Command="{Binding SaveSubCategory1Command}">
 				<Image Source="/Assets/Drawables/save.png" Height="20"/>
 			</Button>
@@ -98,7 +98,7 @@
 			<Button Grid.Column="2" Grid.Row="9" Margin="2,-10,0,0" Command="{Binding ToggleVisibilitySubCategory2Command}">
 				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
 			</Button>
-			<TextBox Text="" Grid.Column="1" Grid.Row="10" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddSubCategory2}"/>
+			<TextBox Text="{Binding NewSubCategory2Name}" Grid.Column="1" Grid.Row="10" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding IsVisibleAddSubCategory2}"/>
 			<Button Grid.Column="2" Grid.Row="10" Margin="2,-10,0,0" IsVisible="{Binding IsVisibleAddSubCategory2}" Command="{Binding SaveSubCategory2Command}">
 				<Image Source="/Assets/Drawables/save.png" Height="20"/>
 			</Button>

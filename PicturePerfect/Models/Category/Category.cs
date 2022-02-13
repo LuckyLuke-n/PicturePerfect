@@ -20,5 +20,13 @@ namespace PicturePerfect.Models
         {
 
         }
+
+        /// <summary>
+        /// Method to add this category instance to the database.
+        /// </summary>
+        public void Create()
+        {
+            Database.AddCategory(this);
+        }
     }
 }
