@@ -107,6 +107,11 @@ namespace PicturePerfect.ViewModels
         {
             get { return ImageFile.ToBitmap(); }
         }
+
+        /// <summary>
+        /// Get the categories tree object of the selected data. Set the object and the static property in the view model base for hand over to other windows.
+        /// </summary>
+        public CategoriesTree CategoriesTree => LoadedCategoriesTree;
         #endregion Image info
 
         #region new location catrogory or sub-category

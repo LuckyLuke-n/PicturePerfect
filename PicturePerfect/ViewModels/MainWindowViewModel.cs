@@ -99,7 +99,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public CategoriesTree CategoriesTree
         {
-            get { return categoriesTree; }
+            get { return LoadedCategoriesTree; }
             set
             {
                 categoriesTree = value;
