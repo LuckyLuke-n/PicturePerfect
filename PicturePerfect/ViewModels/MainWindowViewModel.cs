@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using System.Linq;
 using PicturePerfect.Models;
@@ -6,10 +5,10 @@ using PicturePerfect.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Reactive;
-using System.Text;
+using Avalonia.Threading;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace PicturePerfect.ViewModels
@@ -200,7 +199,15 @@ namespace PicturePerfect.ViewModels
         #region Status Bar
         public int PercentageProgressBar { get; private set; } = 100;
         public string LabelProgressBar { get; private set; } = "100%";
-        public bool IsIndeterminate { get; private set; } = false;
+        private bool isIndeterminate = false;
+        /// <summary>
+        /// Get or set weather the progressbar is indeterminate or not.
+        /// </summary>
+        public bool IsIndeterminate
+        {
+            get { return isIndeterminate; }
+            set { this.RaiseAndSetIfChanged(ref isIndeterminate, value); }
+        }
         private bool hideFileDialog = false;
         /// <summary>
         /// Get or set the property to hilde or show the file dialog in the bottom row.
@@ -263,6 +270,7 @@ namespace PicturePerfect.ViewModels
 
         #region Commands
         public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
+        //public ReactiveCommand<Unit, object> ShowImageCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite1Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite2Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite3Command { get; }
@@ -271,8 +279,9 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> NewProjectCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadProjectCommand { get; }
         public ReactiveCommand<Unit, Unit> ToggleLoadImagesCommand { get; }
-        public ReactiveCommand<Unit, Unit> LoadImagesCommand { get; }       
+        public ReactiveCommand<Unit, Unit> LoadImagesCommand { get; }
         #endregion
+
 
         /// <summary>
         /// Creates an instance of the MainWindowViewModel.
@@ -280,6 +289,7 @@ namespace PicturePerfect.ViewModels
         public MainWindowViewModel()
         {
             ShowImageCommand = ReactiveCommand.Create(RunShowImageCommandAsync);
+            //ShowImageCommand = ReactiveCommand.CreateFromTask(RunShowImageCommandAsync);
             ShowFavorite1Command = ReactiveCommand.Create(RunShowFavorite1Command);
             ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
             ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
@@ -320,14 +330,13 @@ namespace PicturePerfect.ViewModels
             // launch the view image window by using the ImageFile object stored int he ViewModelBase class
             if (ProjectIsLoaded == true)
             {
-                new ImageViewWindow().Show();
+                new ImageViewWindow().Show();               
             }
             else
             {
                 // no project file loaded
                 _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
             }
-                
         }
 
         private void RunShowFavorite1Command()

@@ -6,6 +6,7 @@ using MetadataExtractor.Formats.Exif.Makernotes;
 using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
@@ -179,6 +180,7 @@ namespace PicturePerfect.Models
         public Bitmap ToBitmap()
         {
             Bitmap bitmap;
+
             if (orf.Contains(FileType) || nef.Contains(FileType))
             {
                 MagickImage magickImage = new(AbsolutePath);
@@ -192,7 +194,6 @@ namespace PicturePerfect.Models
             {
                 bitmap = ThisApplication.PlaceholderImage;
             }
-
             return bitmap;
         }
 

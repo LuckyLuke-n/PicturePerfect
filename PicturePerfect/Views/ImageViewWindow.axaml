@@ -22,6 +22,9 @@
 			<Button Content="Save" Margin="5"/>
 			<Button Name="buttonClose" Content="Close" Margin="5,5,10,5" Click="ButtonClose_Click" />
 		</StackPanel>
+		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Left">
+			<ProgressBar Margin="10,0,10,0" IsIndeterminate="{Binding IsIndeterminateBar}"/>
+		</StackPanel>
 
 		<!-- Image column -->
 		<StackPanel VerticalAlignment="Center">

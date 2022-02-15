@@ -1,5 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using PicturePerfect.Models;
+using PicturePerfect.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -29,29 +31,43 @@ namespace PicturePerfect.ViewModels
             get { return isVisibleAddLocation; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddLocation, value); }
         }
+
         private bool isVisibleAddCategory = false;
         public bool IsVisibleAddCategory
         {
             get { return isVisibleAddCategory; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddCategory, value); }
         }
+
         private bool isVisibleAddSubCategory1 = false;
         public bool IsVisibleAddSubCategory1
         {
             get { return isVisibleAddSubCategory1; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory1, value); }
         }
+
         private bool isVisibleAddSubCategory2 = false;
         public bool IsVisibleAddSubCategory2
         {
             get { return isVisibleAddSubCategory2; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory2, value); }
         }
+
         private bool moreInfoVisible = false;
         public bool MoreInfoVisible
         {
             get { return moreInfoVisible; }
             set { this.RaiseAndSetIfChanged(ref moreInfoVisible, value); }
+        }
+
+        private bool isIndeterminateBar = false;
+        /// <summary>
+        /// Get or set weather the progressbar is indeterminate or not.
+        /// </summary>
+        public bool IsIndeterminateBar
+        {
+            get { return isIndeterminateBar; }
+            set { this.RaiseAndSetIfChanged(ref isIndeterminateBar, value); }
         }
         #endregion
 
@@ -105,7 +121,9 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public Bitmap BitmapToDraw
         {
-            get { return ImageFile.ToBitmap(); }
+            //get { return ImageFile.ToBitmap(); }
+            get { return bitmapToDraw; }
+            private set { this.RaiseAndSetIfChanged(ref bitmapToDraw, value); }
         }
 
         /// <summary>
@@ -165,6 +183,27 @@ namespace PicturePerfect.ViewModels
         {
             // inherited from base view model
             ImageFile = SelectedImageFile;
+
+            // new backgroundworker
+            BackgroundWorker backgroundWorker = new();
+            backgroundWorker.DoWork += backgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+            // run the worker
+            backgroundWorker.RunWorkerAsync();
+
+            // convert and load the bitmap into the gui
+            void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+            {
+                IsIndeterminateBar = true;
+                BitmapToDraw = ImageFile.ToBitmap();
+            }
+
+            // reset the progress bar property
+            void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+            {
+                IsIndeterminateBar = false;
+            }
+
 
             ToggleVisibilityLocationCommand = ReactiveCommand.Create(RunToggleVisibilityLocationCommand);
             ToggleVisibilityCategoryCommand = ReactiveCommand.Create(RunToggleVisibilityCategoryCommand);
@@ -284,7 +323,10 @@ namespace PicturePerfect.ViewModels
            
         }
 
-
+        /// <summary>
+        /// Method to save a new subcategory to the database.
+        /// </summary>
+        /// <param name="name"></param>
         private void SaveSubCategory(string name)
         {
             SubCategory subCategory = new();
