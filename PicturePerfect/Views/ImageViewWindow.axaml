@@ -64,7 +64,13 @@
 
 			<!-- Location -->
 			<Label Content="Location" Grid.Column="0" Grid.Row="3" Margin="0,0,0,10"/>
-			<ComboBox SelectedItem="{Binding ImageFile.Location.Name}" Grid.Column="1" Grid.Row="3" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
+			<ComboBox SelectedItem="{Binding ImageFile.Location.Name}" Items="{Binding Locations.List}" Grid.Column="1" Grid.Row="3" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}"/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 			<Button Grid.Column="2" Grid.Row="3" Margin="2,-10,0,0"  Command="{Binding ToggleVisibilityLocationCommand}">
 				<Image Source="/Assets/Drawables/add_category.png" Height="20"/>
 			</Button>

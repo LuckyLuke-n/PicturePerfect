@@ -2,9 +2,6 @@
 using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PicturePerfect.Models
 {
@@ -66,7 +63,7 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Enum for the column numbers of the tables images.
+        /// Enum for the column numbers of the table images.
         /// </summary>
         private enum TableImagesOrdinals
         {
@@ -84,6 +81,26 @@ namespace PicturePerfect.Models
             ExposureBias,
             FocalLength,
             Notes //  12
+        }
+
+        /// <summary>
+        /// Enum for column numbers of table categories.
+        /// </summary>
+        private enum TableCategoriesOrdinals
+        {
+            Id,
+            Name,
+            Notes
+        }
+
+        /// <summary>
+        /// Enum for column numbers of table locations.
+        /// </summary>
+        private enum TableLocationsOrdinals
+        {
+            Id,
+            Name,
+            Notes
         }
 
         /// <summary>
@@ -181,7 +198,7 @@ namespace PicturePerfect.Models
             // new command
             SqliteCommand command = new()
             {
-                CommandText = "INSERT INTO categories ( name, notes) " +
+                CommandText = "INSERT INTO categories (name, notes) " +
                     " VALUES (@name, @notes)",
                 Connection = connector.Connection
             };
@@ -272,7 +289,7 @@ namespace PicturePerfect.Models
         /// Method to load all image file data for files without category assignment.
         /// </summary>
         /// <returns>Returns the list of image files.</returns>
-        public static List<ImageFile> LoadAllWithoutCategory()
+        public static List<ImageFile> LoadAllImageFilesWithoutCategory()
         {
             List<ImageFile> list = new();
 
@@ -284,7 +301,7 @@ namespace PicturePerfect.Models
         /// </summary>
         /// /// <param name="Category"></param>
         /// <returns>Returns the list of image files.</returns>
-        public static List<ImageFile> LoadByCategory(Category category)
+        public static List<ImageFile> LoadImageFilesByCategory(Category category)
         {
             List<ImageFile> list = new();
 
@@ -296,9 +313,92 @@ namespace PicturePerfect.Models
         /// </summary>
         /// <param name="subCategory"></param>
         /// <returns>Returns the list of image files.</returns>
-        public static List<ImageFile> LoadBySubCategory(SubCategory subCategory)
+        public static List<ImageFile> LoadImageFilesBySubCategory(SubCategory subCategory)
         {
             List<ImageFile> list = new();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Method to return a list of all categories in the database.
+        /// </summary>
+        /// <returns>Returns a list containing all category objects.</returns>
+        public static List<Category> LoadAllCategories()
+        {
+            List<Category> list = new();
+
+            string commandText = @"SELECT id, name, notes FROM categories ORDER BY name ASC";
+
+            // Connect to the Sqlite database
+            SQLiteConnector connector = new();
+            SqliteCommand command = new(commandText, connector.Connection);
+
+            // execute reader
+            SqliteDataReader reader = command.ExecuteReader();
+
+            // step through reader
+            while (reader.Read())
+            {
+                Category category = new()
+                {
+                    Id = reader.GetInt32((int)TableCategoriesOrdinals.Id),
+                    Name = reader.GetString((int)TableCategoriesOrdinals.Name),
+                    Notes = reader.GetString((int)TableCategoriesOrdinals.Notes)
+                };
+                //category.SetId(reader.GetInt32((int)TableCategoriesOrdinals.Id));
+
+                list.Add(category);
+            }
+
+            // close connection
+            connector.CloseConnection();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Method to return all locations stored in the database.
+        /// </summary>
+        /// <returns>REturns the locations object.</returns>
+        public static List<Locations.Location> LoadAllLocations()
+        {
+            List<Locations.Location> locations = new();
+
+            string commandText = @"SELECT id, name, notes FROM locations ORDER BY name ASC";
+
+            // Connect to the Sqlite database
+            SQLiteConnector connector = new();
+            SqliteCommand command = new(commandText, connector.Connection);
+
+            // execute reader
+            SqliteDataReader reader = command.ExecuteReader();
+
+            // step through reader
+            while (reader.Read())
+            {
+                Locations.Location location = new()
+                {
+                    Name = reader.GetString((int)TableLocationsOrdinals.Name),
+                    Notes = reader.GetString((int)TableLocationsOrdinals.Notes)
+                };
+                location.SetId(reader.GetInt32((int)TableLocationsOrdinals.Id));
+
+                locations.Add(location);
+            }
+
+            // close connection
+            connector.CloseConnection();
+
+            return locations;
+        }
+
+
+        public static List<SubCategory> LoadSubcategories(Category category)
+        {
+            List <SubCategory> list = new();
+
+            string commandText = @"SELECT id FROM categories ORDER BY name=@name";
 
             return list;
         }

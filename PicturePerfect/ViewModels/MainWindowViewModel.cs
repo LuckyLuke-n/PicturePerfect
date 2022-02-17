@@ -92,18 +92,28 @@ namespace PicturePerfect.ViewModels
             }
         }
 
-        private CategoriesTree categoriesTree = new();
         /// <summary>
         /// Get the categories tree object of the selected data. Set the object and the static property in the view model base for hand over to other windows.
         /// </summary>
-        public CategoriesTree CategoriesTree
+        public static CategoriesTree CategoriesTree
         {
             get { return LoadedCategoriesTree; }
             set
             {
-                categoriesTree = value;
                 // set the properties in the view model base
                 LoadedCategoriesTree = value;
+            }
+        }
+
+        /// <summary>
+        /// Get the locations from the base view model.
+        /// </summary>
+        private static Locations Locations
+        {
+            get { return LoadedLocations; }
+            set
+            {
+                LoadedLocations = value;
             }
         }
 
@@ -311,6 +321,8 @@ namespace PicturePerfect.ViewModels
 
             // images page
             ImageFilesDatabase.LoadAll();
+            CategoriesTree.LoadTree();
+            Locations.LoadList();
 
             // settings page
             NefFilesChecked = ThisApplication.ProjectFile.NefFilesChecked;

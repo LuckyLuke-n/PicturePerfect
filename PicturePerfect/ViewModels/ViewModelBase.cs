@@ -28,5 +28,10 @@ namespace PicturePerfect.ViewModels
         /// This makes it possible for the VMs to communicate with each other.
         /// </summary>
         public static CategoriesTree LoadedCategoriesTree { get; set; } = new();
+        /// <summary>
+        /// Get or set the locations available in the database.
+        /// This makes it possible for the VMs to communicate with each other.
+        /// </summary>
+        public static Locations LoadedLocations { get; set; } = new();
     }
 }

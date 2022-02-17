@@ -28,5 +28,14 @@ namespace PicturePerfect.Models
         {
             Database.AddCategory(this);
         }
+
+        /// <summary>
+        /// Method to set the private property.
+        /// </summary>
+        /// <param name="id"></param>
+        public void SetId(int id)
+        {
+            Id = id;
+        }
     }
 }

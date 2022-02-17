@@ -12,22 +12,27 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get a list of categories.
         /// </summary>
-        public ObservableCollection<Category> Tree { get; private set; } = new() { new Category() { Name = "All" }, new Category() { Name = "None" } };
+        public ObservableCollection<Category> Tree { get; private set; } = new ObservableCollection<Category>();
 
         /// <summary>
         /// Creates a new instance of the categories tree class.
         /// </summary>
         public CategoriesTree()
         {
-
         }
 
         /// <summary>
         /// Method to load all categories from the database.
         /// </summary>
-        private void LoadTree()
+        public void LoadTree()
         {
+            Tree.Clear();
+            List<Category> categories = Database.LoadAllCategories();
 
+            // repopulate list with category objects
+            Tree.Add(new Category() { Name = "All" });
+            Tree.Add(new Category() { Name = "None" });
+            categories.ForEach(categroy => Tree.Add(categroy));
         }
     }
 }

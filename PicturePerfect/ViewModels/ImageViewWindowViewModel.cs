@@ -130,6 +130,12 @@ namespace PicturePerfect.ViewModels
         /// Get the categories tree object of the selected data. Set the object and the static property in the view model base for hand over to other windows.
         /// </summary>
         public CategoriesTree CategoriesTree => LoadedCategoriesTree;
+
+        /// <summary>
+        /// Get the locations available in the database.
+        /// This is inherited from the ViewModelBase.
+        /// </summary>
+        public Locations Locations => LoadedLocations;
         #endregion Image info
 
         #region new location catrogory or sub-category
@@ -265,6 +271,11 @@ namespace PicturePerfect.ViewModels
             Locations.Location location = new();
             location.Name = NewLocationName;
             location.Create();
+
+            // add new location as first item in list
+            Locations.List.Add(location);
+            Locations.List.Move(Locations.List.Count-1, 0);
+
             RunToggleVisibilityLocationCommand();
         }
 
@@ -276,6 +287,11 @@ namespace PicturePerfect.ViewModels
             Category category = new();
             category.Name = NewCategoryName;
             category.Create();
+
+            // add new category as first item in list
+            CategoriesTree.Tree.Add(category);
+            CategoriesTree.Tree.Move(CategoriesTree.Tree.Count-1, 0);
+
             RunToggleVisibilityCategoryCommand();
         }
 

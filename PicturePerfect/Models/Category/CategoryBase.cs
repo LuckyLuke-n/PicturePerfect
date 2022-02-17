@@ -11,7 +11,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get the category id.
         /// </summary>
-        public int Id { get; private set; }
+        public int Id { get; set; }
         /// <summary>
         /// Get or set the category name.
         /// </summary>

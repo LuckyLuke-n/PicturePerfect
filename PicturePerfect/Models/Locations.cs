@@ -51,6 +51,28 @@ namespace PicturePerfect.Models
             {
                 Database.AddLocation(this);
             }
+
+            /// <summary>
+            /// Method to set the private property Id.
+            /// </summary>
+            /// <param name="id"></param>
+            public void SetId(int id)
+            {
+                Id = id;
+            }
+        }
+
+        /// <summary>
+        /// Method to load the location list from the database.
+        /// </summary>
+        public void LoadList()
+        {
+            List.Clear();
+            List<Location> locations = Database.LoadAllLocations();
+
+            // repopulate list with location objects
+            List.Add(new Location() { Name = "None" });
+            locations.ForEach(location => List.Add(location));
         }
     }
 }
