@@ -33,7 +33,7 @@
 				<Button>
 					<Image Source="/Assets/Drawables/left.png" Height="40"/>
 				</Button>
-				<Button ToolTip.Tip="Export the current image.">
+				<Button ToolTip.Tip="Export the current image." Command="{Binding ExportImageCommand}">
 					<Image Source="/Assets/Drawables/export.png" Height="40"/>
 				</Button>
 				<Button ToolTip.Tip="Delete the current image.">
@@ -47,7 +47,7 @@
 
 		<!-- Grid for properties -->
 		<Grid Grid.Column="2" Grid.Row="0" Margin="10,10,10,0"
-			  ColumnDefinitions="auto,*,auto" RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, *, auto" >
+			  ColumnDefinitions="auto,*,auto" RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, *, auto, auto, auto" >
 			<!-- Id -->
 			<Label Content="Id" Grid.Column="0" Grid.Row="0" Margin="0,0,0,10"/>
 			<TextBox Text="{Binding ImageFile.Id}" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
@@ -128,7 +128,13 @@
 					 ToolTip.Tip="This cannot be edited." IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
 					 Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}"/>
 
-			
+			<!-- Export options -->
+			<Label Grid.Column="0" Grid.Row="13" Margin="0,0,0,10" Content="Export options" IsVisible="{Binding MoreInfoVisible}"/>
+			<ComboBox Items="{Binding ConvertToFileType}" SelectedItem="{Binding ConvertTo}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="13" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}"/>
+			<TextBox Name="textBoxSelectFolder" Text="{Binding SaveToPath}" Grid.Column="1" Grid.Row="14" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}" IsReadOnly="True"/>
+			<Button Grid.Column="2" Grid.Row="14" Margin="2,-10,0,0" IsVisible="{Binding MoreInfoVisible}" Click="ButtonSelectFolder_Click">
+				<Image Source="/Assets/Drawables/folder.png" Height="20"/>
+			</Button>
 		</Grid>
 		
 		

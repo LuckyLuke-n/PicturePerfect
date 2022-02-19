@@ -12,6 +12,8 @@ namespace PicturePerfect.Models
     public enum ImageTypes
     {
         jpg,
-        png
+        png,
+        nef,
+        orf
     }
 }

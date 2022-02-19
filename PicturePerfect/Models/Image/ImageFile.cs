@@ -198,16 +198,71 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to convert a raw file image to jpg-format.
+        /// Method to convert a raw file image to jpg-format. The image will be savd to the specified path.
         /// </summary>
+        /// <param name="toFolder"></param>
         /// <param name="outputType"></param>
-        /// <returns>Returns the converted images of type jpg, png, or bitmap.</returns>
-        public object Convert(ImageTypes outputType = ImageTypes.jpg)
+        /// <returns>Returns true if conversion was successful.</returns>
+        public bool Export(string toFolder, string outputType = ".jpg")
         {
-        object convertedImage = "";
+            // create new file name with new extension based on custom or initial name
+            string GetOutputFileName()
+            {
+                string newFileName = string.Empty;
 
+                // check custom or initial name
+                if (Name != CustomName)
+                {
+                    newFileName = $"{CustomName.Split(".").First()}{outputType}";
+                }
+                else
+                {
+                    newFileName = $"{Name.Split(".").First()}{outputType}";
+                }
 
-        return convertedImage;
+                string fileName = Path.Combine(paths: new string[] { toFolder, newFileName });
+
+                return fileName;
+            }
+
+            if (outputType == FileType || outputType.ToUpper() == FileType)
+            {
+                // only copy the file
+                string outputFileName = Path.Combine(toFolder, Name);
+                File.Copy(AbsolutePath, outputFileName, true);
+                return true;
+            }
+            else if ((nef.Contains(outputType) || orf.Contains(outputType)) & jpg.Contains(FileType))
+            {
+                // jpg will not be converted to raw on output!
+                return false;
+            }
+            else
+            {
+                // type is some sort of raw file that will be converted
+                // decode the image using the MagickImage library
+                using (MagickImage rawImage = new(this.AbsolutePath))
+                {
+                    if (jpg.Contains(outputType))
+                    {
+                        rawImage.Write(GetOutputFileName(), MagickFormat.Jpg);
+                    }
+                    else if (png.Contains(outputType))
+                    {
+                        rawImage.Write(GetOutputFileName(), MagickFormat.Png);
+                    }
+                    else if (nef.Contains(outputType))
+                    {
+                        // no conversion
+                        // rawImage.Write(GetOutputFileName(), MagickFormat.Nef);
+                    }
+                    else
+                    {
+                        // no conversion
+                    }
+                }
+                return true;
+            }
         }
 
         /// <summary>

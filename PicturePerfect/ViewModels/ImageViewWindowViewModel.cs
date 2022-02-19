@@ -82,6 +82,8 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> SaveCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveSubCategory1Command { get; }
         public ReactiveCommand<Unit, Unit> SaveSubCategory2Command { get; }
+
+        public ReactiveCommand<Unit, Unit> ExportImageCommand { get; }
         #endregion
 
         #region Image info
@@ -137,6 +139,23 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public Locations Locations => LoadedLocations;
         #endregion Image info
+
+        #region Image more info
+        /// <summary>
+        /// Get or set the string indicating to file type to convert into.
+        /// </summary>
+        public string ConvertTo { get; set; } = ".jpg";
+
+        /// <summary>
+        /// Get a list of supported file types.
+        /// </summary>
+        public static List<string> ConvertToFileType => GetConvertToFileTypes();
+
+        /// <summary>
+        /// Get or set the path where the image file should be saved to.
+        /// </summary>
+        public string SaveToPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        #endregion Image more info
 
         #region new location catrogory or sub-category
         private string newLocationName = string.Empty;
@@ -221,6 +240,8 @@ namespace PicturePerfect.ViewModels
             SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
             SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1Command);
             SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
+
+            ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
         }
 
         /// <summary>
@@ -348,6 +369,48 @@ namespace PicturePerfect.ViewModels
             SubCategory subCategory = new();
             subCategory.Name = name;
             subCategory.Create();
+        }
+
+        /// <summary>
+        /// Method to generate a list of file types to convert to.
+        /// </summary>
+        /// <returns>Returns a list of strings.</returns>
+        private static List<string> GetConvertToFileTypes()
+        {
+            // add supported input types to list
+            List<string> convertTo = new() { ".jpg", ".JPG" };
+            convertTo.AddRange(ThisApplication.ProjectFile.GetInputFileTypes());
+            List<string> converToDistinct = convertTo.Distinct().ToList();
+
+            return converToDistinct;
+        }
+
+        /// <summary>
+        /// Method to export image to desktop.
+        /// </summary>
+        private void RunExportImageCommand()
+        {
+            // export the image file
+            void backgroundWorkerExport_DoWork(object sender, DoWorkEventArgs e)
+            {
+                IsIndeterminateBar = true;
+                ImageFile.Export(toFolder: SaveToPath, ConvertTo);
+            }
+
+            // reset the progress bar property
+            void backgroundWorkerExport_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+            {
+                IsIndeterminateBar = false;
+            }
+
+            // new backgroundworker
+            BackgroundWorker backgroundWorkerExport = new();
+            backgroundWorkerExport.DoWork += backgroundWorkerExport_DoWork;
+            backgroundWorkerExport.RunWorkerCompleted += backgroundWorkerExport_RunWorkerCompleted;
+            // run the worker
+            backgroundWorkerExport.RunWorkerAsync();
+
+
         }
     }
 }

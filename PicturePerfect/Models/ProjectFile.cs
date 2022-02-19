@@ -346,38 +346,6 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to set the input file types.
-        /// </summary>
-        /// <param name="rawInputs"></param>
-        /// <param name="otherInputs"></param>
-        public void SetInputFormats(List<RawTypes> rawInputs, List<ImageTypes>? otherInputs = null)
-        {
-            /*
-            List<string>  fileTypes = new List<string>();
-            
-            // insert raw types in list
-            foreach (RawTypes rawInput in rawInputs)
-            {
-                fileTypes.Add(rawInput.ToString());
-            }
-
-            // insert oter inputs in list
-            if (otherInputs != null)
-            {
-                foreach (ImageTypes otherInput in otherInputs)
-                {
-                    fileTypes.Add(otherInput.ToString());
-                }
-            }
-
-            // set property
-            InputFormats = fileTypes;
-
-            Save();
-            */
-        }
-
-        /// <summary>
         /// Method to generate a list of currently selected input file types. The formats are of type .jpg and .JPG. Always with leading dot and upper and lower case version of the extension.
         /// </summary>
         /// <returns>Returns a list of strings indicating the file formats.</returns>
@@ -387,8 +355,8 @@ namespace PicturePerfect.Models
             List<string> inputListWithUpperCase = new();
 
             // add file types to list
-            if (NefFilesChecked == true) { inputList.Add(RawTypes.nef.ToString()); }
-            if (OrfFilesChecked == true) { inputList.Add(RawTypes.orf.ToString()); }
+            if (NefFilesChecked == true) { inputList.Add(ImageTypes.nef.ToString()); }
+            if (OrfFilesChecked == true) { inputList.Add(ImageTypes.orf.ToString()); }
             if (JpgFilesChecked == true) { inputList.Add(ImageTypes.jpg.ToString()); }
             if (PngFilesChecked == true) { inputList.Add(ImageTypes.png.ToString()); }
 
