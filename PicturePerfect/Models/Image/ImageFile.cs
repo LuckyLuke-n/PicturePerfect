@@ -76,15 +76,15 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the category for this window.
         /// </summary>
-        public Category Category { get; set; } = new();
+        public Category Category { get; set; } = null;
         /// <summary>
         /// Get or set the sub category #1.
         /// </summary>
-        public SubCategory SubCategory1 { get; set; } = new();
+        public SubCategory SubCategory1 { get; set; } = null;
         /// <summary>
         /// Get or set the sub category #2.
         /// </summary>
-        public SubCategory SubCategory2 { get; set; } = new();
+        public SubCategory SubCategory2 { get; set; } = null;
         /// <summary>
         /// Get or set the notes for this image.
         /// </summary>

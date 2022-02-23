@@ -87,16 +87,6 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Image info
-        private int imageId;
-        /// <summary>
-        /// Get or set the image id for the image to be displayed in the image viewer.
-        /// </summary>
-        public int ImageId
-        {
-            get { return imageId; }
-            set { this.RaiseAndSetIfChanged(ref imageId, value); }
-        }
-
         private string moreInfo = "";
         /// <summary>
         /// Get or set the more information section in the image view window. 
@@ -132,6 +122,65 @@ namespace PicturePerfect.ViewModels
         /// Get the categories tree object of the selected data. Set the object and the static property in the view model base for hand over to other windows.
         /// </summary>
         public CategoriesTree CategoriesTree => LoadedCategoriesTree;
+
+        public Category categorySelection = new();
+        /// <summary>
+        /// Get or set the selected category. This will adjust the sub-categories lists.
+        /// </summary>
+        public Category CategorySelection
+        {
+            get { return categorySelection; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref categorySelection, value);
+                
+                if (value != null)
+                {
+                    SubCategories1 = Database.LoadSubcategories(value);
+                    SubCategories2 = Database.LoadSubcategories(value);
+                }               
+            }
+        }
+
+        public SubCategory subCategory1Selection = new();
+        /// <summary>
+        /// Get or set the selected subcategory 1.
+        /// </summary>
+        public SubCategory SubCategory1Selection
+        {
+            get { return subCategory1Selection; }
+            set { this.RaiseAndSetIfChanged(ref subCategory1Selection, value); }
+        }
+
+        public SubCategory subCategory2Selection = new();
+        /// <summary>
+        /// Get or set the selected subcategory 2.
+        /// </summary>
+        public SubCategory SubCategory2Selection
+        {
+            get { return subCategory2Selection; }
+            set { this.RaiseAndSetIfChanged(ref subCategory2Selection, value); }
+        }
+
+        public List<SubCategory> subCategories1 = new();
+        /// <summary>
+        /// Get or set the selection for sub category 1.
+        /// </summary>
+        public List<SubCategory> SubCategories1
+        {
+            get { return subCategories1; }
+            set { this.RaiseAndSetIfChanged(ref subCategories1, value); }
+        }
+
+        public List<SubCategory> subCategories2 = new();
+        /// <summary>
+        /// Get or set the selection for sub category 2.
+        /// </summary>
+        public List<SubCategory> SubCategories2
+        {
+            get { return subCategories2; }
+            set { this.RaiseAndSetIfChanged(ref subCategories2, value); }
+        }
 
         /// <summary>
         /// Get the locations available in the database.
@@ -208,6 +257,9 @@ namespace PicturePerfect.ViewModels
         {
             // inherited from base view model
             ImageFile = SelectedImageFile;
+            CategorySelection = ImageFile.Category;
+            SubCategory1Selection = ImageFile.SubCategory1;
+            SubCategory2Selection = ImageFile.SubCategory2;
 
             // new backgroundworker
             BackgroundWorker backgroundWorker = new();
