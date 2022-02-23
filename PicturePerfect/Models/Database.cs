@@ -94,6 +94,16 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Enum for column numbers of table sub-categories.
+        /// </summary>
+        private enum TableSubCategoriesOrdinals
+        {
+            Id,
+            Name,
+            Notes
+        }
+
+        /// <summary>
         /// Enum for column numbers of table locations.
         /// </summary>
         private enum TableLocationsOrdinals
@@ -337,7 +347,7 @@ namespace PicturePerfect.Models
             // execute reader
             SqliteDataReader reader = command.ExecuteReader();
 
-            // step through reader
+            // step through reader and add subcategories
             while (reader.Read())
             {
                 Category category = new()
@@ -345,10 +355,63 @@ namespace PicturePerfect.Models
                     Id = reader.GetInt32((int)TableCategoriesOrdinals.Id),
                     Name = reader.GetString((int)TableCategoriesOrdinals.Name),
                     Notes = reader.GetString((int)TableCategoriesOrdinals.Notes)
-                };
-                //category.SetId(reader.GetInt32((int)TableCategoriesOrdinals.Id));
+                };          
 
                 list.Add(category);
+            }
+
+            // close connection
+            connector.CloseConnection();
+
+            // add sub-categories (this has to be done after closing the connection to the current reader
+            foreach (Category category in list)
+            {
+                // get the sub-categories
+                category.SubCategories = LoadSubcategories(category);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Method to get a list of subcategories for a specific category
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns>Returns a list of sub-categories for the given category.</returns>
+        public static List<SubCategory> LoadSubcategories(Category category)
+        {
+            List<SubCategory> list = new();
+
+            // query subcategory ids
+            string commandText = @"SELECT subcategory_id FROM categories_subcategories WHERE category_id=@category_id";
+
+            // Connect to the Sqlite database
+            SQLiteConnector connector = new();
+
+            SqliteCommand command = new(commandText, connector.Connection);
+            command.Parameters.AddWithValue("@category_id", category.Id);
+
+            // Sqlite data reader
+            // this reader will not contain elements it the category has no subcategories
+            SqliteDataReader reader = command.ExecuteReader();
+            // step through the reader containing the subcategory ids
+            while (reader.Read())
+            {
+                // index 2 is the subcategory id (column 3 in table)
+                string commandTextSubCategory = @"SELECT id, name, notes FROM subcategories WHERE id=@id";
+                SqliteCommand commandSubCategory = new(commandTextSubCategory, connector.Connection);
+                commandSubCategory.Parameters.AddWithValue("@id", reader.GetInt32(2));
+
+                // call the reader for the subcategory by using the subcateory id
+                SqliteDataReader readerSubCategory = commandSubCategory.ExecuteReader();
+                // reader for the subcategory command will only contain one item, since id is unique
+                SubCategory subCategory = new()
+                {
+                    Id = readerSubCategory.GetInt32((int)TableSubCategoriesOrdinals.Id),
+                    Name = readerSubCategory.GetString((int)TableSubCategoriesOrdinals.Name),
+                    Notes = readerSubCategory.GetString((int)TableSubCategoriesOrdinals.Notes)
+                };
+                list.Add(subCategory);
             }
 
             // close connection
@@ -391,16 +454,6 @@ namespace PicturePerfect.Models
             connector.CloseConnection();
 
             return locations;
-        }
-
-
-        public static List<SubCategory> LoadSubcategories(Category category)
-        {
-            List <SubCategory> list = new();
-
-            string commandText = @"SELECT id FROM categories ORDER BY name=@name";
-
-            return list;
         }
     }
 }
