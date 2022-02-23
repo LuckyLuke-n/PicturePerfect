@@ -84,6 +84,8 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> SaveSubCategory2Command { get; }
 
         public ReactiveCommand<Unit, Unit> ExportImageCommand { get; }
+
+        public ReactiveCommand<Unit, Unit> SaveChangesCommand { get; }
         #endregion
 
         #region Image info
@@ -136,8 +138,21 @@ namespace PicturePerfect.ViewModels
                 
                 if (value != null)
                 {
-                    SubCategories1 = Database.LoadSubcategories(value);
-                    SubCategories2 = Database.LoadSubcategories(value);
+                    // filter the category tree by the category name to get the sub-categories
+                    List<SubCategory> FilterTree()
+                    {
+                        List<SubCategory> list = new();
+
+                        foreach (Category category in CategoriesTree.Tree)
+                        {
+                            if (category.Name == value.Name) { list = category.SubCategories; break; }
+                        }
+
+                        return list;
+                    }
+
+                    SubCategories1 = FilterTree();
+                    SubCategories2 = FilterTree();
                 }               
             }
         }
@@ -294,6 +309,8 @@ namespace PicturePerfect.ViewModels
             SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
 
             ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
+
+            SaveChangesCommand = ReactiveCommand.Create(RunSaveChangesCommand);
         }
 
         /// <summary>
@@ -373,7 +390,8 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveSubCategory1Command()
         {
-            SaveSubCategory(NewSubCategory1Name);
+            SubCategory subCategory = SaveSubCategory(NewSubCategory1Name);
+            CategorySelection.LinkSubcategory(subCategory);
             RunToggleVisibilitySubCategory1Command();
         }
 
@@ -416,11 +434,13 @@ namespace PicturePerfect.ViewModels
         /// Method to save a new subcategory to the database.
         /// </summary>
         /// <param name="name"></param>
-        private void SaveSubCategory(string name)
+        /// <returns>Returns the newly saved sub-category.</returns>
+        private SubCategory SaveSubCategory(string name)
         {
             SubCategory subCategory = new();
             subCategory.Name = name;
             subCategory.Create();
+            return subCategory;
         }
 
         /// <summary>
@@ -463,6 +483,20 @@ namespace PicturePerfect.ViewModels
             backgroundWorkerExport.RunWorkerAsync();
 
 
+        }
+
+        /// <summary>
+        /// Method to save the changes made to the image properties.
+        /// </summary>
+        private void RunSaveChangesCommand()
+        {
+            ImageFile.CommitMetaDataChanges();
+
+            // check if properties causing relinking in database where changed
+            if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); }
+            if (SubCategory1Selection.Name != ImageFile.SubCategory1.Name) { ImageFile.CommitSubCategory1Change(); }
+            if (SubCategory2Selection.Name != ImageFile.SubCategory2.Name) { ImageFile.CommitSubCategory2Change(); }
+            if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); }
         }
     }
 }

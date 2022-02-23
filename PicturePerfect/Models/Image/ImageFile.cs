@@ -76,15 +76,15 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the category for this window.
         /// </summary>
-        public Category Category { get; set; } = null;
+        public Category Category { get; set; } = new();
         /// <summary>
         /// Get or set the sub category #1.
         /// </summary>
-        public SubCategory SubCategory1 { get; set; } = null;
+        public SubCategory SubCategory1 { get; set; } = new();
         /// <summary>
         /// Get or set the sub category #2.
         /// </summary>
-        public SubCategory SubCategory2 { get; set; } = null;
+        public SubCategory SubCategory2 { get; set; } = new();
         /// <summary>
         /// Get or set the notes for this image.
         /// </summary>
@@ -166,12 +166,46 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Save changed properties to the database.
+        /// Save changes made to the image meta data.
         /// </summary>
-        public void CommitChanges()
+        public void CommitMetaDataChanges()
         {
 
         }
+
+        /// <summary>
+        /// Save changes made to the image location.
+        /// </summary>
+        public void CommitLocationChange()
+        {
+
+        }
+
+        /// <summary>
+        /// Save changes made to the image category.
+        /// </summary>
+        public void CommitCategoryChange()
+        {
+
+        }
+
+        /// <summary>
+        /// Save changes made to the image sub category 1.
+        /// </summary>
+        public void CommitSubCategory1Change()
+        {
+
+        }
+
+        /// <summary>
+        /// Save changes made to the image sub category 2.
+        /// </summary>
+        public void CommitSubCategory2Change()
+        {
+
+        }
+
+
 
         /// <summary>
         /// Method to get this image to a bitmap.

@@ -11,7 +11,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the list of subcategories associated with this category.
         /// </summary>
-        public List<SubCategory> SubCategories { get; set; } = new() { };
+        public List<SubCategory> SubCategories { get; set; } = new();
 
         /// <summary>
         /// Creates a new instance of the top-category class.
@@ -36,6 +36,16 @@ namespace PicturePerfect.Models
         public void SetId(int id)
         {
             Id = id;
+        }
+
+        /// <summary>
+        /// Method to link this category instance to a subcategory.
+        /// </summary>
+        /// <param name="subCategory"></param>
+        public void LinkSubcategory(SubCategory subCategory)
+        {
+            Database.LinkCategoryToSubCategory(category: this, subCategory: subCategory);
+            SubCategories.Add(subCategory);
         }
     }
 }
