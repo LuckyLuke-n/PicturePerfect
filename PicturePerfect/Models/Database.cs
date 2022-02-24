@@ -461,6 +461,7 @@ namespace PicturePerfect.Models
         /// <returns>Returns a list of sub-categories for the given category.</returns>
         public static List<SubCategory> LoadSubcategories(Category category)
         {
+            List<int> subCategoryIds = new();
             List<SubCategory> list = new();
 
             // query subcategory ids
@@ -475,27 +476,38 @@ namespace PicturePerfect.Models
             // Sqlite data reader
             // this reader will not contain elements it the category has no subcategories
             SqliteDataReader reader = command.ExecuteReader();
-            // step through the reader containing the subcategory ids
-            MessageBox.Show(reader.FieldCount.ToString());
-            while (reader.Read())
+            // step through the reader containing the subcategory ids           
+            if (reader.HasRows)
             {
-                // index 2 is the subcategory id (column 3 in table)
-                int id = reader.GetInt32(2);
-                string commandTextSubCategory = @"SELECT id, name, notes FROM subcategories WHERE id=@id";
-                SqliteCommand commandSubCategory = new(commandTextSubCategory, connector.Connection);
-                commandSubCategory.Parameters.AddWithValue("@id", id);
-
-                // call the reader for the subcategory by using the subcateory id
-                SqliteDataReader readerSubCategory = commandSubCategory.ExecuteReader();
-                // reader for the subcategory command will only contain one item, since id is unique
-                SubCategory subCategory = new()
+                // create the subcategory list
+                while (reader.Read())
                 {
-                    Id = readerSubCategory.GetInt32((int)TableSubCategoriesOrdinals.Id),
-                    Name = readerSubCategory.GetString((int)TableSubCategoriesOrdinals.Name),
-                    Notes = readerSubCategory.GetString((int)TableSubCategoriesOrdinals.Notes)
-                };
-                list.Add(subCategory);
+                    // index 0 is the subcategory id (only 1 column in reader)
+                    int id = reader.GetInt32(0);
+
+                    string commandTextSubCategory = @"SELECT id, name, notes FROM subcategories WHERE id=@id";
+                    SqliteCommand commandSubCategory = new(commandTextSubCategory, connector.Connection);
+                    commandSubCategory.Parameters.AddWithValue("@id", id);
+
+                    // call the reader for the subcategory by using the subcateory id
+                    SqliteDataReader readerSubCategory = commandSubCategory.ExecuteReader();
+
+                    // reader for the subcategory command will only contain one item, since id is unique
+                    if (readerSubCategory.HasRows)
+                    {
+                        // it will be okay to just call reader.Read() without the while because only the first row is filled
+                        readerSubCategory.Read();                      
+                        SubCategory subCategory = new()
+                        {
+                            Id = readerSubCategory.GetInt32((int)TableSubCategoriesOrdinals.Id),
+                            Name = readerSubCategory.GetString((int)TableSubCategoriesOrdinals.Name),
+                            Notes = readerSubCategory.GetString((int)TableSubCategoriesOrdinals.Notes)
+                        };
+                        list.Add(subCategory);                       
+                    }                   
+                }
             }
+            
 
             // close connection
             connector.CloseConnection();
