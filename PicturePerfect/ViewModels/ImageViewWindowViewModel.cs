@@ -89,6 +89,16 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Image info
+        private string fileNameSelected;
+        /// <summary>
+        /// Get or set the custom file name.
+        /// </summary>
+        public string FileNameSelected
+        {
+            get { return fileNameSelected; }
+            set { this.RaiseAndSetIfChanged(ref fileNameSelected, value); }
+        }
+
         private string moreInfo = "";
         /// <summary>
         /// Get or set the more information section in the image view window. 
@@ -272,6 +282,7 @@ namespace PicturePerfect.ViewModels
         {
             // inherited from base view model
             ImageFile = SelectedImageFile;
+            FileNameSelected = ImageFile.CustomName;
             CategorySelection = ImageFile.Category;
             SubCategory1Selection = ImageFile.SubCategory1;
             SubCategory2Selection = ImageFile.SubCategory2;
@@ -400,7 +411,8 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveSubCategory2Command()
         {
-            SaveSubCategory(NewSubCategory2Name);
+            SubCategory subCategory = SaveSubCategory(NewSubCategory2Name);
+            CategorySelection.LinkSubcategory(subCategory);
             RunToggleVisibilitySubCategory2Command();
         }
 
@@ -490,13 +502,21 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveChangesCommand()
         {
-            ImageFile.CommitMetaDataChanges();
+            // check if the custom file name was changed
+            if (FileNameSelected != ImageFile.CustomName)
+            {
+                ImageFile.CustomName = FileNameSelected;
+                LoadedImageFiles.List[SelectedImageIndex] = ImageFile;
+                ImageFile.CommitCustomFileNameChange();
+            }
 
+            /*
             // check if properties causing relinking in database where changed
             if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); }
             if (SubCategory1Selection.Name != ImageFile.SubCategory1.Name) { ImageFile.CommitSubCategory1Change(); }
             if (SubCategory2Selection.Name != ImageFile.SubCategory2.Name) { ImageFile.CommitSubCategory2Change(); }
             if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); }
+            */
         }
     }
 }

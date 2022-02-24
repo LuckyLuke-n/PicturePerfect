@@ -168,9 +168,9 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Save changes made to the image meta data.
         /// </summary>
-        public void CommitMetaDataChanges()
+        public void CommitCustomFileNameChange()
         {
-
+            Database.SetCustomName(imageFile: this);
         }
 
         /// <summary>

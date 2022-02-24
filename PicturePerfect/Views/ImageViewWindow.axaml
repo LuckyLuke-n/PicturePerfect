@@ -19,7 +19,7 @@
 		<!-- Button Row -->
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Content="More" Margin="5" Command="{Binding ToggleVisibilityMoreInfoCommand}"/>
-			<Button Content="Save" Margin="5"/>
+			<Button Content="Save" Margin="5" Command="{Binding SaveChangesCommand}"/>
 			<Button Name="buttonClose" Content="Close" Margin="5,5,10,5" Click="ButtonClose_Click" />
 		</StackPanel>
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Left">
@@ -55,7 +55,7 @@
 
 			<!-- File name -->
 			<Label Content="File name" Grid.Column="0" Grid.Row="1" Margin="0,0,0,10"/>
-			<TextBox Text="{Binding ImageFile.CustomName}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"/>
+			<TextBox Text="{Binding FileNameSelected}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"/>
 
 			<!-- Date -->
 			<Label Content="Date" Grid.Column="0" Grid.Row="2" Margin="0,0,0,10"/>

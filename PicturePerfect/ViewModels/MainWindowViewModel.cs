@@ -46,22 +46,6 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Page "Images" Properties
-        private int imageId;
-        /// <summary>
-        /// Get the image Id of the selected image. Set the id and the static property in the view model base for hand over to other windows.
-        /// </summary>
-        public int ImageId
-        {
-            get { return imageId; }
-            set
-            {
-                // this.RaiseAndSetIfChanged(ref imageId, value);
-                imageId = value;
-                // set the properties in the view model base
-                SelectedImageId = value;
-            }
-        }
-
         private ImageFile imageFile = new();
         /// <summary>
         /// Get the image file object of the selected image. Set the object and the static property in the view model base for hand over to other windows.
@@ -77,45 +61,34 @@ namespace PicturePerfect.ViewModels
             }
         }
 
-        private ImageFiles imageFilesDatabase = new();
         /// <summary>
-        /// Get the image files object of the images in the database. Set the object and the static property in the view model base for hand over to other windows.
+        /// Get or set the index of the selected image in the collection. This will also set the property in the view model base to enable hand over to other windows.
         /// </summary>
-        public ImageFiles ImageFilesDatabase
-        { 
-            get { return imageFilesDatabase; }
+        public int SelectedIndex
+        {
+            get { return SelectedImageIndex; }
             set
             {
-                imageFilesDatabase = value;
+                //selectedIndex = value;
                 // set the properties in the view model base
-                LoadedImageFiles = value;
+                SelectedImageIndex = value;
             }
         }
 
         /// <summary>
-        /// Get the categories tree object of the selected data. Set the object and the static property in the view model base for hand over to other windows.
+        /// Get the image files object of the images in the database from the view model base.
         /// </summary>
-        public static CategoriesTree CategoriesTree
-        {
-            get { return LoadedCategoriesTree; }
-            set
-            {
-                // set the properties in the view model base
-                LoadedCategoriesTree = value;
-            }
-        }
+        public ImageFiles ImageFilesDatabase => LoadedImageFiles;
+
+        /// <summary>
+        /// Get the categories tree object of the selected data from the view model base.
+        /// </summary>
+        public CategoriesTree CategoriesTree => LoadedCategoriesTree;
 
         /// <summary>
         /// Get the locations from the base view model.
         /// </summary>
-        private static Locations Locations
-        {
-            get { return LoadedLocations; }
-            set
-            {
-                LoadedLocations = value;
-            }
-        }
+        public Locations Locations => LoadedLocations;
 
         private bool hideImagesDialog = false;
         /// <summary>
@@ -320,9 +293,10 @@ namespace PicturePerfect.ViewModels
             Notes = ThisApplication.ProjectFile.Notes;
 
             // images page
-            ImageFilesDatabase.LoadAll();
-            CategoriesTree.LoadTree();
-            Locations.LoadList();
+            //ImageFilesDatabase.LoadAll();
+            LoadedImageFiles.LoadAll();
+            LoadedCategoriesTree.LoadTree();
+            LoadedLocations.LoadList();
 
             // settings page
             NefFilesChecked = ThisApplication.ProjectFile.NefFilesChecked;
@@ -504,7 +478,7 @@ namespace PicturePerfect.ViewModels
                         }      
 
                         // add files to database
-                        ImageFilesDatabase.AddImages(files: filesToAdd, subfolderName: name);
+                        LoadedImageFiles.AddImages(files: filesToAdd, subfolderName: name);
                     }
                     // hide load folder section
                     RunToggleLoadImagesCommand();

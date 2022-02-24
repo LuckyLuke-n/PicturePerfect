@@ -550,5 +550,33 @@ namespace PicturePerfect.Models
 
             return locations;
         }
+
+        /// <summary>
+        /// Method to set the custim name of a given image file in the sqlite database.
+        /// </summary>
+        /// <param name="imageFile"></param>
+        public static void SetCustomName(ImageFile imageFile)
+        {
+            // prepare values
+            List<string> paramters = new() { "@id", "@custom_name"};
+            object[] values = { imageFile.Id, imageFile.CustomName };
+
+            // connect to sqlite database
+            SQLiteConnector connector = new();
+
+            // set command and its properties
+            SqliteCommand command = new()
+            {
+                CommandText = "UPDATE images SET custom_name=@custom_name WHERE id=@id",
+                Connection = connector.Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute and close
+            command.ExecuteNonQuery();
+            connector.CloseConnection();
+        }
     }
 }
