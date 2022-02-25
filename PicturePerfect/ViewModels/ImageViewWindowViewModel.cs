@@ -84,11 +84,34 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> SaveSubCategory2Command { get; }
 
         public ReactiveCommand<Unit, Unit> ExportImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> NextImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> LastImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> DeleteImageCommand { get; }
 
         public ReactiveCommand<Unit, Unit> SaveChangesCommand { get; }
         #endregion
 
         #region Image info
+        private int imageIdSelected;
+        /// <summary>
+        /// Get or set the id of the selected image file.
+        /// </summary>
+        public int ImageIdSelected
+        {
+            get { return imageIdSelected; }
+            set { this.RaiseAndSetIfChanged(ref imageIdSelected, value); }
+        }
+
+        private DateTime dateTaken;
+        /// <summary>
+        /// Get or set the property for the date taken metadata.
+        /// </summary>
+        public DateTime DateTaken
+        {
+            get { return dateTaken; }
+            set { this.RaiseAndSetIfChanged(ref dateTaken, value); }
+        }
+
         private string fileNameSelected;
         /// <summary>
         /// Get or set the custom file name.
@@ -211,7 +234,18 @@ namespace PicturePerfect.ViewModels
         /// Get the locations available in the database.
         /// This is inherited from the ViewModelBase.
         /// </summary>
-        public Locations Locations => LoadedLocations;
+        public static Locations Locations => LoadedLocations;
+
+        private Locations.Location locationSelected;
+        /// <summary>
+        /// Get or set the property for the selected location.
+        /// </summary>
+        public Locations.Location LocationSelected
+        {
+            get { return locationSelected; }
+            set { this.RaiseAndSetIfChanged(ref locationSelected, value); }
+        }
+
         #endregion Image info
 
         #region Image more info
@@ -282,11 +316,48 @@ namespace PicturePerfect.ViewModels
         {
             // inherited from base view model
             ImageFile = SelectedImageFile;
+
+            SetAllProperties();
+            DisplayImageFile();
+
+            ToggleVisibilityLocationCommand = ReactiveCommand.Create(RunToggleVisibilityLocationCommand);
+            ToggleVisibilityCategoryCommand = ReactiveCommand.Create(RunToggleVisibilityCategoryCommand);
+            ToggleVisibilitySubCategory1Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory1Command);
+            ToggleVisibilitySubCategory2Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory2Command);
+            ToggleVisibilityMoreInfoCommand = ReactiveCommand.Create(RunToggleVisibilityMoreInfoCommand);
+
+            SaveLocationCommand = ReactiveCommand.Create(RunSaveLocationCommand);
+            SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
+            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1Command);
+            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
+
+            ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
+            NextImageCommand = ReactiveCommand.Create(RunNextImageCommand);
+            LastImageCommand = ReactiveCommand.Create(RunLastImageCommand);
+            DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommand);
+
+            SaveChangesCommand = ReactiveCommand.Create(RunSaveChangesCommand);
+        }
+
+        /// <summary>
+        /// Method to set all properties except the displayed image.
+        /// </summary>
+        private void SetAllProperties()
+        {
+            ImageIdSelected = ImageFile.Id;
             FileNameSelected = ImageFile.CustomName;
+            DateTaken = ImageFile.DateTaken;
+            LocationSelected = ImageFile.Location;
             CategorySelection = ImageFile.Category;
             SubCategory1Selection = ImageFile.SubCategory1;
             SubCategory2Selection = ImageFile.SubCategory2;
+        }
 
+        /// <summary>
+        /// Method to set the properties to display the image file.
+        /// </summary>
+        private void DisplayImageFile()
+        {
             // new backgroundworker
             BackgroundWorker backgroundWorker = new();
             backgroundWorker.DoWork += backgroundWorker_DoWork;
@@ -306,22 +377,6 @@ namespace PicturePerfect.ViewModels
             {
                 IsIndeterminateBar = false;
             }
-
-
-            ToggleVisibilityLocationCommand = ReactiveCommand.Create(RunToggleVisibilityLocationCommand);
-            ToggleVisibilityCategoryCommand = ReactiveCommand.Create(RunToggleVisibilityCategoryCommand);
-            ToggleVisibilitySubCategory1Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory1Command);
-            ToggleVisibilitySubCategory2Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory2Command);
-            ToggleVisibilityMoreInfoCommand = ReactiveCommand.Create(RunToggleVisibilityMoreInfoCommand);
-
-            SaveLocationCommand = ReactiveCommand.Create(RunSaveLocationCommand);
-            SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
-            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1Command);
-            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
-
-            ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
-
-            SaveChangesCommand = ReactiveCommand.Create(RunSaveChangesCommand);
         }
 
         /// <summary>
@@ -498,24 +553,70 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
+        /// Method to jump to the next image in the list.
+        /// </summary>
+        private void RunNextImageCommand()
+        {
+            // set the properties in the view model base
+            SelectedImageIndex++;         
+            SelectedImageFile = LoadedImageFiles.List[SelectedImageIndex];
+
+            // set the properties in this view model
+            ImageFile = LoadedImageFiles.List[SelectedImageIndex];
+            SetAllProperties();
+            DisplayImageFile();
+        }
+
+        /// <summary>
+        /// Method to jump to the last image in the list.
+        /// </summary>
+        private void RunLastImageCommand()
+        {
+            // set the properties in the view model base
+            SelectedImageIndex--;
+            SelectedImageFile = LoadedImageFiles.List[SelectedImageIndex];
+
+            // set the properties in this view model
+            ImageFile = LoadedImageFiles.List[SelectedImageIndex];
+            SetAllProperties();
+            DisplayImageFile();
+        }
+
+        /// <summary>
+        /// Method to delete the current image from the disk and database.
+        /// </summary>
+        private void RunDeleteImageCommand()
+        {
+
+        }
+
+
+        /// <summary>
         /// Method to save the changes made to the image properties.
         /// </summary>
-        private void RunSaveChangesCommand()
+        private async void RunSaveChangesCommand()
         {
             // check if the custom file name was changed
             if (FileNameSelected != ImageFile.CustomName)
             {
-                ImageFile.CustomName = FileNameSelected;
-                LoadedImageFiles.List[SelectedImageIndex] = ImageFile;
+                ImageFile.CustomName = FileNameSelected; // adjust property in this view model
+                LoadedImageFiles.List[SelectedImageIndex] = ImageFile; // adjust field in observable collection stored in view model base to update the data grad
                 ImageFile.CommitCustomFileNameChange();
             }
 
-            /*
             // check if properties causing relinking in database where changed
-            if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); }
+            //if (ImageFile.Location.Name == null || LocationSelected.Name != ImageFile.Location.Name || ImageFile.Location == null)
+           // {
+                ImageFile.Location = LocationSelected; // adjust property in this view model
+                LoadedImageFiles.List[SelectedImageIndex] = ImageFile; // adjust field in observable collection stored in view model base to update the data grad
+                ImageFile.CommitLocationChange(LocationSelected);
+           // }
+            /*
+            if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); } // not necessary --> category and subcategory are linked in sqlite
+            */
+            /*
             if (SubCategory1Selection.Name != ImageFile.SubCategory1.Name) { ImageFile.CommitSubCategory1Change(); }
             if (SubCategory2Selection.Name != ImageFile.SubCategory2.Name) { ImageFile.CommitSubCategory2Change(); }
-            if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); }
             */
         }
     }

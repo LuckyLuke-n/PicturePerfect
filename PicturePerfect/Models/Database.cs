@@ -317,7 +317,7 @@ namespace PicturePerfect.Models
             // new command
             SqliteCommand command = new()
             {
-                CommandText = "INSERT INTO images_locations (image_id, name, location_id) " +
+                CommandText = "INSERT INTO images_locations (image_id, location_id) " +
                     " VALUES (@image_id, @location_id)",
                 Connection = connector.Connection
             };
@@ -373,6 +373,9 @@ namespace PicturePerfect.Models
             // close connection
             connector.CloseConnection();
 
+            // add locations           
+            list.ForEach(item => item.Location = GetLocation(item.Id));
+
             return list;
         }
 
@@ -409,6 +412,57 @@ namespace PicturePerfect.Models
             List<ImageFile> list = new();
 
             return list;
+        }
+
+        /// <summary>
+        /// Method to get the location for a specific image file.
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <returns>Returns the location object.</returns>
+        private static Locations.Location GetLocation(int imageId)
+        {
+            Locations.Location location = new();
+
+            // query subcategory ids
+            string commandText = @"SELECT location_id FROM images_locations WHERE image_id=@image_id";
+
+            // Connect to the Sqlite database
+            SQLiteConnector connector = new();
+            SqliteCommand command = new(commandText, connector.Connection);
+            command.Parameters.AddWithValue("@image_id", imageId);
+
+            // Sqlite data reader
+            // this reader will not contain elements if the image has no location assigned
+            SqliteDataReader reader = command.ExecuteReader();
+            // step through the reader containing the subcategory ids           
+            if (reader.HasRows)
+            {
+                // reader will only have one item since a image can only have one location
+                reader.Read();
+                int id = reader.GetInt32(0); // index 0 is the location id
+
+                string commandTextLocation = @"SELECT id, name, geo_tag, notes FROM locations WHERE id=@id";
+                SqliteCommand commandLocation = new(commandTextLocation, connector.Connection);
+                commandLocation.Parameters.AddWithValue("@id", id);
+                // call the reader for the location by using the location id
+                SqliteDataReader readerLocation = commandLocation.ExecuteReader();
+
+                // reader for the location command will only contain one item, since id is unique
+                if (readerLocation.HasRows)
+                {
+                    readerLocation.Read();
+                    // set the properties of the location object
+                    location.Id = readerLocation.GetInt32(0);
+                    location.Name = readerLocation.GetString(1);
+                    location.GeoTag = readerLocation.GetString(2);
+                    location.Notes = readerLocation.GetString(3);
+                }
+            }
+
+            // close connection
+            connector.CloseConnection();
+
+            return location;
         }
 
         /// <summary>
@@ -461,7 +515,6 @@ namespace PicturePerfect.Models
         /// <returns>Returns a list of sub-categories for the given category.</returns>
         public static List<SubCategory> LoadSubcategories(Category category)
         {
-            List<int> subCategoryIds = new();
             List<SubCategory> list = new();
 
             // query subcategory ids
@@ -474,7 +527,7 @@ namespace PicturePerfect.Models
             command.Parameters.AddWithValue("@category_id", category.Id);
 
             // Sqlite data reader
-            // this reader will not contain elements it the category has no subcategories
+            // this reader will not contain elements if the category has no subcategories
             SqliteDataReader reader = command.ExecuteReader();
             // step through the reader containing the subcategory ids           
             if (reader.HasRows)
@@ -508,7 +561,6 @@ namespace PicturePerfect.Models
                 }
             }
             
-
             // close connection
             connector.CloseConnection();
 
@@ -537,10 +589,10 @@ namespace PicturePerfect.Models
             {
                 Locations.Location location = new()
                 {
+                    Id = reader.GetInt32((int)TableLocationsOrdinals.Id),
                     Name = reader.GetString((int)TableLocationsOrdinals.Name),
                     Notes = reader.GetString((int)TableLocationsOrdinals.Notes)
                 };
-                location.SetId(reader.GetInt32((int)TableLocationsOrdinals.Id));
 
                 locations.Add(location);
             }

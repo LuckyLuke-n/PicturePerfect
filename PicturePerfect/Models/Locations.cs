@@ -20,9 +20,9 @@ namespace PicturePerfect.Models
         public class Location
         {
             /// <summary>
-            /// Get the location id.
+            /// Get or set the location id.
             /// </summary>
-            public int Id { get; private set; }
+            public int Id { get; set; }
             /// <summary>
             /// Get or set the location name.
             /// </summary>
@@ -50,15 +50,6 @@ namespace PicturePerfect.Models
             public void Create()
             {
                 Database.AddLocation(this);
-            }
-
-            /// <summary>
-            /// Method to set the private property Id.
-            /// </summary>
-            /// <param name="id"></param>
-            public void SetId(int id)
-            {
-                Id = id;
             }
         }
 

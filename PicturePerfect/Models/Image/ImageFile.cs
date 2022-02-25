@@ -166,9 +166,10 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Save changes made to the image location.
         /// </summary>
-        public void CommitLocationChange()
+        /// <param name="location"></param>
+        public void CommitLocationChange(Locations.Location location)
         {
-
+            Database.LinkImageToLocation(this, location);
         }
 
         /// <summary>
