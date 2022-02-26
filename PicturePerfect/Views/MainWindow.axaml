@@ -107,10 +107,10 @@
 							<DataGridTextColumn Header="Size in MB" Binding="{Binding Size}" Width="*"/>
 							<DataGridTextColumn Header="Type" Binding="{Binding FileType}" Width="0.5*"/>
 							<DataGridTextColumn Header="Date created" Binding="{Binding DateTaken}" Width="1.5*"/>
-							<DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="1.5*"/>
-							<DataGridTextColumn Header="Sub category #1" Binding="{Binding SubCategory1}" Width="*"/>
-							<DataGridTextColumn Header="Sub category #2" Binding="{Binding SubCategory2}" Width="*"/>
-							<DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="*"/>
+							<DataGridTextColumn Header="Category" Binding="{Binding Category.Name}" Width="1.5*"/>
+							<DataGridTextColumn Header="Sub category #1" Binding="{Binding SubCategory1.Name}" Width="*"/>
+							<DataGridTextColumn Header="Sub category #2" Binding="{Binding SubCategory2.Name}" Width="*"/>
+							<DataGridTextColumn Header="Location" Binding="{Binding Location.Name}" Width="*"/>
 						</DataGrid.Columns>
 					</DataGrid>
 
