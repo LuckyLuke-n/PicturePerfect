@@ -62,19 +62,19 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the loacation where this image was taken.
         /// </summary>
-        public Locations.Location Location { get; set; } = new();
+        public Locations.Location Location { get; private set; } = new();
         /// <summary>
         /// Get or set the category for this window.
         /// </summary>
-        public Category Category { get; set; } = new();
+        public Category Category { get; private set; } = new();
         /// <summary>
         /// Get or set the sub category #1.
         /// </summary>
-        public SubCategory SubCategory1 { get; set; } = new();
+        public SubCategory SubCategory1 { get; private set; } = new();
         /// <summary>
         /// Get or set the sub category #2.
         /// </summary>
-        public SubCategory SubCategory2 { get; set; } = new();
+        public SubCategory SubCategory2 { get; private set; } = new();
         /// <summary>
         /// Get or set the notes for this image.
         /// </summary>
@@ -93,7 +93,6 @@ namespace PicturePerfect.Models
         private readonly string[] nef = { ".nef", ".NEF" };
         private readonly string[] jpg = { ".jpg", ".JPG" };
         private readonly string[] png = { ".png", ".PNG" };
-
 
 
         /// <summary>
@@ -122,7 +121,7 @@ namespace PicturePerfect.Models
         /// <param name="focalLength"></param>
         /// <param name="notes"></param>
         /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes)
+        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes, Locations.Location location)
         {
             ImageFile imageFile = new()
             {
@@ -139,7 +138,8 @@ namespace PicturePerfect.Models
                 ExposureTime = exposureTime,
                 ExposureBias = exposureBias,
                 FocalLength = focalLength,
-                Notes = notes
+                Notes = notes,
+                Location = location
             };
 
             return imageFile;
@@ -185,6 +185,8 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Save changes made to the image meta data.
         /// </summary>
+        /// <param name="newName"></param>
+        /// <returns>The updated image file object.</returns>
         public ImageFile CommitCustomFileNameChange(string newName)
         {
             CustomName = newName;
@@ -197,9 +199,13 @@ namespace PicturePerfect.Models
         /// Save changes made to the image location.
         /// </summary>
         /// <param name="location"></param>
-        public void CommitLocationChange(Locations.Location location)
+        /// <returns>The updated image file object.</returns>
+        public ImageFile CommitLocationChange(Locations.Location location)
         {
+            Location = location;
             Database.LinkImageToLocation(this, location);
+
+            return this;
         }
 
         /// <summary>

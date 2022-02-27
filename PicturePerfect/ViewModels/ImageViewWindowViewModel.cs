@@ -607,9 +607,8 @@ namespace PicturePerfect.ViewModels
             // check if properties causing relinking in database where changed
             if (LocationSelected.Name != ImageFile.Location.Name)
             {
-                ImageFile.Location = LocationSelected; // adjust property in this view model
-                LoadedImageFiles.List[SelectedImageIndex] = ImageFile; // adjust field in observable collection stored in view model base to update the data grad
-                ImageFile.CommitLocationChange(LocationSelected);
+                ImageFile changedImageFile = ImageFile.CommitLocationChange(LocationSelected);
+                LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; // adjust field in observable collection stored in view model base to update the data grad
             }
             /*
             if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); } // not necessary --> category and subcategory are linked in sqlite

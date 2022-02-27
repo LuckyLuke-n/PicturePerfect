@@ -8,57 +8,28 @@ namespace PicturePerfect.Models
     public static class Database
     {
         /// <summary>
-        /// This class establishes the connection to the sqlite database.
+        /// Get or set the connection to the database.
         /// </summary>
-        private class SQLiteConnector
+        private static SqliteConnection Connection { get; } = SQLiteConnector.GetConnection();
+
+        /// <summary>
+        /// Class to connect to the sqlite database.
+        /// </summary>
+        private static class SQLiteConnector
         {
             /// <summary>
-            /// Indicates weather this instance of the connector has an open open connection to the sqlite file.
+            /// Method to open the connection against the database.
             /// </summary>
-            private static bool IsConnected = false;
-            /// <summary>
-            /// Get the connection to the sqlite database.
-            /// </summary>
-            public SqliteConnection Connection { get; private set; } = new();
-
-            private readonly SqliteConnectionStringBuilder connstringBuilder = new SqliteConnectionStringBuilder();
-
-            /// <summary>
-            /// Creates a new instance of the SQLiteConnector.
-            /// Opens the connection to the database and sets the Connection property.
-            /// </summary>
-            public SQLiteConnector()
+            /// <returns>Returns the SqliteConnection object.</returns>
+            public static SqliteConnection GetConnection()
             {
-                if (IsConnected == false)
-                {
-                    // file exists --> connect to Sqlite
-                    connstringBuilder.DataSource = ThisApplication.ProjectFile.DatabasePath;
-                    string connstring = connstringBuilder.ToString();
+                SqliteConnectionStringBuilder connstringBuilder = new();
+                connstringBuilder.DataSource = ThisApplication.ProjectFile.DatabasePath;
+                string connstring = connstringBuilder.ToString();
 
-                    Connection = new SqliteConnection(connstring);
-
-                    Connection.Open();
-                    IsConnected = true;
-                }
-                else
-                {
-                    MessageBox.Show("Internal error while trying to connect to the database. Connection already open.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
-                }
-            }
-
-            /// <summary>
-            /// Method to close the SQLite connection if currently open.
-            /// </summary>
-            public void CloseConnection()
-            {
-                // check if connection is closed
-                if (IsConnected == true)
-                {
-                    // connection is closed
-                    Connection.Close();
-                    Connection.Dispose();
-                    IsConnected = false;
-                }
+                SqliteConnection connection = new(connstring);
+                
+                return connection;
             }
         }
 
@@ -118,24 +89,22 @@ namespace PicturePerfect.Models
         /// </summary>
         public static void NewDatabase()
         {
-            SQLiteConnector connector = new();
-
+            Connection.Open();
             string[] queries = {"CREATE TABLE images (id INTEGER PRIMARY KEY, custom_name TEXT, name TEXT, subfolder TEXT, file_type TEXT, date_taken TEXT, size REAL, camera TEXT, iso INTEGER, fstop REAL, exposure_time INTEGER, exposure_bias REAL, focal_length REAL, notes TEXT)",
-                                "CREATE TABLE categories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
-                                "CREATE TABLE subcategories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
-                                "CREATE TABLE locations (id INTEGER PRIMARY KEY, name TEXT, geo_tag TEXT, notes TEXT)",
-                                "CREATE TABLE categories_subcategories (id INTEGER PRIMARY KEY, category_id INTEGER, subcategory_id INTEGER)",
-                                "CREATE TABLE images_subcategories (id INTEGER PRIMARY KEY, image_id INTEGER, subcategory_id INTEGER)",
-                                "CREATE TABLE images_locations (id INTEGER PRIMARY KEY, image_id INTEGER, location_id INTEGER)"};
+                        "CREATE TABLE categories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
+                        "CREATE TABLE subcategories (id INTEGER PRIMARY KEY, name TEXT, notes TEXT)",
+                        "CREATE TABLE locations (id INTEGER PRIMARY KEY, name TEXT, geo_tag TEXT, notes TEXT)",
+                        "CREATE TABLE categories_subcategories (id INTEGER PRIMARY KEY, category_id INTEGER, subcategory_id INTEGER)",
+                        "CREATE TABLE images_subcategories (id INTEGER PRIMARY KEY, image_id INTEGER, subcategory_id INTEGER)",
+                        "CREATE TABLE images_locations (id INTEGER PRIMARY KEY, image_id INTEGER, location_id INTEGER)"};
 
             // run queries against database
             foreach (string query in queries)
             {
-                var command = new SqliteCommand(query, connector.Connection);
+                var command = new SqliteCommand(query, Connection);
                 command.ExecuteNonQuery();
             }
-
-            connector.CloseConnection();
+            Connection.Close();          
         }
 
         /// <summary>
@@ -148,13 +117,13 @@ namespace PicturePerfect.Models
             object[] values = { imageFile.CustomName, imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
 
             // new command
-            SQLiteConnector connector = new();
+            Connection.Open();
             // new command
             SqliteCommand command = new()
             {
                 CommandText = "INSERT INTO images ( custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes) " +
                     " VALUES (@custom_name, @name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
-                Connection = connector.Connection
+                Connection = Connection
             };
 
             // add all with value, only works if each column is unique, which should always be the case
@@ -162,7 +131,7 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            connector.CloseConnection();           
+            Connection.Close();
         }
 
         /// <summary>
@@ -176,13 +145,12 @@ namespace PicturePerfect.Models
             object[] values = { location.Name, location.GeoTag, location.Notes };
 
             // new command
-            SQLiteConnector connector = new();
-            // new command
+            Connection.Open();
             SqliteCommand command = new()
             {
                 CommandText = "INSERT INTO locations ( name, geo_tag, notes) " +
                     " VALUES (@name, @geo_tag, @notes)",
-                Connection = connector.Connection
+                Connection = Connection
             };
 
             // add all with value, only works if each column is unique, which should always be the case
@@ -190,7 +158,7 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            connector.CloseConnection();
+            Connection.Close();     
         }
 
         /// <summary>
@@ -203,14 +171,13 @@ namespace PicturePerfect.Models
             List<string> paramters = new() { "@name", @"notes" };
             object[] values = { category.Name, category.Notes };
 
-            // new command
-            SQLiteConnector connector = new();
+            Connection.Open();
             // new command
             SqliteCommand command = new()
             {
                 CommandText = "INSERT INTO categories (name, notes) " +
                     " VALUES (@name, @notes)",
-                Connection = connector.Connection
+                Connection = Connection
             };
 
             // add all with value, only works if each column is unique, which should always be the case
@@ -218,7 +185,7 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            connector.CloseConnection();
+            Connection.Close();       
         }
 
         /// <summary>
@@ -231,14 +198,13 @@ namespace PicturePerfect.Models
             List<string> paramters = new() { "@name", @"notes" };
             object[] values = { subCategory.Name, subCategory.Notes };
 
-            // new command
-            SQLiteConnector connector = new();
+            Connection.Open();
             // new command
             SqliteCommand command = new()
             {
                 CommandText = "INSERT INTO subcategories ( name, notes) " +
                     " VALUES (@name, @notes)",
-                Connection = connector.Connection
+                Connection = Connection
             };
 
             // add all with value, only works if each column is unique, which should always be the case
@@ -246,7 +212,7 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            connector.CloseConnection();
+            Connection.Close();         
         }
 
         /// <summary>
@@ -261,22 +227,21 @@ namespace PicturePerfect.Models
                 // category was not read from database --> id is missing (equals 0)
                 // get the id
                 // Connect to the Sqlite database
-                SQLiteConnector connectorSubCategory = new();
-
+                Connection.Open();
                 SqliteCommand commandSubCategory = new()
                 {
                     CommandText = @"SELECT id FROM subcategories WHERE name= @name",
-                    Connection = connectorSubCategory.Connection
+                    Connection = Connection
                 };
                 commandSubCategory.Parameters.AddWithValue("@name", subCategory.Name);
 
                 // get the id from the reader, returns 0 if id was not found
                 int subCategoryId = Convert.ToInt32(commandSubCategory.ExecuteScalar());
 
-                connectorSubCategory.CloseConnection();
+                Connection.Close();
 
                 // set the id according to the database
-                subCategory.Id = subCategoryId;
+                subCategory.Id = subCategoryId;              
             }
 
             //  values and parameters
@@ -284,13 +249,12 @@ namespace PicturePerfect.Models
             object[] values = { category.Id, subCategory.Id };
 
             // new command
-            SQLiteConnector connector = new();
-            // new command
+            Connection.Open();
             SqliteCommand command = new()
             {
                 CommandText = "INSERT INTO categories_subcategories (category_id, subcategory_id) " +
                     " VALUES (@category_id, @subcategory_id)",
-                Connection = connector.Connection
+                Connection = Connection
             };
 
             // add all with value, only works if each column is unique, which should always be the case
@@ -298,7 +262,7 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            connector.CloseConnection();
+            Connection.Close();       
         }
 
         /// <summary>
@@ -313,21 +277,31 @@ namespace PicturePerfect.Models
             object[] values = { image.Id, location.Id };
 
             // new command
-            SQLiteConnector connector = new();
-            // new command
-            SqliteCommand command = new()
+            Connection.Open();
+
+            // delete old link
+            SqliteCommand commandDelete = new()
+            {
+                CommandText = "DELETE FROM images_locations WHERE image_id=@image_id",
+                Connection = Connection
+            };
+            commandDelete.Parameters.AddWithValue("@image_id", image.Id);
+            commandDelete.ExecuteNonQuery();
+
+
+            // insert new row linking the image and the location
+            SqliteCommand commandNew = new()
             {
                 CommandText = "INSERT INTO images_locations (image_id, location_id) " +
                     " VALUES (@image_id, @location_id)",
-                Connection = connector.Connection
+                Connection = Connection
             };
-
             // add all with value, only works if each column is unique, which should always be the case
-            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+            paramters.ForEach(parameter => commandNew.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+            commandNew.ExecuteNonQuery();
 
-            // execute command and close connection
-            command.ExecuteNonQuery();
-            connector.CloseConnection();
+            // close connection
+            Connection.Close();
         }
 
         /// <summary>
@@ -340,8 +314,8 @@ namespace PicturePerfect.Models
             string commandText = @"SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images ORDER BY date_taken ASC";
 
             // Connect to the Sqlite database
-            SQLiteConnector connector = new();
-            SqliteCommand command = new(commandText, connector.Connection);
+            Connection.Open();
+            SqliteCommand command = new(commandText, Connection);
 
             // execute reader
             SqliteDataReader reader = command.ExecuteReader();
@@ -364,16 +338,20 @@ namespace PicturePerfect.Models
                 double focalLength = reader.GetDouble((int)TableImagesOrdinals.FocalLength);
                 string notes = reader.GetString((int)TableImagesOrdinals.Notes);
 
-                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes);
+                Locations.Location location = GetLocation(id);
+
+                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location);
 
                 list.Add(imageFile);
             }
 
-            // close connection
-            connector.CloseConnection();
-
+            
             // add locations           
-            list.ForEach(item => item.Location = GetLocation(item.Id));
+            //list.ForEach(item => item.Location = GetLocation(item.Id));
+
+
+            // close connection
+            Connection.Close();
 
             return list;
         }
@@ -426,8 +404,7 @@ namespace PicturePerfect.Models
             string commandText = @"SELECT location_id FROM images_locations WHERE image_id=@image_id";
 
             // Connect to the Sqlite database
-            SQLiteConnector connector = new();
-            SqliteCommand command = new(commandText, connector.Connection);
+            SqliteCommand command = new(commandText, Connection);
             command.Parameters.AddWithValue("@image_id", imageId);
 
             // Sqlite data reader
@@ -441,7 +418,7 @@ namespace PicturePerfect.Models
                 int id = reader.GetInt32(0); // index 0 is the location id
 
                 string commandTextLocation = @"SELECT id, name, geo_tag, notes FROM locations WHERE id=@id";
-                SqliteCommand commandLocation = new(commandTextLocation, connector.Connection);
+                SqliteCommand commandLocation = new(commandTextLocation, Connection);
                 commandLocation.Parameters.AddWithValue("@id", id);
                 // call the reader for the location by using the location id
                 SqliteDataReader readerLocation = commandLocation.ExecuteReader();
@@ -458,9 +435,6 @@ namespace PicturePerfect.Models
                 }
             }
 
-            // close connection
-            connector.CloseConnection();
-
             return location;
         }
 
@@ -475,8 +449,8 @@ namespace PicturePerfect.Models
             string commandText = @"SELECT id, name, notes FROM categories ORDER BY name ASC";
 
             // Connect to the Sqlite database
-            SQLiteConnector connector = new();
-            SqliteCommand command = new(commandText, connector.Connection);
+            Connection.Open();
+            SqliteCommand command = new(commandText, Connection);
 
             // execute reader
             SqliteDataReader reader = command.ExecuteReader();
@@ -495,7 +469,7 @@ namespace PicturePerfect.Models
             }
 
             // close connection
-            connector.CloseConnection();
+            Connection.Close();
 
             // add sub-categories (this has to be done after closing the connection to the current reader
             foreach (Category category in list)
@@ -520,9 +494,9 @@ namespace PicturePerfect.Models
             string commandText = @"SELECT subcategory_id FROM categories_subcategories WHERE category_id=@category_id";
 
             // Connect to the Sqlite database
-            SQLiteConnector connector = new();
+            Connection.Open();
 
-            SqliteCommand command = new(commandText, connector.Connection);
+            SqliteCommand command = new(commandText, Connection);
             command.Parameters.AddWithValue("@category_id", category.Id);
 
             // Sqlite data reader
@@ -538,7 +512,7 @@ namespace PicturePerfect.Models
                     int id = reader.GetInt32(0);
 
                     string commandTextSubCategory = @"SELECT id, name, notes FROM subcategories WHERE id=@id";
-                    SqliteCommand commandSubCategory = new(commandTextSubCategory, connector.Connection);
+                    SqliteCommand commandSubCategory = new(commandTextSubCategory, Connection);
                     commandSubCategory.Parameters.AddWithValue("@id", id);
 
                     // call the reader for the subcategory by using the subcateory id
@@ -561,7 +535,7 @@ namespace PicturePerfect.Models
             }
             
             // close connection
-            connector.CloseConnection();
+            Connection.Close();
 
             return list;
         }
@@ -577,8 +551,8 @@ namespace PicturePerfect.Models
             string commandText = @"SELECT id, name, notes FROM locations ORDER BY name ASC";
 
             // Connect to the Sqlite database
-            SQLiteConnector connector = new();
-            SqliteCommand command = new(commandText, connector.Connection);
+            Connection.Open();
+            SqliteCommand command = new(commandText, Connection);
 
             // execute reader
             SqliteDataReader reader = command.ExecuteReader();
@@ -597,7 +571,7 @@ namespace PicturePerfect.Models
             }
 
             // close connection
-            connector.CloseConnection();
+            Connection.Close();
 
             return locations;
         }
@@ -613,13 +587,13 @@ namespace PicturePerfect.Models
             object[] values = { imageFile.Id, imageFile.CustomName };
 
             // connect to sqlite database
-            SQLiteConnector connector = new();
+            Connection.Open();
 
             // set command and its properties
             SqliteCommand command = new()
             {
                 CommandText = "UPDATE images SET custom_name=@custom_name WHERE id=@id",
-                Connection = connector.Connection
+                Connection = Connection
             };
 
             // add all with value, only works if each column is unique, which should always be the case
@@ -627,7 +601,7 @@ namespace PicturePerfect.Models
 
             // execute and close
             command.ExecuteNonQuery();
-            connector.CloseConnection();
+            Connection.Close();
         }
     }
 }
