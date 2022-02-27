@@ -12,7 +12,7 @@ namespace PicturePerfect.Models
         /// Get or set the custom name. This will not change the file name.
         /// Per default this equals the file name.
         /// </summary>
-        public string CustomName { get; set; }
+        public string CustomName { get; private set; }
         /// <summary>
         /// Get the filename. Per default this is the filename.
         /// </summary>
@@ -20,44 +20,44 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the subfolder name located in .../images/
         /// </summary>
-        public string Subfolder { get; set; } = string.Empty;
+        public string Subfolder { get; private set; } = string.Empty;
         /// <summary>
         /// Get or set the file type.
         /// </summary>
-        public string FileType { get; set; } = string.Empty;
+        public string FileType { get; private set; } = string.Empty;
         /// <summary>
         /// Get or set the date when the image was taken.
         /// </summary>
-        public DateTime DateTaken { get; set; }
+        public DateTime DateTaken { get; private set; }
         /// <summary>
         /// Get or set the file size of this image.
         /// </summary>
-        public double Size { get; set; }
+        public double Size { get; private set; }
         /// <summary>
         /// Get or set the camera manufacturer and model.
         /// </summary>
-        public string Camera { get; set; } = string.Empty;
+        public string Camera { get; private set; } = string.Empty;
         /// <summary>
         /// Get or set the ISO value set for this image.
         /// </summary>
-        public int ISO { get; set; }
+        public int ISO { get; private set; }
         /// <summary>
         /// Get or set the F-stop value for this image.
         /// It should be displayed as f/[value]
         /// </summary>
-        public double FStop { get; set; }
+        public double FStop { get; private set; }
         /// <summary>
         /// Get or set the exposure time in milli-sec.
         /// </summary>
-        public int ExposureTime { get; set; }
+        public int ExposureTime { get; private set; }
         /// <summary>
         /// Get or set the exposure bias in steps for this image.
         /// </summary>
-        public double ExposureBias { get; set; }
+        public double ExposureBias { get; private set; }
         /// <summary>
         /// Get or set the focal length in mm for this image.
         /// </summary>
-        public double FocalLength { get; set; }
+        public double FocalLength { get; private set; }
 
         /// <summary>
         /// Get or set the loacation where this image was taken.
@@ -78,7 +78,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Get or set the notes for this image.
         /// </summary>
-        public string Notes { get; set; } = string.Empty;
+        public string Notes { get; private set; } = string.Empty;
         /// <summary>
         /// Get the image id. This is the id number from the sqlite database.
         /// </summary>
@@ -95,6 +95,7 @@ namespace PicturePerfect.Models
         private readonly string[] png = { ".png", ".PNG" };
 
 
+
         /// <summary>
         /// Creates a new instance of the image file class.
         /// </summary>
@@ -104,63 +105,92 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to populate the properties with file info from a given path.
+        /// Creates a new image file object with information from the database.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="customName"></param>
+        /// <param name="subfolderName"></param>
+        /// <param name="fileType"></param>
+        /// <param name="dateTaken"></param>
+        /// <param name="size"></param>
+        /// <param name="camera"></param>
+        /// <param name="fStop"></param>
+        /// <param name="iso"></param>
+        /// <param name="exposureTime"></param>
+        /// <param name="exposureBias"></param>
+        /// <param name="focalLength"></param>
+        /// <param name="notes"></param>
+        /// <returns>Returns the image file object.</returns>
+        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes)
+        {
+            ImageFile imageFile = new()
+            {
+                Id = id,
+                Name = name,
+                CustomName = customName,
+                Subfolder = subfolderName,
+                FileType = fileType,
+                DateTaken = dateTaken,
+                Size = size,
+                Camera = camera,
+                ISO = iso,
+                FStop = fStop,
+                ExposureTime = exposureTime,
+                ExposureBias = exposureBias,
+                FocalLength = focalLength,
+                Notes = notes
+            };
+
+            return imageFile;
+        }
+
+        /// <summary>
+        /// Method to create an image file object from a path.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="subfolderName"></param>
-        public void NewFromPath(string path, string subfolderName)
+        /// <returns>Returns the image file object.</returns>
+        public static ImageFile NewFromPath(string path, string subfolderName)
         {
+            ImageFile imageFile = new();
+
             FileInfo fileInfo = new(path);
-            CustomName = fileInfo.Name;
-            Name = fileInfo.Name;
-            Subfolder = subfolderName;
-            FileType = fileInfo.Extension;
-            DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
-            Size = Math.Round(fileInfo.Length/1000000.00, 3);
+            imageFile.CustomName = fileInfo.Name;
+            imageFile.Name = fileInfo.Name;
+            imageFile.Subfolder = subfolderName;
+            imageFile.FileType = fileInfo.Extension;
+            imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
+            imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
 
             // create the entry
-            CreateDatabaseEntry(this, path);
+            CreateDatabaseEntry(imageFile, path);
+
+            return imageFile;
         }
 
         /// <summary>
         /// Method to copy the files and create a sqlite entry for this image.
         /// </summary>
-        private void CreateDatabaseEntry(ImageFile imageFile, string path)
+        private static void CreateDatabaseEntry(ImageFile imageFile, string path)
         {
             // copy the file to the image folder's subfolder
             string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
             File.Copy(path, destination, true);
 
             // add to sqlite
-            Database.AddImage(this);
-        }
-
-        /// <summary>
-        /// Method to set the value for the Id property. The property has a private setter to avoid mis-use.
-        /// This method is a work around.
-        /// </summary>
-        /// <param name="id"></param>
-        public void SetId(int id)
-        {
-            Id = id;
-        }
-
-        /// <summary>
-        /// Method to set the value for the Name property. The property has a private setter to avoid mis-use.
-        /// This method is a work around.
-        /// </summary>
-        /// <param name="name"></param>
-        public void SetFileName(string name)
-        {
-            Name = name;
+            Database.AddImage(imageFile);
         }
 
         /// <summary>
         /// Save changes made to the image meta data.
         /// </summary>
-        public void CommitCustomFileNameChange()
+        public ImageFile CommitCustomFileNameChange(string newName)
         {
+            CustomName = newName;
             Database.SetCustomName(imageFile: this);
+
+            return this;
         }
 
         /// <summary>

@@ -76,8 +76,7 @@ namespace PicturePerfect.Models
             foreach (string file in files)
             {
                 // create image file oject
-                ImageFile image = new();
-                image.NewFromPath(file, subfolderName);
+                ImageFile image = ImageFile.NewFromPath(file, subfolderName);
                 List.Add(image);
             }
         }

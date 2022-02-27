@@ -349,23 +349,22 @@ namespace PicturePerfect.Models
             // step through reader
             while (reader.Read())
             {
-                ImageFile imageFile = new()
-                {
-                    CustomName = reader.GetString((int)TableImagesOrdinals.CustomName),
-                    Subfolder = reader.GetString((int)TableImagesOrdinals.Subfolder),
-                    FileType = reader.GetString((int)TableImagesOrdinals.FileType),
-                    DateTaken = DateTime.Parse(reader.GetString((int)TableImagesOrdinals.DateTaken)),
-                    Size = reader.GetDouble((int)TableImagesOrdinals.Size),
-                    Camera = reader.GetString((int)TableImagesOrdinals.Camera),
-                    ISO = reader.GetInt32((int)TableImagesOrdinals.ISO),
-                    FStop = reader.GetDouble((int)TableImagesOrdinals.FStop),
-                    ExposureTime = reader.GetInt32((int)TableImagesOrdinals.ExposureTime),
-                    ExposureBias = reader.GetDouble((int)TableImagesOrdinals.ExposureBias),
-                    FocalLength = reader.GetDouble((int)TableImagesOrdinals.FocalLength),
-                    Notes = reader.GetString((int)TableImagesOrdinals.Notes)
-                };
-                imageFile.SetId(reader.GetInt32((int)TableImagesOrdinals.Id));
-                imageFile.SetFileName(reader.GetString((int)TableImagesOrdinals.Name));
+                int id = reader.GetInt32((int)TableImagesOrdinals.Id);
+                string customName = reader.GetString((int)TableImagesOrdinals.CustomName);
+                string name = reader.GetString((int)TableImagesOrdinals.Name);
+                string subfolderName = reader.GetString((int)TableImagesOrdinals.Subfolder);
+                string fileType = reader.GetString((int)TableImagesOrdinals.FileType);
+                DateTime dateTaken = DateTime.Parse(reader.GetString((int)TableImagesOrdinals.DateTaken));
+                double size = reader.GetDouble((int)TableImagesOrdinals.Size);
+                string camera = reader.GetString((int)TableImagesOrdinals.Camera);
+                int iso = reader.GetInt32((int)TableImagesOrdinals.ISO);
+                double fStop = reader.GetDouble((int)TableImagesOrdinals.FStop);
+                int exposureTime = reader.GetInt32((int)TableImagesOrdinals.ExposureTime);
+                double exposureBias = reader.GetDouble((int)TableImagesOrdinals.ExposureBias);
+                double focalLength = reader.GetDouble((int)TableImagesOrdinals.FocalLength);
+                string notes = reader.GetString((int)TableImagesOrdinals.Notes);
+
+                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes);
 
                 list.Add(imageFile);
             }

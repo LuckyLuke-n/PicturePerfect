@@ -490,7 +490,8 @@ namespace PicturePerfect.ViewModels
                     $"F-stop: {ImageFile.FStop}" + Environment.NewLine +
                     $"Exposure time: {ImageFile.ExposureTime}" + Environment.NewLine +
                     $"Exposure bias: {ImageFile.ExposureBias}" + Environment.NewLine +
-                    $"Focal length: {ImageFile.FocalLength}";
+                    $"Focal length: {ImageFile.FocalLength}" + Environment.NewLine +
+                    $"Absolute path: {ImageFile.AbsolutePath}";
 
                 return moreInfo;
             }
@@ -594,14 +595,13 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Method to save the changes made to the image properties.
         /// </summary>
-        private async void RunSaveChangesCommand()
+        private void RunSaveChangesCommand()
         {
             // check if the custom file name was changed
             if (FileNameSelected != ImageFile.CustomName)
             {
-                ImageFile.CustomName = FileNameSelected; // adjust property in this view model
-                LoadedImageFiles.List[SelectedImageIndex] = ImageFile; // adjust field in observable collection stored in view model base to update the data grad
-                ImageFile.CommitCustomFileNameChange();
+                ImageFile changedImageFile = ImageFile.CommitCustomFileNameChange(FileNameSelected);
+                LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; // adjust field in observable collection stored in view model base to update the data grad
             }
 
             // check if properties causing relinking in database where changed
