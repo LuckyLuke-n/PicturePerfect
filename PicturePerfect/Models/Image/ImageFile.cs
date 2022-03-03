@@ -121,7 +121,7 @@ namespace PicturePerfect.Models
         /// <param name="focalLength"></param>
         /// <param name="notes"></param>
         /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes, Locations.Location location)
+        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes, Locations.Location location, Category category)
         {
             ImageFile imageFile = new()
             {
@@ -139,7 +139,8 @@ namespace PicturePerfect.Models
                 ExposureBias = exposureBias,
                 FocalLength = focalLength,
                 Notes = notes,
-                Location = location
+                Location = location,
+                Category = category
             };
 
             return imageFile;
@@ -211,9 +212,12 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Save changes made to the image category.
         /// </summary>
-        public void CommitCategoryChange()
+        public ImageFile CommitCategoryChange(Category category)
         {
+            Category = category;
+            Database.LinkImageToCategory(this, category);
 
+            return this;
         }
 
         /// <summary>

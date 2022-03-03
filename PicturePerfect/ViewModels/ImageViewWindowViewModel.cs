@@ -158,38 +158,6 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public CategoriesTree CategoriesTree => LoadedCategoriesTree;
 
-        public Category categorySelection = new();
-        /// <summary>
-        /// Get or set the selected category. This will adjust the sub-categories lists.
-        /// </summary>
-        public Category CategorySelection
-        {
-            get { return categorySelection; }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref categorySelection, value);
-                
-                if (value != null)
-                {
-                    // filter the category tree by the category name to get the sub-categories
-                    List<SubCategory> FilterTree()
-                    {
-                        List<SubCategory> list = new();
-
-                        foreach (Category category in CategoriesTree.Tree)
-                        {
-                            if (category.Name == value.Name) { list = category.SubCategories; break; }
-                        }
-
-                        return list;
-                    }
-
-                    SubCategories1 = FilterTree();
-                    SubCategories2 = FilterTree();
-                }               
-            }
-        }
-
         public SubCategory subCategory1Selection = new();
         /// <summary>
         /// Get or set the selected subcategory 1.
@@ -236,14 +204,24 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public static Locations Locations => LoadedLocations;
 
-        private Locations.Location locationSelected;
+        private int locationIndexSelected;
         /// <summary>
-        /// Get or set the property for the selected location.
+        /// Get or set the list index of the selected location.
         /// </summary>
-        public Locations.Location LocationSelected
+        public int LocationIndexSelected
         {
-            get { return locationSelected; }
-            set { this.RaiseAndSetIfChanged(ref locationSelected, value); }
+            get { return locationIndexSelected; }
+            set { this.RaiseAndSetIfChanged(ref locationIndexSelected, value); }
+        }
+
+        private int categoryIndexSelected;
+        /// <summary>
+        /// Get or set the list index of the selected category.
+        /// </summary>
+        internal int CategoryIndexSelected
+        {
+            get { return categoryIndexSelected; }
+            set { this.RaiseAndSetIfChanged(ref categoryIndexSelected, value); }
         }
 
         #endregion Image info
@@ -347,8 +325,8 @@ namespace PicturePerfect.ViewModels
             ImageIdSelected = ImageFile.Id;
             FileNameSelected = ImageFile.CustomName;
             DateTaken = ImageFile.DateTaken;
-            LocationSelected = ImageFile.Location;
-            CategorySelection = ImageFile.Category;
+            LocationIndexSelected = GetLocationIndex();
+            CategoryIndexSelected = GetCategoryIndex();
             SubCategory1Selection = ImageFile.SubCategory1;
             SubCategory2Selection = ImageFile.SubCategory2;
         }
@@ -377,6 +355,40 @@ namespace PicturePerfect.ViewModels
             {
                 IsIndeterminateBar = false;
             }
+        }
+
+        /// <summary>
+        /// Get the index for the selected location.
+        /// </summary>
+        /// <returns>Returns the index.</returns>
+        private int GetLocationIndex()
+        {
+            int index = -1;
+            int i = 0;
+            foreach (Locations.Location item in Locations.List)
+            {
+                if (item.Id == ImageFile.Location.Id) { index = i; break; }
+                i++;
+            }
+
+            return index;
+        }
+
+        /// <summary>
+        /// Get the index for the selected category.
+        /// </summary>
+        /// <returns>Returns the index.</returns>
+        private int GetCategoryIndex()
+        {
+            int index = -1;
+            int i = 0;
+            foreach (Category category in CategoriesTree.Tree)
+            {
+                if (category.Id == ImageFile.Category.Id) { index = i; break; }
+                i++;
+            }
+
+            return index;
         }
 
         /// <summary>
@@ -455,7 +467,7 @@ namespace PicturePerfect.ViewModels
         private void RunSaveSubCategory1Command()
         {
             SubCategory subCategory = SaveSubCategory(NewSubCategory1Name);
-            CategorySelection.LinkSubcategory(subCategory);
+            CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
             RunToggleVisibilitySubCategory1Command();
         }
 
@@ -465,7 +477,7 @@ namespace PicturePerfect.ViewModels
         private void RunSaveSubCategory2Command()
         {
             SubCategory subCategory = SaveSubCategory(NewSubCategory2Name);
-            CategorySelection.LinkSubcategory(subCategory);
+            CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
             RunToggleVisibilitySubCategory2Command();
         }
 
@@ -595,19 +607,35 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveChangesCommand()
         {
+            bool changesMade = false;
+            ImageFile changedImageFile = null;
+
             // check if the custom file name was changed
             if (FileNameSelected != ImageFile.CustomName)
             {
-                ImageFile changedImageFile = ImageFile.CommitCustomFileNameChange(FileNameSelected);
-                LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; // adjust field in observable collection stored in view model base to update the data grad
+                changedImageFile = ImageFile.CommitCustomFileNameChange(FileNameSelected);
+                changesMade = true;
             }
 
             // check if properties causing relinking in database where changed
-            if (LocationSelected.Name != ImageFile.Location.Name)
+            if (LocationIndexSelected == -1 || Locations.List[LocationIndexSelected].Name != ImageFile.Location.Name)
             {
-                ImageFile changedImageFile = ImageFile.CommitLocationChange(LocationSelected);
-                LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; // adjust field in observable collection stored in view model base to update the data grad
+                changedImageFile = ImageFile.CommitLocationChange(Locations.List[LocationIndexSelected]);
+                changesMade = true;
             }
+
+            if (CategoryIndexSelected == -1 || CategoriesTree.Tree[CategoryIndexSelected].Name != ImageFile.Category.Name)
+            {
+                changedImageFile = ImageFile.CommitCategoryChange(CategoriesTree.Tree[CategoryIndexSelected]);
+                changesMade = true;
+            }
+
+            if (changesMade == true && changedImageFile != null)
+            {
+                // adjust field in observable collection stored in view model base to update the data grid
+                LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; 
+            }
+
             /*
             if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); } // not necessary --> category and subcategory are linked in sqlite
             */

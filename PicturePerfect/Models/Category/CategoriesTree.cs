@@ -30,8 +30,6 @@ namespace PicturePerfect.Models
             List<Category> categories = Database.LoadAllCategories();
 
             // repopulate list with category objects
-            Tree.Add(new Category() { Name = "All" });
-            Tree.Add(new Category() { Name = "None" });
             categories.ForEach(categroy => Tree.Add(categroy));
         }
     }

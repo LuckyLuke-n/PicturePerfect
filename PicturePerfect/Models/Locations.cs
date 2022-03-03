@@ -84,21 +84,6 @@ namespace PicturePerfect.Models
 
                 return location;
             }
-
-            /// <summary>
-            /// Method to get a location default location like "all" or "none".
-            /// </summary>
-            /// <param name="name"></param>
-            /// <returns>Returns the location object</returns>
-            public static Location GetDefault(string name)
-            {
-                Location location = new()
-                {
-                    Name = name
-                };
-
-                return location;
-            }
         }
 
         /// <summary>
@@ -110,8 +95,6 @@ namespace PicturePerfect.Models
             List<Location> locations = Database.LoadAllLocations();
 
             // repopulate list with location objects
-            List.Add(Location.GetDefault("All"));
-            List.Add(Location.GetDefault("None"));
             locations.ForEach(location => List.Add(location));
         }
     }
