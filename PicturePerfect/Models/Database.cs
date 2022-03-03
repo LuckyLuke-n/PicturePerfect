@@ -81,6 +81,7 @@ namespace PicturePerfect.Models
         {
             Id,
             Name,
+            GeoTag,
             Notes
         }
 
@@ -428,10 +429,14 @@ namespace PicturePerfect.Models
                 {
                     readerLocation.Read();
                     // set the properties of the location object
-                    location.Id = readerLocation.GetInt32(0);
-                    location.Name = readerLocation.GetString(1);
-                    location.GeoTag = readerLocation.GetString(2);
-                    location.Notes = readerLocation.GetString(3);
+                    
+
+                    int identifier = readerLocation.GetInt32(0);
+                    string name = readerLocation.GetString(1);
+                    string geoTag = readerLocation.GetString(2);
+                    string notes = readerLocation.GetString(3);
+
+                    location = Locations.Location.NewFromDatabase(identifier, name, geoTag, notes);
                 }
             }
 
@@ -548,7 +553,7 @@ namespace PicturePerfect.Models
         {
             List<Locations.Location> locations = new();
 
-            string commandText = @"SELECT id, name, notes FROM locations ORDER BY name ASC";
+            string commandText = @"SELECT * FROM locations ORDER BY name ASC";
 
             // Connect to the Sqlite database
             Connection.Open();
@@ -560,12 +565,12 @@ namespace PicturePerfect.Models
             // step through reader
             while (reader.Read())
             {
-                Locations.Location location = new()
-                {
-                    Id = reader.GetInt32((int)TableLocationsOrdinals.Id),
-                    Name = reader.GetString((int)TableLocationsOrdinals.Name),
-                    Notes = reader.GetString((int)TableLocationsOrdinals.Notes)
-                };
+                int id = reader.GetInt32((int)TableLocationsOrdinals.Id);
+                string name = reader.GetString((int)TableLocationsOrdinals.Name);
+                string geoTag = reader.GetString((int)TableLocationsOrdinals.GeoTag);
+                string notes = reader.GetString((int)TableLocationsOrdinals.Notes);
+
+                Locations.Location location = Locations.Location.NewFromDatabase(id, name, geoTag, notes);
 
                 locations.Add(location);
             }

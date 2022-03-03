@@ -424,9 +424,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveLocationCommand()
         {
-            Locations.Location location = new();
-            location.Name = NewLocationName;
-            location.Create();
+            Locations.Location location = Locations.Location.Create(name: NewLocationName, geoTag: string.Empty, notes: string.Empty);
 
             // add new location as first item in list
             Locations.List.Add(location);
