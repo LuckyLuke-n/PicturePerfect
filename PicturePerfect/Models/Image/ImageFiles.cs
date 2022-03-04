@@ -32,18 +32,20 @@ namespace PicturePerfect.Models
 
             List<ImageFile> list = Database.LoadAllImageFiles();
 
-            foreach (ImageFile file in list)
-            {
-                List.Add(file);
-            }
+            list.ForEach(file => List.Add(file));
         }
 
         /// <summary>
         /// Load images from the database by category.
         /// </summary>
-        public void LoadByCategory()
+        /// <param name="category"></param>
+        public void LoadByCategory(Category category)
         {
             List.Clear();
+
+            List<ImageFile> list = Database.LoadImageFilesByCategory(category);
+
+            list.ForEach(file => List.Add(file));
         }
 
         /// <summary>

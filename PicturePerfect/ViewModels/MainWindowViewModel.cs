@@ -251,6 +251,18 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
+        #region TreeView properties
+        private object selectedCategoryObject;
+        /// <summary>
+        /// Get or set the selected object in the treeview.
+        /// </summary>
+        public object SelectedCategoryObject
+        {
+            get { return selectedCategoryObject; }
+            set { this.RaiseAndSetIfChanged(ref selectedCategoryObject, value); LoadImagesByCategoryObject(); }
+        }
+        #endregion
+
         #region Commands
         public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
         //public ReactiveCommand<Unit, object> ShowImageCommand { get; }
@@ -362,6 +374,25 @@ namespace PicturePerfect.ViewModels
             // set object in view model base
 
             // new ImageViewWindow().Show();
+        }
+
+        /// <summary>
+        /// Method to load images by category or subcategory.
+        /// </summary>
+        private void LoadImagesByCategoryObject()
+        {
+            if (SelectedCategoryObject.GetType() == typeof(Category))
+            {
+                // Selection was a category
+                Category category = (Category)SelectedCategoryObject;
+                LoadedImageFiles.LoadByCategory(category);
+            }
+            else
+            {
+                // selection was a subcategory
+                SubCategory subCategory = (SubCategory)SelectedCategoryObject;
+                MessageBox.Show(subCategory.GetType().Name + "....." + subCategory.Name);
+            }          
         }
 
         /// <summary>

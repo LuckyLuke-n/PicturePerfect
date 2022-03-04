@@ -445,11 +445,6 @@ namespace PicturePerfect.Models
                 list.Add(imageFile);
             }
 
-            
-            // add locations           
-            //list.ForEach(item => item.Location = GetLocation(item.Id));
-
-
             // close connection
             Connection.Close();
 
@@ -457,24 +452,70 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to load all image file data for files without category assignment.
-        /// </summary>
-        /// <returns>Returns the list of image files.</returns>
-        public static List<ImageFile> LoadAllImageFilesWithoutCategory()
-        {
-            List<ImageFile> list = new();
-
-            return list;
-        }
-
-        /// <summary>
         /// Method to load all image file data for files with a specific category assignment.
         /// </summary>
-        /// /// <param name="Category"></param>
+        /// /// <param name="category"></param>
         /// <returns>Returns the list of image files.</returns>
         public static List<ImageFile> LoadImageFilesByCategory(Category category)
         {
             List<ImageFile> list = new();
+
+            if (category.Id == 1)
+            {
+                // load all
+                list = LoadAllImageFiles();
+            }
+            else
+            {
+                // specific category
+                string commandTextIds = "SELECT image_id FROM images_categories WHERE category_id=@category_id";
+
+                Connection.Open();
+
+                SqliteCommand commandIds = new(commandTextIds, Connection);
+                commandIds.Parameters.AddWithValue("category_id", category.Id);
+                SqliteDataReader readerId = commandIds.ExecuteReader();
+
+                if (readerId.HasRows)
+                {
+                    while (readerId.Read())
+                    {
+                        // get id and corresponding image
+                        int imageId = readerId.GetInt32(0);
+
+                        string commandTextImage = "SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images WHERE id=@id ORDER BY date_taken ASC";
+                        SqliteCommand commandImage = new(commandTextImage, Connection);
+                        commandImage.Parameters.AddWithValue("@id", imageId);
+                        SqliteDataReader readerImage = commandImage.ExecuteReader();
+
+                        // only one entry as a result
+                        readerImage.Read();
+
+                        int id = readerImage.GetInt32((int)TableImagesOrdinals.Id);
+                        string customName = readerImage.GetString((int)TableImagesOrdinals.CustomName);
+                        string name = readerImage.GetString((int)TableImagesOrdinals.Name);
+                        string subfolderName = readerImage.GetString((int)TableImagesOrdinals.Subfolder);
+                        string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
+                        DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
+                        double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
+                        string camera = readerImage.GetString((int)TableImagesOrdinals.Camera);
+                        int iso = readerImage.GetInt32((int)TableImagesOrdinals.ISO);
+                        double fStop = readerImage.GetDouble((int)TableImagesOrdinals.FStop);
+                        int exposureTime = readerImage.GetInt32((int)TableImagesOrdinals.ExposureTime);
+                        double exposureBias = readerImage.GetDouble((int)TableImagesOrdinals.ExposureBias);
+                        double focalLength = readerImage.GetDouble((int)TableImagesOrdinals.FocalLength);
+                        string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
+
+                        Locations.Location location = GetLocation(id);
+
+                        ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category);
+
+                        list.Add(imageFile);
+                    }
+                }
+
+                Connection.Close();
+            }
 
             return list;
         }
