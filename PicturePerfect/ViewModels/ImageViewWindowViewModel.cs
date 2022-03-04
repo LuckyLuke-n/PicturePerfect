@@ -158,26 +158,6 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public CategoriesTree CategoriesTree => LoadedCategoriesTree;
 
-        public SubCategory subCategory1Selection = new();
-        /// <summary>
-        /// Get or set the selected subcategory 1.
-        /// </summary>
-        public SubCategory SubCategory1Selection
-        {
-            get { return subCategory1Selection; }
-            set { this.RaiseAndSetIfChanged(ref subCategory1Selection, value); }
-        }
-
-        public SubCategory subCategory2Selection = new();
-        /// <summary>
-        /// Get or set the selected subcategory 2.
-        /// </summary>
-        public SubCategory SubCategory2Selection
-        {
-            get { return subCategory2Selection; }
-            set { this.RaiseAndSetIfChanged(ref subCategory2Selection, value); }
-        }
-
         public List<SubCategory> subCategories1 = new();
         /// <summary>
         /// Get or set the selection for sub category 1.
@@ -214,14 +194,14 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref locationIndexSelected, value); }
         }
 
-        private int categoryIndexSelected;
+        private int categoryIndexSelected = -1;
         /// <summary>
         /// Get or set the list index of the selected category.
         /// </summary>
-        internal int CategoryIndexSelected
+        public int CategoryIndexSelected
         {
             get { return categoryIndexSelected; }
-            set { this.RaiseAndSetIfChanged(ref categoryIndexSelected, value); }
+            set { this.RaiseAndSetIfChanged(ref categoryIndexSelected, value); SetSubCategoryLists(); }
         }
 
         #endregion Image info
@@ -327,8 +307,19 @@ namespace PicturePerfect.ViewModels
             DateTaken = ImageFile.DateTaken;
             LocationIndexSelected = GetLocationIndex();
             CategoryIndexSelected = GetCategoryIndex();
-            SubCategory1Selection = ImageFile.SubCategory1;
-            SubCategory2Selection = ImageFile.SubCategory2;
+            SetSubCategoryLists();
+        }
+
+        /// <summary>
+        /// Method to set the properties for the subcategory lists.
+        /// </summary>
+        private void SetSubCategoryLists()
+        {
+            if (CategoryIndexSelected != -1)
+            {
+                SubCategories1 = CategoriesTree.Tree[CategoryIndexSelected].SubCategories;
+                SubCategories2 = CategoriesTree.Tree[CategoryIndexSelected].SubCategories;
+            }
         }
 
         /// <summary>
