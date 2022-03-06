@@ -684,7 +684,7 @@ namespace PicturePerfect.Models
         /// </summary>
         /// <param name="category"></param>
         /// <returns>Returns a list of sub-categories for the given category.</returns>
-        public static List<SubCategory> LoadSubcategories(Category category)
+        private static List<SubCategory> LoadSubcategories(Category category)
         {
             List<SubCategory> list = new();
 
@@ -696,7 +696,8 @@ namespace PicturePerfect.Models
             // "none"
             else if(category.Id == 2)
             {
-                // "None" --> get all subcategories
+                // "None" -->no subcategories
+                /*
                 string commandText = @"SELECT * FROM subcategories ORDER BY name ASC";
 
                 // Connect to the Sqlite database
@@ -721,6 +722,7 @@ namespace PicturePerfect.Models
 
                 // close connection
                 Connection.Close();
+                */
             }
             // any custom category
             else
