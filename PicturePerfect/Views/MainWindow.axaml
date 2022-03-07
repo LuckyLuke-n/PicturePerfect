@@ -113,17 +113,27 @@
 							<DataGridTextColumn Header="Location" Binding="{Binding Location.Name}" Width="*"/>
 						</DataGrid.Columns>
 						<DataGrid.ContextMenu>
-							<ContextMenu Width="200">
+							<ContextMenu>
 								<MenuItem Header="View" Command="{Binding ShowImageCommand}">
 									<MenuItem.Icon>
 										<Image Source="/Assets/Drawables/properties_dark.png"/>
 									</MenuItem.Icon>
+								</MenuItem>
+								<MenuItem Header="Mark as favorite">
+									<MenuItem.Icon>
+										<Image Source="/Assets/Drawables/favorite_dark.png"/>
+									</MenuItem.Icon>
+									<MenuItem Header="Favorite 1"/>
+									<MenuItem Header="Favorite 2"/>
+									<MenuItem Header="Favorite 3"/>
+									<MenuItem Header="Favorite 4"/>
 								</MenuItem>
 								<MenuItem Header="Delete">
 									<MenuItem.Icon>
 										<Image Source="/Assets/Drawables/delete_dark.png"/>
 									</MenuItem.Icon>
 								</MenuItem>
+								<Separator/>
 								<MenuItem Header="Add images" Command="{Binding ToggleLoadImagesCommand}">
 									<MenuItem.Icon>
 										<Image Source="/Assets/Drawables/load_images_dark.png"/>
