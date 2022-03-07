@@ -10,6 +10,7 @@ using System.Reactive;
 using Avalonia.Threading;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace PicturePerfect.ViewModels
 {
@@ -30,10 +31,34 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Favorite images for home page
-        public static Bitmap ImageNo1 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140045_Stockerpel.jpg");
-        public static Bitmap ImageNo2 { get; private set; } = ThisApplication.PlaceholderImage;
-        public static Bitmap ImageNo3 { get; private set; } = ThisApplication.PlaceholderImage;
-        public static Bitmap ImageNo4 { get; private set; } = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+        private Bitmap imageNo1 = ThisApplication.PlaceholderImage;
+        public Bitmap ImageNo1
+        {
+            get { return imageNo1; }
+            private set { this.RaiseAndSetIfChanged(ref imageNo1, value); }
+        }
+
+        private Bitmap imageNo2 = ThisApplication.PlaceholderImage;
+        public Bitmap ImageNo2
+        {
+            get { return imageNo2; }
+            private set { this.RaiseAndSetIfChanged(ref imageNo2, value); }
+        }
+
+        private Bitmap imageNo3 = ThisApplication.PlaceholderImage;
+        public Bitmap ImageNo3
+        {
+            get { return imageNo3; }
+            private set { this.RaiseAndSetIfChanged(ref imageNo3, value); }
+        }
+
+        private Bitmap imageNo4 = ThisApplication.PlaceholderImage;
+        public Bitmap ImageNo4
+        {
+            get { return imageNo4; }
+            private set { this.RaiseAndSetIfChanged(ref imageNo4, value); }
+        }
+
         private static string notes = string.Empty;
         /// <summary>
         /// Get the notes to be displayed in the home tab. When the setter is used, the notes will be saved to the project file when a project is loaded.
@@ -180,8 +205,20 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Status Bar
-        public int PercentageProgressBar { get; private set; } = 100;
-        public string LabelProgressBar { get; private set; } = "100%";
+        private int percentageProgressBar = 0;
+        public int PercentageProgressBar
+        {
+            get { return percentageProgressBar; }
+            private set { this.RaiseAndSetIfChanged(ref percentageProgressBar, value); }
+        }
+
+        private string labelProgressBar = "0%";
+        public string LabelProgressBar
+        {
+            get { return labelProgressBar; }
+            private set { this.RaiseAndSetIfChanged(ref labelProgressBar, value); }
+        }
+
         private bool isIndeterminate = false;
         /// <summary>
         /// Get or set weather the progressbar is indeterminate or not.
@@ -309,6 +346,7 @@ namespace PicturePerfect.ViewModels
             LoadedImageFiles.LoadAll();
             LoadedCategoriesTree.LoadTree();
             LoadedLocations.LoadList();
+            SetFavoriteImages();
 
             // settings page
             NefFilesChecked = ThisApplication.ProjectFile.NefFilesChecked;
@@ -318,6 +356,78 @@ namespace PicturePerfect.ViewModels
             BufferSize = ThisApplication.ProjectFile.BufferSize;
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
+        }
+
+        /// <summary>
+        /// Set the favorite images in a background worker.
+        /// </summary>
+        private void SetFavoriteImages()
+        {
+            // new backgroundworker
+            BackgroundWorker backgroundWorker = new();
+            backgroundWorker.WorkerReportsProgress = true;
+            backgroundWorker.DoWork += backgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+            backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
+
+            // run the worker
+            backgroundWorker.RunWorkerAsync();
+
+
+            void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+            {
+                PercentageProgressBar = 0;
+                LabelProgressBar = PercentageProgressBar.ToString() + "%";
+                int i = 0;
+                int[] favoriteIds = { ThisApplication.ProjectFile.Favorite1Id, ThisApplication.ProjectFile.Favorite2Id, ThisApplication.ProjectFile.Favorite3Id, ThisApplication.ProjectFile.Favorite4Id };
+                Bitmap[] favoriteImages = { ImageNo1, ImageNo2, ImageNo3, ImageNo4 };
+
+                // load image as bitmaps
+                foreach (int id in favoriteIds)
+                {
+                    if (id == 0)
+                    {
+                        // no image set
+                        favoriteImages[i] = ThisApplication.PlaceholderImage;
+                    }
+                    else
+                    {
+                        // set image
+                        switch (i)
+                        {
+                            case 0:
+                                ImageNo1 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                break;
+                            case 1:
+                                ImageNo2 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                break;
+                            case 2:
+                                ImageNo3 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                break;
+                            case 3:
+                                ImageNo4 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                    }
+                    i++;
+                    double percentage = (double)i / 4 * 100;
+                    backgroundWorker.ReportProgress((int)percentage);
+                }
+            }
+
+            void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+            {
+                //PercentageProgressBar = 100;
+            }
+
+            void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+            {
+                PercentageProgressBar = e.ProgressPercentage;
+                LabelProgressBar = PercentageProgressBar.ToString() + "%";
+            }
         }
 
         /// <summary>
