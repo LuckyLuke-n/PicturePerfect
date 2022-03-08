@@ -110,7 +110,7 @@ namespace PicturePerfect.Models
         public int Favorite1Id
         {
             get { return favorite1Id; }
-            set { favorite1Id = value; }
+            set { favorite1Id = value; Save(); }
         }
         /// <summary>
         /// Get or set the image id. Set id to 0 if no favorite is selected.
@@ -118,7 +118,7 @@ namespace PicturePerfect.Models
         public int Favorite2Id
         {
             get { return favorite2Id; }
-            set { favorite2Id = value;}
+            set { favorite2Id = value; Save(); }
         }
         /// <summary>
         /// Get or set the image id. Set id to 0 if no favorite is selected.
@@ -126,7 +126,7 @@ namespace PicturePerfect.Models
         public int Favorite3Id
         {
             get { return favorite3Id; }
-            set { favorite3Id = value;  }
+            set { favorite3Id = value; Save(); }
         }
         /// <summary>
         /// Get or set the image id. Set id to 0 if no favorite is selected.
@@ -134,7 +134,7 @@ namespace PicturePerfect.Models
         public int Favorite4Id
         {
             get { return favorite4Id; }
-            set { favorite4Id = value; }
+            set { favorite4Id = value; Save(); }
         }
         #endregion
 

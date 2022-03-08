@@ -536,7 +536,6 @@ namespace PicturePerfect.ViewModels
         private void RunMarkAsFavorite1Command()
         {
             ThisApplication.ProjectFile.Favorite1Id = ImageFile.Id;
-            ThisApplication.ProjectFile.Save();
             ImageNo1 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
         }
 
@@ -546,7 +545,6 @@ namespace PicturePerfect.ViewModels
         private void RunMarkAsFavorite2Command()
         {
             ThisApplication.ProjectFile.Favorite2Id = ImageFile.Id;
-            ThisApplication.ProjectFile.Save();
             ImageNo2 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
         }
 
@@ -556,7 +554,6 @@ namespace PicturePerfect.ViewModels
         private void RunMarkAsFavorite3Command()
         {
             ThisApplication.ProjectFile.Favorite3Id = ImageFile.Id;
-            ThisApplication.ProjectFile.Save();
             ImageNo3 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
         }
 
@@ -566,7 +563,6 @@ namespace PicturePerfect.ViewModels
         private void RunMarkAsFavorite4Command()
         {
             ThisApplication.ProjectFile.Favorite4Id = ImageFile.Id;
-            ThisApplication.ProjectFile.Save();
             ImageNo4 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
         }
 
