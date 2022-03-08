@@ -130,6 +130,7 @@ namespace PicturePerfect.ViewModels
         public static string NamingConventionDescription => File.ReadAllText("Resources/Descriptions/naming_convention.txt");
         public static string FileTypeDescription => File.ReadAllText("Resources/Descriptions/file_types.txt");
         public static string BufferSizeDescription => File.ReadAllText("Resources/Descriptions/buffer_size.txt");
+        public static string ViewDescription => File.ReadAllText("Resources/Descriptions/view_settings.txt");
 
         private int bufferSize = ThisApplication.ProjectFile.BufferSize;
         /// <summary>
@@ -201,6 +202,16 @@ namespace PicturePerfect.ViewModels
         {
             get { return pngFilesChecked; }
             set { this.RaiseAndSetIfChanged(ref pngFilesChecked, value); ThisApplication.ProjectFile.PngFilesChecked = value; }
+        }
+
+        private bool imageViewFullScreenChecked = false;
+        /// <summary>
+        /// Get or set the property for opening the image view window in full screen.
+        /// </summary>
+        public bool ImageViewFullScreenChecked
+        {
+            get { return imageViewFullScreenChecked; }
+            set { this.RaiseAndSetIfChanged(ref imageViewFullScreenChecked, value); ThisApplication.ProjectFile.ImageViewFullScreenChecked = value; }
         }
         #endregion
 
@@ -359,6 +370,7 @@ namespace PicturePerfect.ViewModels
             OrfFilesChecked = ThisApplication.ProjectFile.OrfFilesChecked;
             JpgFilesChecked = ThisApplication.ProjectFile.JpgFilesChecked;
             PngFilesChecked = ThisApplication.ProjectFile.PngFilesChecked;
+            ImageViewFullScreenChecked = ThisApplication.ProjectFile.ImageViewFullScreenChecked;
             BufferSize = ThisApplication.ProjectFile.BufferSize;
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };

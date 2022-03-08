@@ -178,6 +178,7 @@ namespace PicturePerfect.Models
             get { return nefFilesChecked; }
             set { nefFilesChecked = value; Save(); }
         }
+
         private bool orfFilesChecked = false;
         /// <summary>
         /// Get or set the orf files property. The change will be saved to the project file.
@@ -187,6 +188,7 @@ namespace PicturePerfect.Models
             get { return orfFilesChecked; }
             set { orfFilesChecked = value; Save(); }
         }
+
         private bool jpgFilesChecked = false;
         /// <summary>
         /// Get or set the jpg files property. The change will be saved to the project file.
@@ -196,6 +198,7 @@ namespace PicturePerfect.Models
             get { return jpgFilesChecked; }
             set { jpgFilesChecked = value; Save(); }
         }
+
         private bool pngFilesChecked = false;
         /// <summary>
         /// Get or set the png files property. The change will be saved to the project file.
@@ -204,6 +207,16 @@ namespace PicturePerfect.Models
         {
             get { return pngFilesChecked; }
             set { pngFilesChecked = value; Save(); }
+        }
+
+        private bool imageViewFullScreenChecked = false;
+        /// <summary>
+        /// Get or set the behavior for the image view window.
+        /// </summary>
+        public bool ImageViewFullScreenChecked
+        {
+            get { return imageViewFullScreenChecked; }
+            set { imageViewFullScreenChecked = value; Save(); }
         }
         #endregion
 
@@ -237,7 +250,8 @@ namespace PicturePerfect.Models
                 ImageFolder = Path.Combine(path, "images"),
                 DatabasePath = Path.Combine(path, "sqlite", "database.sqlite"),
                 OrfFilesChecked = true,
-                NefFilesChecked = true
+                NefFilesChecked = true,
+                ImageViewFullScreenChecked = false
             };
 
             // create basic folders
@@ -302,6 +316,14 @@ namespace PicturePerfect.Models
 
                 return value;
             }
+            bool CheckImageViewFullScreenChecked()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["ImageViewFullScreenChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
 
             // update project file
             ProjectFile newFile = new()
@@ -320,6 +342,7 @@ namespace PicturePerfect.Models
                 OrfFilesChecked = CheckOrfFilesCheckedException(),
                 JpgFilesChecked = CheckJpgFilesCheckedException(),
                 PngFilesChecked = CheckPngFilesCheckedException(),
+                ImageViewFullScreenChecked = CheckImageViewFullScreenChecked(),
                 BufferSize = Convert.ToInt32(projectFile["BufferSize"]),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
                 Separator = projectFile["Separator"],

@@ -187,7 +187,7 @@
 					<!-- Database settings -->
 					<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10"/>
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding FileTypeDescription}"/>
 						<CheckBox Content=".nef (Nikon raw file)" IsChecked="{Binding NefFilesChecked}"/>
 						<CheckBox Content=".orf (Olympus raw file)" IsChecked="{Binding OrfFilesChecked}"/>
 						<CheckBox Content=".jpg" IsChecked="{Binding JpgFilesChecked}"/>
@@ -196,11 +196,18 @@
 						<StackPanel Orientation="Horizontal">
 							<CheckBox Content="Use string separator" Margin="0,0,10,0" IsChecked="{Binding UseSeparator}"/>
 							<ComboBox SelectedItem="{Binding Separator}" Width="100" Items="{Binding Separators}" IsEnabled="{Binding UseSeparator}"/>
-						</StackPanel>						
+						</StackPanel>
+					</StackPanel>
+
+					<!-- View settings -->
+					<StackPanel Margin="10" Grid.Row="1" IsEnabled="{Binding ProjectIsLoaded}">
+						<Label Content="View" FontWeight="Bold" Margin="0,0,0,10"/>
+						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding ViewDescription}" />
+						<CheckBox Content="Open image view in full screen mode" IsChecked="{Binding ImageViewFullScreenChecked}"/>
 					</StackPanel>
 
 					<!-- Performance settings -->
-					<StackPanel Margin="10" Grid.Row="1" IsEnabled="{Binding ProjectIsLoaded}">
+					<StackPanel Margin="10" Grid.Column="1" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
 						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding BufferSizeDescription}" />
 						<StackPanel Orientation="Horizontal">

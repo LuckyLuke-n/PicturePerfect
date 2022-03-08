@@ -1,1 +1,1 @@
-﻿Select the file types youo want to store in your project database. It is recommended to store raw formats. The application will convert them if needed.
+﻿Select the file types your want to store in your project database. It is recommended to store raw formats. The application will convert them if needed.

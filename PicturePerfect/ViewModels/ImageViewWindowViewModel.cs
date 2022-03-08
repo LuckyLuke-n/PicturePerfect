@@ -69,6 +69,25 @@ namespace PicturePerfect.ViewModels
             get { return isIndeterminateBar; }
             set { this.RaiseAndSetIfChanged(ref isIndeterminateBar, value); }
         }
+
+        /// <summary>
+        /// Get property if this window is supposed to be opened in full screen.
+        /// </summary>
+        public string IsFullScreen
+        {
+            get
+            {
+                if (ThisApplication.ProjectFile.ImageViewFullScreenChecked == true)
+                {
+                    return "Maximized";
+                }
+                else
+                {
+                    return "Normal";
+                }
+            }
+
+        }
         #endregion
 
         #region Commands
