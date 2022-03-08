@@ -106,7 +106,7 @@
 
 			<!-- Sub category 1 -->
 			<Label Content="Sub category 1" Grid.Column="0" Grid.Row="7" Margin="0,0,0,10"/>
-			<ComboBox Items="{Binding SubCategories1}" Grid.Column="1" Grid.Row="7" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
+			<ComboBox SelectedIndex="{Binding SubCategory1IndexSelected}" Items="{Binding SubCategories1}" Grid.Column="1" Grid.Row="7" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock Text="{Binding Name}"/>
@@ -123,7 +123,7 @@
 
 			<!-- Sub category 2 -->
 			<Label Content="Sub category 2" Grid.Column="0" Grid.Row="9" Margin="0,0,0,10"/>
-			<ComboBox Items="{Binding SubCategories2}" Grid.Column="1" Grid.Row="9" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
+			<ComboBox SelectedIndex="{Binding SubCategory2IndexSelected}" Items="{Binding SubCategories2}" Grid.Column="1" Grid.Row="9" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock Text="{Binding Name}"/>

@@ -710,22 +710,6 @@ namespace PicturePerfect.ViewModels
         }
 
 
-
-
-
-        /// <summary>
-        /// Method to show the image view window.
-        /// </summary>
-        /// <param name="id"></param>
-        private void ShowFavoriteImage(int favoriteId)
-        {
-            // get image file object by id from project file
-
-            // set object in view model base
-
-            // new ImageViewWindow().Show();
-        }
-
         /// <summary>
         /// Method to load images by category or subcategory.
         /// </summary>
@@ -741,7 +725,7 @@ namespace PicturePerfect.ViewModels
             {
                 // selection was a subcategory
                 SubCategory subCategory = (SubCategory)SelectedCategoryObject;
-                MessageBox.Show(subCategory.GetType().Name + "....." + subCategory.Name);
+                LoadedImageFiles.LoadBySubCategory(subCategory);
             }
         }
     }

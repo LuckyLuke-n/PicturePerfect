@@ -51,9 +51,13 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Load images from the database by sub-category.
         /// </summary>
-        public void LoadBySubCategory()
+        public void LoadBySubCategory(SubCategory subCategory)
         {
             List.Clear();
+
+            List<ImageFile> list = Database.LoadImageFilesBySubCategory(subCategory);
+
+            list.ForEach(file => List.Add(file));
         }
 
         /// <summary>

@@ -204,6 +204,25 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref categoryIndexSelected, value); SetSubCategoryLists(); }
         }
 
+        private int subCategory1IndexSelected = -1;
+        /// <summary>
+        /// Get or set the list index of the selected subcategory 1.
+        /// </summary>
+        public int SubCategory1IndexSelected
+        {
+            get { return subCategory1IndexSelected; }
+            set { this.RaiseAndSetIfChanged(ref subCategory1IndexSelected, value); SetSubCategoryLists(); }
+        }
+
+        private int subCategory2IndexSelected = -1;
+        /// <summary>
+        /// Get or set the list index of the selected subcategory 2.
+        /// </summary>
+        public int SubCategory2IndexSelected
+        {
+            get { return subCategory2IndexSelected; }
+            set { this.RaiseAndSetIfChanged(ref subCategory2IndexSelected, value); SetSubCategoryLists(); }
+        }
         #endregion Image info
 
         #region Image more info
@@ -308,6 +327,9 @@ namespace PicturePerfect.ViewModels
             LocationIndexSelected = GetLocationIndex();
             CategoryIndexSelected = GetCategoryIndex();
             SetSubCategoryLists();
+
+            SubCategory1IndexSelected = GetSubCategoryIndex(1);
+            SubCategory2IndexSelected = GetSubCategoryIndex(2);
         }
 
         /// <summary>
@@ -377,6 +399,36 @@ namespace PicturePerfect.ViewModels
             {
                 if (category.Id == ImageFile.Category.Id) { index = i; break; }
                 i++;
+            }
+
+            return index;
+        }
+
+        /// <summary>
+        /// Method to get the current sub category index.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns>Returns an integer value for the subcategory index.</returns>
+        private int GetSubCategoryIndex(int number)
+        {
+            int index = -1;
+            int i = 0;
+
+            if (number == 1)
+            {
+                foreach (SubCategory subCategory in SubCategories1)
+                {
+                    if (subCategory.Id == ImageFile.SubCategory1.Id) { index = i; break; }
+                    i++;
+                }
+            }
+            else if (number == 2)
+            {
+                foreach (SubCategory subCategory in SubCategories2)
+                {
+                    if (subCategory.Id == ImageFile.SubCategory2.Id) { index = i; break; }
+                    i++;
+                }
             }
 
             return index;
@@ -609,16 +661,34 @@ namespace PicturePerfect.ViewModels
             }
 
             // check if properties causing relinking in database where changed
-            if (LocationIndexSelected == -1 || Locations.List[LocationIndexSelected].Name != ImageFile.Location.Name)
+            if (LocationIndexSelected == -1 || Locations.List[LocationIndexSelected].Id != ImageFile.Location.Id)
             {
                 changedImageFile = ImageFile.CommitLocationChange(Locations.List[LocationIndexSelected]);
                 changesMade = true;
             }
 
-            if (CategoryIndexSelected == -1 || CategoriesTree.Tree[CategoryIndexSelected].Name != ImageFile.Category.Name)
+            if (CategoryIndexSelected == -1 || CategoriesTree.Tree[CategoryIndexSelected].Id != ImageFile.Category.Id)
             {
                 changedImageFile = ImageFile.CommitCategoryChange(CategoriesTree.Tree[CategoryIndexSelected]);
                 changesMade = true;
+            }
+
+            if (SubCategory1IndexSelected != -1)
+            {
+                if (SubCategories1[SubCategory1IndexSelected].Id != ImageFile.SubCategory1.Id)
+                {
+                    changedImageFile = ImageFile.CommitSubCategory1Change(newSubCategory: SubCategories1[SubCategory1IndexSelected], oldSubCategory: ImageFile.SubCategory1);
+                    changesMade = true;
+                }
+            }
+
+            if (SubCategory2IndexSelected != -1)
+            {
+                if (SubCategories2[SubCategory2IndexSelected].Id != ImageFile.SubCategory2.Id)
+                {
+                    changedImageFile = ImageFile.CommitSubCategory2Change(newSubCategory: SubCategories2[SubCategory2IndexSelected], oldSubCategory: ImageFile.SubCategory2);
+                    changesMade = true;
+                }
             }
 
             if (changesMade == true && changedImageFile != null)
@@ -626,14 +696,6 @@ namespace PicturePerfect.ViewModels
                 // adjust field in observable collection stored in view model base to update the data grid
                 LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; 
             }
-
-            /*
-            if (CategorySelection.Name != ImageFile.Category.Name) { ImageFile.CommitCategoryChange(); } // not necessary --> category and subcategory are linked in sqlite
-            */
-            /*
-            if (SubCategory1Selection.Name != ImageFile.SubCategory1.Name) { ImageFile.CommitSubCategory1Change(); }
-            if (SubCategory2Selection.Name != ImageFile.SubCategory2.Name) { ImageFile.CommitSubCategory2Change(); }
-            */
         }
     }
 }

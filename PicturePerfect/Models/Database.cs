@@ -404,6 +404,51 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to link an image to a subcategory.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="oldSubCategory"></param>
+        /// <param name="newSubCategory"></param>
+        public static void LinkImageToSubCategory(ImageFile image, SubCategory newSubCategory, SubCategory oldSubCategory)
+        {
+            string[] commandsDelete = { "DELETE FROM images_subcategories WHERE image_id=@image_id AND subcategory_id=@oldsubcategory_id" };
+
+            // new command
+            Connection.Open();
+
+            if (oldSubCategory.Id != 0)
+            {
+                // delete old link
+                foreach (string commandText in commandsDelete)
+                {
+                    SqliteCommand commandDelete = new()
+                    {
+                        CommandText = commandText,
+                        Connection = Connection
+                    };
+                    commandDelete.Parameters.AddWithValue("@image_id", image.Id);
+                    commandDelete.Parameters.AddWithValue("@oldsubcategory_id", oldSubCategory.Id);
+                    commandDelete.ExecuteNonQuery();
+                }
+            }
+
+            // insert new row linking the image and the location
+            SqliteCommand commandNew = new()
+            {
+                CommandText = "INSERT INTO images_subcategories (image_id, subcategory_id) " +
+                    " VALUES (@image_id, @newsubcategory_id)",
+                Connection = Connection
+            };
+            // add all with value, only works if each column is unique, which should always be the case
+            commandNew.Parameters.AddWithValue("@image_id", image.Id);
+            commandNew.Parameters.AddWithValue("@newsubcategory_id", newSubCategory.Id);
+            commandNew.ExecuteNonQuery();
+
+            // close connection
+            Connection.Close();
+        }
+
+        /// <summary>
         /// Method to load an image file by its id.
         /// </summary>
         /// <param name="id"></param>
@@ -440,8 +485,9 @@ namespace PicturePerfect.Models
 
                 Locations.Location location = GetLocation(id);
                 Category category = GetCategory(id);
+                SubCategory[] subCategories = GetSubCategories(id);
 
-                imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category);
+                imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
             }
 
             Connection.Close();
@@ -485,8 +531,9 @@ namespace PicturePerfect.Models
 
                 Locations.Location location = GetLocation(id);
                 Category category = GetCategory(id);
+                SubCategory[] subCategories = GetSubCategories(id);
 
-                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category);
+                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
 
                 list.Add(imageFile);
             }
@@ -553,8 +600,9 @@ namespace PicturePerfect.Models
                         string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
 
                         Locations.Location location = GetLocation(id);
+                        SubCategory[] subCategories = GetSubCategories(id);
 
-                        ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category);
+                        ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
 
                         list.Add(imageFile);
                     }
@@ -575,6 +623,57 @@ namespace PicturePerfect.Models
         {
             List<ImageFile> list = new();
 
+            // specific category
+            string commandTextIds = "SELECT image_id FROM images_subcategories WHERE subcategory_id=@subcategory_id";
+
+            Connection.Open();
+
+            SqliteCommand commandIds = new(commandTextIds, Connection);
+            commandIds.Parameters.AddWithValue("subcategory_id", subCategory.Id);
+            SqliteDataReader readerId = commandIds.ExecuteReader();
+
+            if (readerId.HasRows)
+            {
+                while (readerId.Read())
+                {
+                    // get id and corresponding image
+                    int imageId = readerId.GetInt32(0);
+
+                    string commandTextImage = "SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images WHERE id=@id ORDER BY date_taken ASC";
+                    SqliteCommand commandImage = new(commandTextImage, Connection);
+                    commandImage.Parameters.AddWithValue("@id", imageId);
+                    SqliteDataReader readerImage = commandImage.ExecuteReader();
+
+                    // only one entry as a result
+                    readerImage.Read();
+
+                    int id = readerImage.GetInt32((int)TableImagesOrdinals.Id);
+                    string customName = readerImage.GetString((int)TableImagesOrdinals.CustomName);
+                    string name = readerImage.GetString((int)TableImagesOrdinals.Name);
+                    string subfolderName = readerImage.GetString((int)TableImagesOrdinals.Subfolder);
+                    string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
+                    DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
+                    double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
+                    string camera = readerImage.GetString((int)TableImagesOrdinals.Camera);
+                    int iso = readerImage.GetInt32((int)TableImagesOrdinals.ISO);
+                    double fStop = readerImage.GetDouble((int)TableImagesOrdinals.FStop);
+                    int exposureTime = readerImage.GetInt32((int)TableImagesOrdinals.ExposureTime);
+                    double exposureBias = readerImage.GetDouble((int)TableImagesOrdinals.ExposureBias);
+                    double focalLength = readerImage.GetDouble((int)TableImagesOrdinals.FocalLength);
+                    string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
+
+                    Locations.Location location = GetLocation(id);
+                    Category category = GetCategory(id);
+                    SubCategory[] subCategories = GetSubCategories(id);
+
+                    ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
+
+                    list.Add(imageFile);
+                }
+            }
+
+            Connection.Close();
+            
             return list;
         }
 
@@ -680,6 +779,61 @@ namespace PicturePerfect.Models
             }
 
             return category;
+        }
+
+        /// <summary>
+        /// Method to get the assigned subcategories for a specific image file.
+        /// </summary>
+        /// <param name="imageId"></param>
+        /// <param name="number"></param>
+        /// <returns>Returns an array containing the two subcategories. The first element in subcategory 1. The second element is subcategory 2.</returns>
+        private static SubCategory[] GetSubCategories(int imageId)
+        {
+            SubCategory[] subCategories = { new SubCategory(), new SubCategory() };
+
+            // query subcategory ids
+            string commandText = @"SELECT subcategory_id FROM images_subcategories WHERE image_id=@image_id";
+
+            // Connect to the Sqlite database
+            SqliteCommand command = new(commandText, Connection);
+            command.Parameters.AddWithValue("@image_id", imageId);
+
+            // Sqlite data reader
+            // this reader will not contain elements if the image has no subcategory assigned
+            SqliteDataReader reader = command.ExecuteReader();
+            // step through the reader containing the subcategory ids           
+            if (reader.HasRows)
+            {
+                // reader will only have two item since a image can only have two subcategories
+                int row = 0;
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0); // index 0 is the subcategory id
+
+                    string commandTextCategory = @"SELECT id, name, notes FROM subcategories WHERE id=@id";
+                    SqliteCommand commandLocation = new(commandTextCategory, Connection);
+                    commandLocation.Parameters.AddWithValue("@id", id);
+                    // call the reader for the location by using the category id
+                    SqliteDataReader readerLocation = commandLocation.ExecuteReader();
+
+                    // reader for the subcategory command will only contain one item, since id is unique
+                    if (readerLocation.HasRows)
+                    {
+                        readerLocation.Read();                     
+                        // set the properties of the category object
+                        int identifier = readerLocation.GetInt32(0);
+                        string name = readerLocation.GetString(1);
+                        string notes = readerLocation.GetString(2);
+
+                        subCategories[row].Id = identifier;
+                        subCategories[row].Name = name;
+                        subCategories[row].Notes = notes;
+                    }
+                    row++;
+                }
+            }
+
+            return subCategories;
         }
 
         /// <summary>

@@ -121,7 +121,7 @@ namespace PicturePerfect.Models
         /// <param name="focalLength"></param>
         /// <param name="notes"></param>
         /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes, Locations.Location location, Category category)
+        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes, Locations.Location location, Category category, SubCategory subCategory1, SubCategory subCategory2)
         {
             ImageFile imageFile = new()
             {
@@ -140,7 +140,9 @@ namespace PicturePerfect.Models
                 FocalLength = focalLength,
                 Notes = notes,
                 Location = location,
-                Category = category
+                Category = category,
+                SubCategory1 = subCategory1,
+                SubCategory2 = subCategory2
             };
 
             return imageFile;
@@ -222,6 +224,7 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Save changes made to the image category.
         /// </summary>
+        /// <returns>The updated image file object.</returns>
         public ImageFile CommitCategoryChange(Category category)
         {
             Category = category;
@@ -233,17 +236,27 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Save changes made to the image sub category 1.
         /// </summary>
-        public void CommitSubCategory1Change()
+        /// <returns>The updated image file object.</returns>
+        public ImageFile CommitSubCategory1Change(SubCategory newSubCategory, SubCategory oldSubCategory)
         {
+            oldSubCategory = SubCategory1;
+            SubCategory1 = newSubCategory;
+            Database.LinkImageToSubCategory(this, newSubCategory, oldSubCategory);
 
+            return this;
         }
 
         /// <summary>
         /// Save changes made to the image sub category 2.
         /// </summary>
-        public void CommitSubCategory2Change()
+        /// <returns>The updated image file object.</returns>
+        public ImageFile CommitSubCategory2Change(SubCategory newSubCategory, SubCategory oldSubCategory)
         {
+            oldSubCategory = SubCategory2;
+            SubCategory2 = newSubCategory;
+            Database.LinkImageToSubCategory(this, newSubCategory, oldSubCategory);
 
+            return this;
         }
 
 
