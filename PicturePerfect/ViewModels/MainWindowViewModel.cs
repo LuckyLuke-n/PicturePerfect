@@ -302,7 +302,10 @@ namespace PicturePerfect.ViewModels
 
         #region Commands
         public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
-        //public ReactiveCommand<Unit, object> ShowImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> MarkAsFavorite1Command { get; }
+        public ReactiveCommand<Unit, Unit> MarkAsFavorite2Command { get; }
+        public ReactiveCommand<Unit, Unit> MarkAsFavorite3Command { get; }
+        public ReactiveCommand<Unit, Unit> MarkAsFavorite4Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite1Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite2Command { get; }
         public ReactiveCommand<Unit, Unit> ShowFavorite3Command { get; }
@@ -321,7 +324,10 @@ namespace PicturePerfect.ViewModels
         public MainWindowViewModel()
         {
             ShowImageCommand = ReactiveCommand.Create(RunShowImageCommandAsync);
-            //ShowImageCommand = ReactiveCommand.CreateFromTask(RunShowImageCommandAsync);
+            MarkAsFavorite1Command = ReactiveCommand.Create(RunMarkAsFavorite1Command);
+            MarkAsFavorite2Command = ReactiveCommand.Create(RunMarkAsFavorite2Command);
+            MarkAsFavorite3Command = ReactiveCommand.Create(RunMarkAsFavorite3Command);
+            MarkAsFavorite4Command = ReactiveCommand.Create(RunMarkAsFavorite4Command);
             ShowFavorite1Command = ReactiveCommand.Create(RunShowFavorite1Command);
             ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
             ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
@@ -396,16 +402,16 @@ namespace PicturePerfect.ViewModels
                         switch (i)
                         {
                             case 0:
-                                ImageNo1 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                ImageNo1 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
                                 break;
                             case 1:
-                                ImageNo2 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                ImageNo2 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
                                 break;
                             case 2:
-                                ImageNo3 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                ImageNo3 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
                                 break;
                             case 3:
-                                ImageNo4 = BitmapValueConverter.Convert("avares://PicturePerfect/Assets/test/P5140202_Kohlmeise.jpg");
+                                ImageNo4 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
                                 break;
                             default:
                                 break;
@@ -447,25 +453,76 @@ namespace PicturePerfect.ViewModels
             }
         }
 
+        /// <summary>
+        /// Method to show the favorite image 1.
+        /// </summary>
         private void RunShowFavorite1Command()
         {
-            // set the inherited static property to make the id available to the other view models
-            //ShowImage(ImageId);
+            if (ThisApplication.ProjectFile.Favorite1Id == 0)
+            {
+                // no favorite selected
+                MessageBox.Show("No favorite selected yet.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                // set the static property in the view model base and in this vew model
+                ImageFile = ImageFile.LoadById(ThisApplication.ProjectFile.Favorite1Id);
+                RunShowImageCommandAsync();
+            }
         }
 
+        /// <summary>
+        /// Method to show the favorite image 2.
+        /// </summary>
         private void RunShowFavorite2Command()
         {
-            //ShowImage(ImageId);
+            if (ThisApplication.ProjectFile.Favorite2Id == 0)
+            {
+                // no favorite selected
+                MessageBox.Show("No favorite selected yet.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                // set the static property in the view model base and in this vew model
+                ImageFile = ImageFile.LoadById(ThisApplication.ProjectFile.Favorite2Id);
+                RunShowImageCommandAsync();
+            }
         }
 
+        /// <summary>
+        /// Method to show the favorite image 3.
+        /// </summary>
         private void RunShowFavorite3Command()
         {
-            //ShowImage(ImageId);
+            if (ThisApplication.ProjectFile.Favorite3Id == 0)
+            {
+                // no favorite selected
+                MessageBox.Show("No favorite selected yet.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                // set the static property in the view model base and in this vew model
+                ImageFile = ImageFile.LoadById(ThisApplication.ProjectFile.Favorite3Id);
+                RunShowImageCommandAsync();
+            }
         }
 
+        /// <summary>
+        /// Method to show the favorite image 4.
+        /// </summary>
         private void RunShowFavorite4Command()
         {
-            //ShowImage(SelectedImageId);
+            if (ThisApplication.ProjectFile.Favorite4Id == 0)
+            {
+                // no favorite selected
+                MessageBox.Show("No favorite selected yet.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                // set the static property in the view model base and in this vew model
+                ImageFile = ImageFile.LoadById(ThisApplication.ProjectFile.Favorite4Id);
+                RunShowImageCommandAsync();
+            }
         }
 
         private void RunUseSeparatorCommand()
@@ -474,35 +531,43 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to show the image view window.
+        /// Method to set the seleted image file as favorite 1.
         /// </summary>
-        /// <param name="id"></param>
-        private void ShowFavoriteImage(int favoriteId)
+        private void RunMarkAsFavorite1Command()
         {
-            // get image file object by id from project file
-
-            // set object in view model base
-
-            // new ImageViewWindow().Show();
+            ThisApplication.ProjectFile.Favorite1Id = ImageFile.Id;
+            ThisApplication.ProjectFile.Save();
+            ImageNo1 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
         }
 
         /// <summary>
-        /// Method to load images by category or subcategory.
+        /// Method to set the seleted image file as favorite 2.
         /// </summary>
-        private void LoadImagesByCategoryObject()
+        private void RunMarkAsFavorite2Command()
         {
-            if (SelectedCategoryObject.GetType() == typeof(Category))
-            {
-                // Selection was a category
-                Category category = (Category)SelectedCategoryObject;
-                LoadedImageFiles.LoadByCategory(category);
-            }
-            else
-            {
-                // selection was a subcategory
-                SubCategory subCategory = (SubCategory)SelectedCategoryObject;
-                MessageBox.Show(subCategory.GetType().Name + "....." + subCategory.Name);
-            }          
+            ThisApplication.ProjectFile.Favorite2Id = ImageFile.Id;
+            ThisApplication.ProjectFile.Save();
+            ImageNo2 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+        }
+
+        /// <summary>
+        /// Method to set the seleted image file as favorite 3.
+        /// </summary>
+        private void RunMarkAsFavorite3Command()
+        {
+            ThisApplication.ProjectFile.Favorite3Id = ImageFile.Id;
+            ThisApplication.ProjectFile.Save();
+            ImageNo3 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+        }
+
+        /// <summary>
+        /// Method to set the seleted image file as favorite 4.
+        /// </summary>
+        private void RunMarkAsFavorite4Command()
+        {
+            ThisApplication.ProjectFile.Favorite4Id = ImageFile.Id;
+            ThisApplication.ProjectFile.Save();
+            ImageNo4 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
         }
 
         /// <summary>
@@ -642,6 +707,42 @@ namespace PicturePerfect.ViewModels
         {
             HideImagesDialog = !HideImagesDialog;
             PathToImageSourceFolder = "Select a source folder";
+        }
+
+
+
+
+
+        /// <summary>
+        /// Method to show the image view window.
+        /// </summary>
+        /// <param name="id"></param>
+        private void ShowFavoriteImage(int favoriteId)
+        {
+            // get image file object by id from project file
+
+            // set object in view model base
+
+            // new ImageViewWindow().Show();
+        }
+
+        /// <summary>
+        /// Method to load images by category or subcategory.
+        /// </summary>
+        private void LoadImagesByCategoryObject()
+        {
+            if (SelectedCategoryObject.GetType() == typeof(Category))
+            {
+                // Selection was a category
+                Category category = (Category)SelectedCategoryObject;
+                LoadedImageFiles.LoadByCategory(category);
+            }
+            else
+            {
+                // selection was a subcategory
+                SubCategory subCategory = (SubCategory)SelectedCategoryObject;
+                MessageBox.Show(subCategory.GetType().Name + "....." + subCategory.Name);
+            }
         }
     }
 }

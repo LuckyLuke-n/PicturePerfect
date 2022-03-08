@@ -404,6 +404,52 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to load an image file by its id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Returns the image file object.</returns>
+        public static ImageFile LoadImageFileById(int id)
+        {
+            ImageFile imageFile = new();
+
+            Connection.Open();
+
+            string commandTextImage = "SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images WHERE id=@id";
+            SqliteCommand commandImage = new(commandTextImage, Connection);
+            commandImage.Parameters.AddWithValue("@id", id);
+            SqliteDataReader readerImage = commandImage.ExecuteReader();
+
+            if (readerImage.HasRows)
+            {
+                // only one entry as a result
+                readerImage.Read();
+
+                string customName = readerImage.GetString((int)TableImagesOrdinals.CustomName);
+                string name = readerImage.GetString((int)TableImagesOrdinals.Name);
+                string subfolderName = readerImage.GetString((int)TableImagesOrdinals.Subfolder);
+                string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
+                DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
+                double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
+                string camera = readerImage.GetString((int)TableImagesOrdinals.Camera);
+                int iso = readerImage.GetInt32((int)TableImagesOrdinals.ISO);
+                double fStop = readerImage.GetDouble((int)TableImagesOrdinals.FStop);
+                int exposureTime = readerImage.GetInt32((int)TableImagesOrdinals.ExposureTime);
+                double exposureBias = readerImage.GetDouble((int)TableImagesOrdinals.ExposureBias);
+                double focalLength = readerImage.GetDouble((int)TableImagesOrdinals.FocalLength);
+                string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
+
+                Locations.Location location = GetLocation(id);
+                Category category = GetCategory(id);
+
+                imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category);
+            }
+
+            Connection.Close();
+
+            return imageFile;
+        }
+
+        /// <summary>
         /// Method to load all images file data from the database.
         /// </summary>
         /// <returns>Returns the list of image files.</returns>

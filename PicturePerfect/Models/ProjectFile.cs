@@ -314,6 +314,7 @@ namespace PicturePerfect.Models
                 Notes = projectFile["Notes"],
                 ImageFolder = Path.Combine(new FileInfo(path).DirectoryName, "images"),
                 DatabasePath = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "database.sqlite"),
+
                 // settings
                 NefFilesChecked = CatchNefFilesCheckedException(),
                 OrfFilesChecked = CheckOrfFilesCheckedException(),
@@ -321,7 +322,13 @@ namespace PicturePerfect.Models
                 PngFilesChecked = CheckPngFilesCheckedException(),
                 BufferSize = Convert.ToInt32(projectFile["BufferSize"]),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
-                Separator = projectFile["Separator"]
+                Separator = projectFile["Separator"],
+
+                // favorites
+                Favorite1Id = Convert.ToInt32(projectFile["Favorite1Id"]),
+                Favorite2Id = Convert.ToInt32(projectFile["Favorite2Id"]),
+                Favorite3Id = Convert.ToInt32(projectFile["Favorite3Id"]),
+                Favorite4Id = Convert.ToInt32(projectFile["Favorite4Id"])
             };
 
             // save object to json file

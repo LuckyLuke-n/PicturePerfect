@@ -171,6 +171,16 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to load the image file object from the database by its id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Returns the image file object.</returns>
+        public static ImageFile LoadById(int id)
+        {
+            return Database.LoadImageFileById(id);
+        }
+
+        /// <summary>
         /// Method to copy the files and create a sqlite entry for this image.
         /// </summary>
         private static void CreateDatabaseEntry(ImageFile imageFile, string path)

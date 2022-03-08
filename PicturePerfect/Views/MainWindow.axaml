@@ -123,10 +123,10 @@
 									<MenuItem.Icon>
 										<Image Source="/Assets/Drawables/favorite_dark.png"/>
 									</MenuItem.Icon>
-									<MenuItem Header="Favorite 1"/>
-									<MenuItem Header="Favorite 2"/>
-									<MenuItem Header="Favorite 3"/>
-									<MenuItem Header="Favorite 4"/>
+									<MenuItem Header="Favorite 1" Command="{Binding MarkAsFavorite1Command}"/>
+									<MenuItem Header="Favorite 2" Command="{Binding MarkAsFavorite2Command}"/>
+									<MenuItem Header="Favorite 3" Command="{Binding MarkAsFavorite3Command}"/>
+									<MenuItem Header="Favorite 4" Command="{Binding MarkAsFavorite4Command}"/>
 								</MenuItem>
 								<MenuItem Header="Delete">
 									<MenuItem.Icon>
