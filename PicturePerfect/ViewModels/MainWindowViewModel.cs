@@ -326,6 +326,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> LoadProjectCommand { get; }
         public ReactiveCommand<Unit, Unit> ToggleLoadImagesCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadImagesCommand { get; }
+        public ReactiveCommand<Unit, Unit> DeleteImageCommand { get; }
         #endregion
 
 
@@ -335,10 +336,10 @@ namespace PicturePerfect.ViewModels
         public MainWindowViewModel()
         {
             ShowImageCommand = ReactiveCommand.Create(RunShowImageCommandAsync);
-            MarkAsFavorite1Command = ReactiveCommand.Create(RunMarkAsFavorite1Command);
-            MarkAsFavorite2Command = ReactiveCommand.Create(RunMarkAsFavorite2Command);
-            MarkAsFavorite3Command = ReactiveCommand.Create(RunMarkAsFavorite3Command);
-            MarkAsFavorite4Command = ReactiveCommand.Create(RunMarkAsFavorite4Command);
+            MarkAsFavorite1Command = ReactiveCommand.Create(RunMarkAsFavorite1CommandAsync);
+            MarkAsFavorite2Command = ReactiveCommand.Create(RunMarkAsFavorite2CommandAsync);
+            MarkAsFavorite3Command = ReactiveCommand.Create(RunMarkAsFavorite3CommandAsync);
+            MarkAsFavorite4Command = ReactiveCommand.Create(RunMarkAsFavorite4CommandAsync);
             ShowFavorite1Command = ReactiveCommand.Create(RunShowFavorite1Command);
             ShowFavorite2Command = ReactiveCommand.Create(RunShowFavorite2Command);
             ShowFavorite3Command = ReactiveCommand.Create(RunShowFavorite3Command);
@@ -348,6 +349,7 @@ namespace PicturePerfect.ViewModels
             LoadProjectCommand = ReactiveCommand.Create(RunLoadProjectCommandAsync);
             LoadImagesCommand = ReactiveCommand.Create(RunLoadImagesCommandAsync);
             ToggleLoadImagesCommand = ReactiveCommand.Create(RunToggleLoadImagesCommand);
+            DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommandAsync);
         }
 
         /// <summary>
@@ -537,45 +539,72 @@ namespace PicturePerfect.ViewModels
             }
         }
 
-        private void RunUseSeparatorCommand()
-        {
-
-        }
-
         /// <summary>
         /// Method to set the seleted image file as favorite 1.
         /// </summary>
-        private void RunMarkAsFavorite1Command()
+        private async void RunMarkAsFavorite1CommandAsync()
         {
-            ThisApplication.ProjectFile.Favorite1Id = ImageFile.Id;
-            ImageNo1 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            if (ProjectIsLoaded == true)
+                {
+                ThisApplication.ProjectFile.Favorite1Id = ImageFile.Id;
+                ImageNo1 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
         /// Method to set the seleted image file as favorite 2.
         /// </summary>
-        private void RunMarkAsFavorite2Command()
+        private async void RunMarkAsFavorite2CommandAsync()
         {
-            ThisApplication.ProjectFile.Favorite2Id = ImageFile.Id;
-            ImageNo2 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            if (ProjectIsLoaded == true)
+            {
+                ThisApplication.ProjectFile.Favorite2Id = ImageFile.Id;
+                ImageNo2 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
         /// Method to set the seleted image file as favorite 3.
         /// </summary>
-        private void RunMarkAsFavorite3Command()
+        private async void RunMarkAsFavorite3CommandAsync()
         {
-            ThisApplication.ProjectFile.Favorite3Id = ImageFile.Id;
-            ImageNo3 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            if (ProjectIsLoaded == true)
+            {
+                ThisApplication.ProjectFile.Favorite3Id = ImageFile.Id;
+                ImageNo3 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
         /// Method to set the seleted image file as favorite 4.
         /// </summary>
-        private void RunMarkAsFavorite4Command()
+        private async void RunMarkAsFavorite4CommandAsync()
         {
-            ThisApplication.ProjectFile.Favorite4Id = ImageFile.Id;
-            ImageNo4 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            if (ProjectIsLoaded == true)
+            {
+                ThisApplication.ProjectFile.Favorite4Id = ImageFile.Id;
+                ImageNo4 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
@@ -717,7 +746,6 @@ namespace PicturePerfect.ViewModels
             PathToImageSourceFolder = "Select a source folder";
         }
 
-
         /// <summary>
         /// Method to load images by category or subcategory.
         /// </summary>
@@ -734,6 +762,32 @@ namespace PicturePerfect.ViewModels
                 // selection was a subcategory
                 SubCategory subCategory = (SubCategory)SelectedCategoryObject;
                 LoadedImageFiles.LoadBySubCategory(subCategory);
+            }
+        }
+
+        /// <summary>
+        /// Method to run delete the selected image.
+        /// </summary>
+        private async void RunDeleteImageCommandAsync()
+        {
+            if (ProjectIsLoaded == true)
+            {
+                string message = $"Are you sure you want to delete the image {ImageFile.Name} from the database?";
+                MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.YesNo, MessageBox.MessageBoxIcon.Question);
+
+                if (result == MessageBox.MessageBoxResult.Yes)
+                {
+                    // delete from database
+                    ImageFile.DeleteFromDatabase();
+
+                    // remove from list
+                    LoadedImageFiles.List.RemoveAt(SelectedIndex);
+                }
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
             }
         }
     }

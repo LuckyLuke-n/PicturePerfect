@@ -1042,5 +1042,31 @@ namespace PicturePerfect.Models
             command.ExecuteNonQuery();
             Connection.Close();
         }
+
+        /// <summary>
+        /// Method to delete an image entry from the database. This includes the entries in all tables.
+        /// </summary>
+        /// <param name="imageFile"></param>
+        public static void DeleteImage(ImageFile imageFile)
+        {
+            string[] queries =
+                {
+                "DELETE FROM images WHERE id=@image_id",
+                "DELETE FROM images_categories WHERE image_id=@image_id",
+                "DELETE FROM images_subcategories WHERE image_id=@image_id",
+                "DELETE FROM images_locations WHERE image_id=@image_id"
+                };
+
+            Connection.Open();
+
+            foreach (string query in queries)
+            {
+                SqliteCommand command = new(query, Connection);
+                command.Parameters.AddWithValue("@image_id", imageFile.Id);
+                command.ExecuteNonQuery();
+            }
+
+            Connection.Close();
+        }
     }
 }

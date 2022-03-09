@@ -358,7 +358,7 @@ namespace PicturePerfect.Models
         /// </summary>
         public void DeleteFromDatabase()
         {
-
+            Database.DeleteImage(this);
         }
     }
 }

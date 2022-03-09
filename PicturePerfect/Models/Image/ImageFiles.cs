@@ -61,14 +61,6 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Load images from the database by location.
-        /// </summary>
-        public void LoadByLocation()
-        {
-            List.Clear();
-        }
-
-        /// <summary>
         /// Copy image files from a folder to \images\subfolder\ and store the information to the database.
         /// </summary>
         /// <param name="files">List of files to be added.</param>
@@ -85,23 +77,6 @@ namespace PicturePerfect.Models
                 ImageFile image = ImageFile.NewFromPath(file, subfolderName);
                 List.Add(image);
             }
-        }
-
-        /// <summary>
-        /// Method to remove a images file from the list.
-        /// This will not delete the item from the database.
-        /// </summary>
-        public void RemoveFromList()
-        {
-
-        }
-
-        /// <summary>
-        /// Method to delete the image from the database.
-        /// </summary>
-        public void DeleteFromDatabase()
-        {
-
         }
     }
 }

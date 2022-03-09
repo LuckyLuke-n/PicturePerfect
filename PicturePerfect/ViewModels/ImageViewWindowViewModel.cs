@@ -161,6 +161,11 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref this.imageFile, value); }
         }
 
+        /// <summary>
+        /// Get the list index of the currently opened image from the base view model.
+        /// </summary>
+        private int SelectedIndex => SelectedImageIndex;
+
         private Bitmap bitmapToDraw = ThisApplication.PlaceholderImage;
         /// <summary>
         /// Get the bitmap object for the image file object.
@@ -330,7 +335,7 @@ namespace PicturePerfect.ViewModels
             ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
             NextImageCommand = ReactiveCommand.Create(RunNextImageCommand);
             LastImageCommand = ReactiveCommand.Create(RunLastImageCommand);
-            DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommand);
+            DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommandAsync);
 
             SaveChangesCommand = ReactiveCommand.Create(RunSaveChangesCommand);
         }
@@ -658,11 +663,23 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Method to delete the current image from the disk and database.
         /// </summary>
-        private void RunDeleteImageCommand()
+        private async void RunDeleteImageCommandAsync()
         {
+            string message = $"Are you sure you want to delete the image {ImageFile.Name} from the database?";
+            MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.YesNo, MessageBox.MessageBoxIcon.Question);
 
+            if (result == MessageBox.MessageBoxResult.Yes)
+            {
+                // delete from database
+                ImageFile.DeleteFromDatabase();
+
+                // jump to next image by upping the SelectedIndex by one
+                RunNextImageCommand();
+
+                // remove from list
+                LoadedImageFiles.List.RemoveAt(SelectedIndex - 1);
+            }
         }
-
 
         /// <summary>
         /// Method to save the changes made to the image properties.

@@ -128,7 +128,7 @@
 									<MenuItem Header="Favorite 3" Command="{Binding MarkAsFavorite3Command}"/>
 									<MenuItem Header="Favorite 4" Command="{Binding MarkAsFavorite4Command}"/>
 								</MenuItem>
-								<MenuItem Header="Delete">
+								<MenuItem Header="Delete" Command="{Binding DeleteImageCommand}">
 									<MenuItem.Icon>
 										<Image Source="/Assets/Drawables/delete_dark.png"/>
 									</MenuItem.Icon>
@@ -170,7 +170,7 @@
 						<Button ToolTip.Tip="Open the selected image an review the properties." Command="{Binding ShowImageCommand}">
 							<Image Source="/Assets/Drawables/properties.png" Height="40"/>
 						</Button>
-						<Button ToolTip.Tip="Delete the selected image from your database.">
+						<Button ToolTip.Tip="Delete the selected image from your database." Command="{Binding DeleteImageCommand}">
 							<Image Source="/Assets/Drawables/delete.png" Height="40"/>
 						</Button>
 					</StackPanel>
