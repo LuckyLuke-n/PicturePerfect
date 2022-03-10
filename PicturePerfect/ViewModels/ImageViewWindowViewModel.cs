@@ -1,16 +1,12 @@
 ﻿using Avalonia.Media.Imaging;
-using Avalonia.Threading;
 using PicturePerfect.Models;
 using PicturePerfect.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PicturePerfect.ViewModels
 {

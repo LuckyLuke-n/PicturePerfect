@@ -1,12 +1,8 @@
 ﻿using Newtonsoft.Json;
-using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PicturePerfect.Models
 {
