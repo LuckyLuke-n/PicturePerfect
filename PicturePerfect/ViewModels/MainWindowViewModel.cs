@@ -7,9 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive;
-using Avalonia.Threading;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel;
 
 namespace PicturePerfect.ViewModels
@@ -215,7 +213,7 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
-        #region Status Bar
+        #region Status Bar and search box
         private int percentageProgressBar = 0;
         public int PercentageProgressBar
         {
@@ -239,6 +237,7 @@ namespace PicturePerfect.ViewModels
             get { return isIndeterminate; }
             set { this.RaiseAndSetIfChanged(ref isIndeterminate, value); }
         }
+
         private bool hideFileDialog = false;
         /// <summary>
         /// Get or set the property to hilde or show the file dialog in the bottom row.
@@ -248,6 +247,7 @@ namespace PicturePerfect.ViewModels
             get { return hideFileDialog; }
             private set { this.RaiseAndSetIfChanged(ref hideFileDialog, value); }
         }
+
         public string inWorkItem = "No project loaded";
         /// <summary>
         /// Get the current in work project.
@@ -257,6 +257,7 @@ namespace PicturePerfect.ViewModels
             get { return inWorkItem; }
             private set { this.RaiseAndSetIfChanged(ref inWorkItem, value); }
         }
+
         private bool projectIsLoaded = false;
         /// <summary>
         /// Get the property indicating weather a project is loaded.
@@ -266,6 +267,16 @@ namespace PicturePerfect.ViewModels
         {
             get { return projectIsLoaded; }
             set { this.RaiseAndSetIfChanged(ref projectIsLoaded, value); }
+        }
+
+        private string searchQuery = string.Empty;
+        /// <summary>
+        /// Get or set the search query.
+        /// </summary>
+        public string SearchQuery
+        {
+            get { return searchQuery; }
+            set { this.RaiseAndSetIfChanged(ref searchQuery, value); }
         }
         #endregion
 
@@ -327,6 +338,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> ToggleLoadImagesCommand { get; }
         public ReactiveCommand<Unit, Unit> LoadImagesCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> SearchCommand { get; }
         #endregion
 
 
@@ -350,6 +362,7 @@ namespace PicturePerfect.ViewModels
             LoadImagesCommand = ReactiveCommand.Create(RunLoadImagesCommandAsync);
             ToggleLoadImagesCommand = ReactiveCommand.Create(RunToggleLoadImagesCommand);
             DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommandAsync);
+            SearchCommand = ReactiveCommand.Create(RunSearchCommandAsync);
         }
 
         /// <summary>
@@ -783,6 +796,22 @@ namespace PicturePerfect.ViewModels
                     // remove from list
                     LoadedImageFiles.List.RemoveAt(SelectedIndex);
                 }
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Method to run the search against the database.
+        /// </summary>
+        private async void RunSearchCommandAsync()
+        {
+            if (ProjectIsLoaded == true)
+            {
+                LoadedImageFiles.Search(SearchQuery);
             }
             else
             {

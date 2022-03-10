@@ -77,6 +77,22 @@ namespace PicturePerfect.Models
                 ImageFile image = ImageFile.NewFromPath(file, subfolderName);
                 List.Add(image);
             }
+
+            // reload all images from the sqlite database in order to get the info about the id
+            LoadAll();
+        }
+
+        /// <summary>
+        /// Search for specific query.
+        /// </summary>
+        /// <param name="query"></param>
+        public void Search(string query)
+        {
+            List.Clear();
+
+            List<ImageFile> searchMatches = Database.Search(query);
+
+            searchMatches.ForEach(file => List.Add(file));
         }
     }
 }

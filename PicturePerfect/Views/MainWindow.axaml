@@ -250,9 +250,12 @@
 		<!-- ROW 0: Seach box over other elements -->
 		<StackPanel Name="stackPlanelSearch" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5,0,0">
 			<Image Source="/Assets/Drawables/search.png" Height="25" Margin="5,0,5,0"/>
-			<TextBox Text="" Background="{Binding DarkContrastColor}"
+			<TextBox Text="{Binding SearchQuery}" Background="{Binding DarkContrastColor}"
 					 CornerRadius="0" BorderThickness="0" Margin="1" Width="{Binding SearchBoxWidth}"
 					 ToolTip.Tip="Type your search query here.">
+				<TextBox.KeyBindings>
+					<KeyBinding Gesture="Enter" Command="{Binding SearchCommand}" />
+				</TextBox.KeyBindings>
 			</TextBox>
 		</StackPanel>
 

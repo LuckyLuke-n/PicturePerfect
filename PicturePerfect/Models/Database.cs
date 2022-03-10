@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
-using PicturePerfect.Views;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PicturePerfect.Models
 {
@@ -1067,6 +1067,124 @@ namespace PicturePerfect.Models
             }
 
             Connection.Close();
+        }
+
+        /// <summary>
+        /// Method to run a search string against the database.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns>Returns a list of image file objects containg the search string.</returns>
+        public static List<ImageFile> Search(string query)
+        {
+            List<int> imageIds = new();
+            List<ImageFile> images = new();
+
+            string commandTextImages = @$"SELECT id FROM images WHERE custom_name LIKE @query";
+            string commandTextLocations = @$"SELECT id FROM locations WHERE name LIKE @query";
+            string commandTextCategories = @$"SELECT id FROM categories WHERE name LIKE @query";
+            string commandTextSubCategories = @$"SELECT id FROM subcategories WHERE name LIKE @query";
+
+            
+
+            
+            void GetImages()
+            {
+                Connection.Open();
+                // image ids
+                SqliteCommand commandImages = new()
+                {
+                    CommandText = commandTextImages,
+                    Connection = Connection
+                };
+                commandImages.Parameters.AddWithValue("@query", "%" + query + "%");
+                SqliteDataReader readerImages = commandImages.ExecuteReader();
+
+                if (readerImages.HasRows)
+                {
+                    while (readerImages.Read())
+                    {
+                        imageIds.Add(readerImages.GetInt32(0));
+                    }
+                }
+                Connection.Close();
+            }
+            
+            /*
+            void GetLocations()
+            {
+                Connection.Open();
+                List<int> locationIds = new();
+
+                // location ids
+                SqliteCommand commandLocations = new()
+                {
+                    CommandText = commandTextLocations,
+                    Connection = Connection
+                };
+                commandLocations.Parameters.AddWithValue("@query", "%" + query + "%");
+                SqliteDataReader readerLocations = commandLocations.ExecuteReader();
+
+                if (readerLocations.HasRows)
+                {
+                    // multiple locations for each query
+                    while (readerLocations.Read())
+                    {
+                        locationIds.Add(readerLocations.GetInt32(0));
+                    }
+                }
+                Connection.Close();
+
+                Connection.Open();
+                // image ids
+                SqliteCommand commandImages = new()
+                {
+                    CommandText = @$"SELECT image_id FROM images_locations WHERE location_id=@location_id",
+                    Connection = Connection
+                };
+
+                foreach (int locationId in locationIds)
+                {
+                    commandImages.Parameters.AddWithValue("@location_id", locationId);
+                    SqliteDataReader readerImages = commandLocations.ExecuteReader();
+
+                    if (readerImages.HasRows)
+                    {
+                        while (readerImages.Read())
+                        {
+                            // multiple image ids for each location
+                            imageIds.Add(readerImages.GetInt32(0));
+                        }
+                    }
+                }
+                Connection.Close();
+            }
+
+            void GetCategories()
+            {
+
+            }
+
+            void GetSubCategories()
+            {
+
+            }
+            */
+
+
+            GetImages();
+            //GetLocations();
+            //GetCategories();
+            //GetSubCategories();
+
+
+
+            // remove duplicates
+            List<int> imagesIdsDistinct = imageIds.Distinct().ToList();
+
+            // get list
+            imagesIdsDistinct.ForEach(id => images.Add(LoadImageFileById(id)));
+
+            return images;
         }
     }
 }
