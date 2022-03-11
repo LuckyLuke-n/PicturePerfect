@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="1200" MinHeight="450" MinWidth="800" WindowState="Maximized"
         x:Class="PicturePerfect.Views.MainWindow"
-        Icon="/Assets/icon.ico"
+        Icon="/Assets/icon.ico" 
         Title="PicturePerfect">
 
 	<!-- Styles for items in tab control https://docs.avaloniaui.net/docs/controls/tabcontrol -->
@@ -152,10 +152,10 @@
 					
 					<!-- Buttons for TreeView -->
 					<StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 0, 10">
-						<Button ToolTip.Tip="Add category.">
+						<Button ToolTip.Tip="Edit locations.">
 							<Image Source="/Assets/Drawables/add_category.png" Height="40"/>
 						</Button>
-						<Button ToolTip.Tip="Edit the selected category.">
+						<Button ToolTip.Tip="Edit categories." Command="{Binding EditCategoriesCommand}">
 							<Image Source="/Assets/Drawables/edit_category.png" Height="40"/>
 						</Button>
 						<Button ToolTip.Tip="Delete the selected category.">

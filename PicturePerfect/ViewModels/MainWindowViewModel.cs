@@ -339,6 +339,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> LoadImagesCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteImageCommand { get; }
         public ReactiveCommand<Unit, Unit> SearchCommand { get; }
+        public ReactiveCommand<Unit, Unit> EditCategoriesCommand { get; }
         #endregion
 
 
@@ -363,6 +364,7 @@ namespace PicturePerfect.ViewModels
             ToggleLoadImagesCommand = ReactiveCommand.Create(RunToggleLoadImagesCommand);
             DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommandAsync);
             SearchCommand = ReactiveCommand.Create(RunSearchCommandAsync);
+            EditCategoriesCommand = ReactiveCommand.Create(RunEditCategoriesCommandAsync);
         }
 
         /// <summary>
@@ -812,6 +814,22 @@ namespace PicturePerfect.ViewModels
             if (ProjectIsLoaded == true)
             {
                 LoadedImageFiles.Search(SearchQuery);
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Method to open the window for editing the categories.
+        /// </summary>
+        private async void RunEditCategoriesCommandAsync()
+        {
+            if (ProjectIsLoaded)
+            {
+                new CategoryWindow().Show();
             }
             else
             {
