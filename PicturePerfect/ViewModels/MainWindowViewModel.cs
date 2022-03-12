@@ -340,6 +340,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> DeleteImageCommand { get; }
         public ReactiveCommand<Unit, Unit> SearchCommand { get; }
         public ReactiveCommand<Unit, Unit> EditCategoriesCommand { get; }
+        public ReactiveCommand<Unit, Unit> EditLocationsCommand { get; }
         #endregion
 
 
@@ -365,6 +366,7 @@ namespace PicturePerfect.ViewModels
             DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommandAsync);
             SearchCommand = ReactiveCommand.Create(RunSearchCommandAsync);
             EditCategoriesCommand = ReactiveCommand.Create(RunEditCategoriesCommandAsync);
+            EditLocationsCommand = ReactiveCommand.Create(RunEditLocationsCommandAsync);
         }
 
         /// <summary>
@@ -830,6 +832,22 @@ namespace PicturePerfect.ViewModels
             if (ProjectIsLoaded)
             {
                 new CategoryWindow().Show();
+            }
+            else
+            {
+                // no project file loaded
+                _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Method to open a new window for editing the locations.
+        /// </summary>
+        private async void RunEditLocationsCommandAsync()
+        {
+            if (ProjectIsLoaded)
+            {
+                new LocationWindow().Show();
             }
             else
             {

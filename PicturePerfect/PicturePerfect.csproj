@@ -15,6 +15,7 @@
     <None Remove="Assets\Drawables\export.png" />
     <None Remove="Assets\Drawables\favorite_dark.png" />
     <None Remove="Assets\Drawables\folder.png" />
+    <None Remove="Assets\Drawables\globe.png" />
     <None Remove="Assets\Drawables\image_placeholder.jpg" />
     <None Remove="Assets\Drawables\left.png" />
     <None Remove="Assets\Drawables\load_images_dark.png" />

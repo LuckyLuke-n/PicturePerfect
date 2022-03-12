@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PicturePerfect.ViewModels
 {
-    internal class CategoryWindowViewModel : ViewModelBase
+    internal class LocationWindowViewModel : ViewModelBase
     {
         #region Color and font properties
         public static string DarkColor => ThisApplication.ProjectFile.DarkColor;
@@ -17,10 +17,9 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
-
-        public CategoryWindowViewModel()
+        public LocationWindowViewModel()
         {
-             
+
         }
     }
 }
