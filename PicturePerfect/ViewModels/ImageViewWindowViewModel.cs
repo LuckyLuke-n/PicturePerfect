@@ -262,7 +262,7 @@ namespace PicturePerfect.ViewModels
         public string SaveToPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         #endregion Image more info
 
-        #region new location catrogory or sub-category
+        #region new location category or sub-category
         private string newLocationName = string.Empty;
         /// <summary>
         /// Get or set the name for the new location.

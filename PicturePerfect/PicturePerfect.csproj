@@ -18,9 +18,11 @@
     <None Remove="Assets\Drawables\globe.png" />
     <None Remove="Assets\Drawables\image_placeholder.jpg" />
     <None Remove="Assets\Drawables\left.png" />
+    <None Remove="Assets\Drawables\link.png" />
     <None Remove="Assets\Drawables\load_images_dark.png" />
     <None Remove="Assets\Drawables\properties_dark.png" />
     <None Remove="Assets\Drawables\right.png" />
+    <None Remove="Assets\Drawables\unlink.png" />
     <None Remove="Assets\edit_category.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\info.png" />

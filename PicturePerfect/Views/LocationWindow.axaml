@@ -20,6 +20,38 @@
 			<Button Name="buttonClose" Content="Close" Margin="5,5,10,5" Click="ButtonClose_Click" />
 		</StackPanel>
 
+
+		<!-- List box for locations -->
+		<ListBox Margin="10" >
+			
+		</ListBox>
+
+
+		<!-- View and editing section -->
+		<Grid Margin="10" Grid.Column="1" ColumnDefinitions="auto,*"  RowDefinitions="auto,auto,auto,*">
+			<!-- Id -->
+			<Label Content="Id" Grid.Column="0" Grid.Row="0" Margin="0,0,0,10"/>
+			<TextBox Text="" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+					 IsReadOnly="True" ToolTip.Tip="The id cannot be edited."/>
+
+			<!-- Name -->
+			<Label Content="Name" Grid.Row="1" Grid.Column="0" Margin="0,0,0,10"/>
+			<TextBox Text="" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"/>
+
+			<!-- GeoTag -->
+			<Label Content="Geo tag" Grid.Row="2" Grid.Column="0" Margin="0,0,0,10"/>
+			<TextBox Text="" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,0,10" Background="{Binding LightColor}"
+				 ToolTip.Tip="The geo tag can be coordinates."/>
+
+			<!-- Notes -->
+			<Label Content="Notes" Grid.Column="0" Grid.Row="3" Margin="0,0,0,10"/>
+			<TextBox Text="" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="10,0,0,0" AcceptsReturn="True" TextWrapping="Wrap" Background="{Binding LightColor}"/>
+
+		</Grid>
+		
+
+		
+		
 	</Grid>
 	
 	
