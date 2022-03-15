@@ -28,5 +28,14 @@ namespace PicturePerfect.Models
             // repopulate list with category objects
             categories.ForEach(categroy => Tree.Add(categroy));
         }
+
+        /// <summary>
+        /// Method to load a list containing all subcategories.
+        /// </summary>
+        /// <returns>Returns a list of subcategories.</returns>
+        public List<SubCategory> LoadAllSubcategories()
+        {
+            return Database.LoadAllSubCategories();
+        }
     }
 }

@@ -880,6 +880,56 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to load a list containing all subcategories except the None entry with slite id 1.
+        /// </summary>
+        /// <returns>Returns a list of subcategories.</returns>
+        public static List<SubCategory> LoadAllSubCategories()
+        {
+            List<SubCategory> list = new();
+
+            string commandText = @"SELECT * FROM subcategories ORDER BY name ASC";
+
+            // Connect to the Sqlite database
+            Connection.Open();
+
+            SqliteCommand command = new(commandText, Connection);
+            SqliteDataReader reader = command.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    SubCategory subCategory = new()
+                    {
+                        Id = reader.GetInt32((int)TableSubCategoriesOrdinals.Id),
+                        Name = reader.GetString((int)TableSubCategoriesOrdinals.Name),
+                        Notes = reader.GetString((int)TableSubCategoriesOrdinals.Notes)
+                    };
+                    list.Add(subCategory);
+                }
+            }
+
+            // close connection
+            Connection.Close();
+
+            // remove the "None" entry
+            int index = 0;
+            foreach (SubCategory subCategory in list)
+            {
+                if (subCategory.Id == 1)
+                {
+                    //"None"
+                    break;
+                }
+
+                index++;
+            }
+            list.RemoveAt(index);
+
+            return list;
+        }
+
+        /// <summary>
         /// Method to get a list of subcategories for a specific category
         /// </summary>
         /// <param name="category"></param>

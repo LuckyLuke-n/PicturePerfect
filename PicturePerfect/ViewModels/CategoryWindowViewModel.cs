@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using PicturePerfect.Models;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,19 +58,160 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
+        #region TreeView properties
+        private object selectedCategoryObject;
+        /// <summary>
+        /// Get or set the selected object in the treeview.
+        /// </summary>
+        public object SelectedCategoryObject
+        {
+            get { return selectedCategoryObject; }
+            set { this.RaiseAndSetIfChanged(ref selectedCategoryObject, value); SetGui(); }
+        }
+
+        /// <summary>
+        /// Get the categories tree object of the selected data from the view model base.
+        /// </summary>
+        public CategoriesTree CategoriesTree => LoadedCategoriesTree;
+        #endregion
+
+        #region Category or Subcategory properties
+        private int selectedId;
+        /// <summary>
+        /// Get or set the selected id.
+        /// </summary>
+        public int SelectedId
+        {
+            get { return selectedId; }
+            set { this.RaiseAndSetIfChanged(ref selectedId, value); }
+        }
+
+        private string selectedName = string.Empty;
+        /// <summary>
+        /// Get or set the selected name.
+        /// </summary>
+        public string SelectedName
+        {
+            get { return selectedName; }
+            set { this.RaiseAndSetIfChanged(ref selectedName, value); }
+        }
+
+        private string selectedNotes = string.Empty;
+        /// <summary>
+        /// Get or set the selected notes.
+        /// </summary>
+        public string SelectedNotes
+        {
+            get { return selectedNotes; }
+            set { this.RaiseAndSetIfChanged(ref selectedNotes, value); }
+        }
+
+        private bool isCategory = false;
+        /// <summary>
+        /// Get or set weather the selected element is a category object or not.
+        /// </summary>
+        public bool IsCategory
+        {
+            get { return isCategory; }
+            set { this.RaiseAndSetIfChanged(ref isCategory, value); }
+        }
+
+        private bool isUnProtectedCategory = true;
+        /// <summary>
+        /// Get or set weather the selected element is a unprotected category object or not. "All" and "None" are protected.
+        /// </summary>
+        public bool IsUnProtectedCategory
+        {
+            get { return isUnProtectedCategory; }
+            set { this.RaiseAndSetIfChanged(ref isUnProtectedCategory, value); }
+        }
+
+        private List<SubCategory> subCategoriesList = new();
+        /// <summary>
+        /// Get or set the subcategory list.
+        /// </summary>
+        public List<SubCategory> SubCategoriesList
+        {
+            get { return subCategoriesList; }
+            set { this.RaiseAndSetIfChanged(ref subCategoriesList, value); }
+        }
+
+        private List<SubCategory> subCategoriesListAll = new();
+        /// <summary>
+        /// Get or set the subcategory list.
+        /// </summary>
+        public List<SubCategory> SubCategoriesListAll
+        {
+            get { return subCategoriesListAll; }
+            set { this.RaiseAndSetIfChanged(ref subCategoriesListAll, value); }
+        }
+        #endregion
+
+
         #region Commands
-        public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategory1Command { get; }
+        public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategoryCommand { get; }
         #endregion
 
         public CategoryWindowViewModel()
         {
-            ToggleVisibilitySubCategory1Command = ReactiveCommand.Create(RunToggleVisibilitySubCategory1Command);
+            ToggleVisibilitySubCategoryCommand = ReactiveCommand.Create(RunToggleVisibilitySubCategoryCommand);
+        }
+
+        /// <summary>
+        /// Method to set the blanks in the category window
+        /// </summary>
+        private void SetGui()
+        {
+            if (SelectedCategoryObject.GetType() == typeof(Category))
+            {
+                // Selection was a category
+                IsCategory = true;
+                IsUnProtectedCategory = true;
+                Category category = (Category)SelectedCategoryObject;
+                SelectedId = category.Id;
+                SelectedName = category.Name;
+                SelectedNotes = category.Notes;
+                SubCategoriesList = LoadedCategoriesTree.Tree[LoadedCategoriesTree.Tree.IndexOf(category)].SubCategories;
+                SubCategoriesListAll = AllSubCategories();
+
+                // Load a list of all subcategories except the already linked subcategories
+                List<SubCategory> AllSubCategories()
+                {
+                    List<SubCategory> listAll = CategoriesTree.LoadAllSubcategories();
+
+                    foreach (SubCategory subCategory in SubCategoriesList)
+                    {
+                        // remove subcategory from list of all subcategories if possible
+                        listAll.Remove(subCategory);
+                    }
+
+                    return listAll;
+                };
+
+                if (category.Id == 1 || category.Id == 2)
+                {
+                    // category "All" or category "None"
+                    IsCategory = false;
+                    IsUnProtectedCategory = false;
+                }
+
+            }
+            else
+            {
+                // selection was a subcategory
+                IsCategory = false;
+                IsUnProtectedCategory = true;
+                SubCategory subCategory = (SubCategory)SelectedCategoryObject;
+                SelectedId = subCategory.Id;
+                SelectedName = subCategory.Name;
+                SelectedNotes = subCategory.Notes;
+            }
         }
 
         /// <summary>
         /// Command to toggle the add sub category 1 visibility.
         /// </summary>
-        private void RunToggleVisibilitySubCategory1Command()
+        private void RunToggleVisibilitySubCategoryCommand()
         {
             IsVisibleAddSubCategory1 = !IsVisibleAddSubCategory1;
         }
