@@ -322,6 +322,27 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to unlink a subcategory from a category
+        /// </summary>
+        public static void UnlinkSubCategoryFromCategory(Category category, SubCategory subCategory)
+        {
+            // new command
+            Connection.Open();
+
+            // delete old link
+            SqliteCommand commandDelete = new()
+            {
+                CommandText = "DELETE FROM categories_subcategories WHERE subcategory_id=@subcategory_id AND category_id=@category_id",
+                Connection = Connection
+            };
+            commandDelete.Parameters.AddWithValue("@subcategory_id", subCategory.Id);
+            commandDelete.Parameters.AddWithValue("@category_id", category.Id);
+            commandDelete.ExecuteNonQuery();
+
+            Connection.Close();
+        }
+
+        /// <summary>
         /// Method to link an image file to a location.
         /// </summary>
         /// <param name="image"></param>
@@ -887,7 +908,7 @@ namespace PicturePerfect.Models
         {
             List<SubCategory> list = new();
 
-            string commandText = @"SELECT * FROM subcategories ORDER BY name ASC";
+            string commandText = @"SELECT * FROM subcategories WHERE id NOT IN (1) ORDER BY name ASC";
 
             // Connect to the Sqlite database
             Connection.Open();
@@ -911,20 +932,6 @@ namespace PicturePerfect.Models
 
             // close connection
             Connection.Close();
-
-            // remove the "None" entry
-            int index = 0;
-            foreach (SubCategory subCategory in list)
-            {
-                if (subCategory.Id == 1)
-                {
-                    //"None"
-                    break;
-                }
-
-                index++;
-            }
-            list.RemoveAt(index);
 
             return list;
         }

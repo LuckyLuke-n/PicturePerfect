@@ -10,6 +10,7 @@
     <None Remove=".gitignore" />
     <None Remove="Assets\add_category.png" />
     <None Remove="Assets\delete.png" />
+    <None Remove="Assets\Drawables\add_dark.png" />
     <None Remove="Assets\Drawables\delete_dark.png" />
     <None Remove="Assets\Drawables\delete_image.png" />
     <None Remove="Assets\Drawables\export.png" />
@@ -23,6 +24,7 @@
     <None Remove="Assets\Drawables\properties_dark.png" />
     <None Remove="Assets\Drawables\right.png" />
     <None Remove="Assets\Drawables\unlink.png" />
+    <None Remove="Assets\Drawables\unlink_dark.png" />
     <None Remove="Assets\edit_category.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\info.png" />

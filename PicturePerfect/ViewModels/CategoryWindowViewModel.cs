@@ -1,4 +1,5 @@
 ﻿using PicturePerfect.Models;
+using PicturePerfect.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -20,28 +21,6 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
-        #region New subcategory
-        private string newSubCategory1Name = string.Empty;
-        /// <summary>
-        /// Get or set the name for the new subcategory 1.
-        /// </summary>
-        public string NewSubCategory1Name
-        {
-            get { return newSubCategory1Name; }
-            set { this.RaiseAndSetIfChanged(ref newSubCategory1Name, value); }
-        }
-
-        private string newSubCategory2Name = string.Empty;
-        /// <summary>
-        /// Get or set the name for the new subcategory 2.
-        /// </summary>
-        public string NewSubCategory2Name
-        {
-            get { return newSubCategory2Name; }
-            set { this.RaiseAndSetIfChanged(ref newSubCategory2Name, value); }
-        }
-        #endregion
-
         #region Visibilty of gui elements
         private bool isVisibleAddSubCategory1 = false;
         public bool IsVisibleAddSubCategory1
@@ -49,17 +28,10 @@ namespace PicturePerfect.ViewModels
             get { return isVisibleAddSubCategory1; }
             set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory1, value); }
         }
-
-        private bool isVisibleAddSubCategory2 = false;
-        public bool IsVisibleAddSubCategory2
-        {
-            get { return isVisibleAddSubCategory2; }
-            set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory2, value); }
-        }
         #endregion
 
         #region TreeView properties
-        private object selectedCategoryObject;
+        private object selectedCategoryObject = null;
         /// <summary>
         /// Get or set the selected object in the treeview.
         /// </summary>
@@ -67,6 +39,26 @@ namespace PicturePerfect.ViewModels
         {
             get { return selectedCategoryObject; }
             set { this.RaiseAndSetIfChanged(ref selectedCategoryObject, value); SetGui(); }
+        }
+
+        private SubCategory subCategoryLinkedSelected;
+        /// <summary>
+        /// Get or set the selection from the combobox containing the linked subcategories.
+        /// </summary>
+        public SubCategory SubCategoryLinkedSelected
+        {
+            get { return subCategoryLinkedSelected; }
+            set { this.RaiseAndSetIfChanged(ref subCategoryLinkedSelected, value); }
+        }
+
+        private int subCategoryLinkedIndexSelected = -1;
+        /// <summary>
+        /// Get or set the index for the selected linked subcategory.
+        /// </summary>
+        public int SubCategoryLinkedIndexSelected
+        {
+            get { return subCategoryLinkedIndexSelected; }
+            set { this.RaiseAndSetIfChanged(ref subCategoryLinkedIndexSelected, value); }
         }
 
         /// <summary>
@@ -145,16 +137,32 @@ namespace PicturePerfect.ViewModels
             get { return subCategoriesListAll; }
             set { this.RaiseAndSetIfChanged(ref subCategoriesListAll, value); }
         }
+
+        private string newSubCategoryName = string.Empty;
+        /// <summary>
+        /// Get or set the name for the new category.
+        /// </summary>
+        public string NewSubCategoryName
+        {
+            get { return newSubCategoryName; }
+            set { this.RaiseAndSetIfChanged(ref newSubCategoryName, value); }
+        }
         #endregion
 
 
         #region Commands
         public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> UnlinkCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> CreateSubcategoryCommand { get; }
         #endregion
 
         public CategoryWindowViewModel()
         {
             ToggleVisibilitySubCategoryCommand = ReactiveCommand.Create(RunToggleVisibilitySubCategoryCommand);
+            UnlinkCategoryCommand = ReactiveCommand.Create(RunUnlinkCategoryCommand);
+            LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
+            CreateSubcategoryCommand = ReactiveCommand.Create(RunCreateSubcategoryCommandAsync);
         }
 
         /// <summary>
@@ -178,12 +186,26 @@ namespace PicturePerfect.ViewModels
                 List<SubCategory> AllSubCategories()
                 {
                     List<SubCategory> listAll = CategoriesTree.LoadAllSubcategories();
+                    List<int> indicesToRemove = new();
+                    int index = 0;
 
-                    foreach (SubCategory subCategory in SubCategoriesList)
+                    foreach (SubCategory subCategory in listAll)
                     {
-                        // remove subcategory from list of all subcategories if possible
-                        listAll.Remove(subCategory);
+                        foreach (SubCategory assignedSubCategory in SubCategoriesList)
+                        {
+                            if (subCategory.Id == assignedSubCategory.Id) { indicesToRemove.Add(index); break; }
+                        }
+
+                        index++;
                     }
+
+                    // order indices to remove descending to avoid mixed up index results after removing
+                    // use a distinct list for safety
+                    List<int> indicesToRemoveDistinct = indicesToRemove.Distinct().ToList();
+                    List<int> indicesToDeleteDistinctAndOrdered =  indicesToRemoveDistinct.OrderByDescending(i => i).ToList();
+
+                    // remove subcategories that are already assigned
+                    indicesToDeleteDistinctAndOrdered.ForEach(i => listAll.RemoveAt(i));
 
                     return listAll;
                 };
@@ -209,11 +231,101 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Command to toggle the add sub category 1 visibility.
+        /// Method to get the list index of the currently selected category set by the binding.
+        /// </summary>
+        /// <returns>Returns the list index of type int.</returns>
+        private int GetListIndexOfCategory()
+        {
+            int index = 0;
+            int listIndex = -1;
+            Category selectedCategory = (Category)SelectedCategoryObject;
+
+            // get the index of the current category in the category tree list.
+            foreach (Category category in CategoriesTree.Tree)
+            {
+                if (category.Id == selectedCategory.Id)
+                {
+                    listIndex = index;
+                }
+                index++;
+            }
+
+            return listIndex;
+        }
+
+        /// <summary>
+        /// Command to toggle the add sub category visibility.
         /// </summary>
         private void RunToggleVisibilitySubCategoryCommand()
         {
             IsVisibleAddSubCategory1 = !IsVisibleAddSubCategory1;
+        }
+
+        /// <summary>
+        /// Method to get call the methods to unlink a subcategory from its category.
+        /// </summary>
+        private void RunUnlinkCategoryCommand()
+        {           
+            int listIndex = GetListIndexOfCategory();
+
+            // call the unlink method
+            if (listIndex != -1 && SubCategoryLinkedIndexSelected != -1)
+            {
+                // unlink is sqlite
+                CategoriesTree.Tree[listIndex].UnlinkSubCategory(SubCategoryLinkedSelected);
+                // in binding list
+                CategoriesTree.Tree[listIndex].SubCategories.RemoveAt(SubCategoryLinkedIndexSelected);
+            }   
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void RunLinkCategoryCommand()
+        {
+
+        }
+
+        /// <summary>
+        /// Method to call the methods for creating a new subcategory and linking it to the currently set category selection.
+        /// </summary>
+        private async void RunCreateSubcategoryCommandAsync()
+        {
+            // check selection
+            if (SelectedCategoryObject != null)
+            {
+                // category was selected
+                Category selectedCategory = (Category)SelectedCategoryObject;
+                if (selectedCategory.Id == 1 || selectedCategory.Id == 2)
+                {
+                    // all or none
+                    _ = await MessageBox.Show("This category cannot have subcategories.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+                }
+                else
+                {
+                    // method to generatate a 10 digit radom number
+                    string GenerateNumber()
+                    {
+                        Random random = new();
+                        string r = "";
+                        int i;
+                        for (i = 1; i < 11; i++)
+                        {
+                            r += random.Next(0, 9).ToString();
+                        }
+                        return r;
+                    }
+
+                    // create new subcategory
+                    SubCategory subCategory = new();
+                    subCategory.Name = "New subcategory " + GenerateNumber();
+                    subCategory.Create();
+
+                    // add to categories tree observable object
+                    int listIndex = GetListIndexOfCategory();
+                    CategoriesTree.Tree[listIndex].LinkSubcategory(subCategory);
+                }
+            }
         }
     }
 }

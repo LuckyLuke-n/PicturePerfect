@@ -43,5 +43,11 @@ namespace PicturePerfect.Models
             Database.LinkCategoryToSubCategory(category: this, subCategory: subCategory);
             SubCategories.Add(subCategory);
         }
+
+
+        public void UnlinkSubCategory(SubCategory subCategory)
+        {
+            Database.UnlinkSubCategoryFromCategory(category: this, subCategory: subCategory);
+        }
     }
 }
