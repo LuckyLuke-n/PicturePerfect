@@ -249,6 +249,8 @@ namespace PicturePerfect.ViewModels
                 CategoriesTree.Tree[listIndex].UnlinkSubCategory(SubCategoryLinkedSelected);
                 // in binding list
                 CategoriesTree.Tree[listIndex].SubCategories.RemoveAt(SubCategoryLinkedIndexSelected);
+                // reload the images for the data grid binding
+                LoadedImageFiles.LoadAll();
             }   
         }
 

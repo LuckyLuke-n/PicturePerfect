@@ -360,22 +360,31 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to unlink a subcategory from a category
+        /// Method to unlink a subcategory from a category. The subcategory's images are unlinked too.
         /// </summary>
         public static void UnlinkSubCategoryFromCategory(Category category, SubCategory subCategory)
         {
             // new command
             Connection.Open();
 
+            // delete links of images to this subcategory
+            SqliteCommand commandDeleteImages = new()
+            {
+                CommandText = "DELETE FROM images_subcategories WHERE subcategory_id=@subcategory_id",
+                Connection = Connection
+            };
+            commandDeleteImages.Parameters.AddWithValue("@subcategory_id", subCategory.Id);
+            commandDeleteImages.ExecuteNonQuery();
+
             // delete old link
-            SqliteCommand commandDelete = new()
+            SqliteCommand commandDeleteCategoryLink = new()
             {
                 CommandText = "DELETE FROM categories_subcategories WHERE subcategory_id=@subcategory_id AND category_id=@category_id",
                 Connection = Connection
             };
-            commandDelete.Parameters.AddWithValue("@subcategory_id", subCategory.Id);
-            commandDelete.Parameters.AddWithValue("@category_id", category.Id);
-            commandDelete.ExecuteNonQuery();
+            commandDeleteCategoryLink.Parameters.AddWithValue("@subcategory_id", subCategory.Id);
+            commandDeleteCategoryLink.Parameters.AddWithValue("@category_id", category.Id);
+            commandDeleteCategoryLink.ExecuteNonQuery();
 
             Connection.Close();
         }

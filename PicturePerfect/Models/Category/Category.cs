@@ -44,7 +44,9 @@ namespace PicturePerfect.Models
             SubCategories.Add(subCategory);
         }
 
-
+        /// <summary>
+        /// Method to unlink a subcategory from a category. The subcategory's images are unlinked too.
+        /// </summary>
         public void UnlinkSubCategory(SubCategory subCategory)
         {
             Database.UnlinkSubCategoryFromCategory(category: this, subCategory: subCategory);
