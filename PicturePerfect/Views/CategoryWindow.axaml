@@ -81,14 +81,14 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsEnabled="{Binding IsCategory}" Command="{Binding UnlinkCategoryCommand}"
+			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsEnabled="{Binding IsCategory}" Command="{Binding UnlinkSubCategoryCommand}"
 					ToolTip.Tip="Cut the link to the selected subcategory.">
 				<Image Source="/Assets/Drawables/unlink.png" Height="20"/>
 			</Button>
 
 			<!-- All sub categories -->
-			<Label Content="All subcategories" Grid.Column="0" Grid.Row="6" Margin="0,0,0,10"/>
-			<ComboBox SelectedIndex="{Binding SubCategoriesAllIndexSelected}" Items="{Binding SubCategoriesListAll}" IsEnabled="{Binding IsCategory}"
+			<Label Content="Unlinked subcategories" Grid.Column="0" Grid.Row="6" Margin="0,0,0,10"/>
+			<ComboBox SelectedIndex="{Binding SubCategoriesAllIndexSelected}" Items="{Binding SubCategoriesListUnlinked}" IsEnabled="{Binding IsCategory}"
 					  Grid.Column="1" Grid.Row="6" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>

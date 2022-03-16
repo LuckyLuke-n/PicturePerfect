@@ -128,14 +128,14 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref subCategoriesList, value); }
         }
 
-        private List<SubCategory> subCategoriesListAll = new();
+        private List<SubCategory> subCategoriesListUnlinked = new();
         /// <summary>
         /// Get or set the subcategory list.
         /// </summary>
-        public List<SubCategory> SubCategoriesListAll
+        public List<SubCategory> SubCategoriesListUnlinked
         {
-            get { return subCategoriesListAll; }
-            set { this.RaiseAndSetIfChanged(ref subCategoriesListAll, value); }
+            get { return subCategoriesListUnlinked; }
+            set { this.RaiseAndSetIfChanged(ref subCategoriesListUnlinked, value); }
         }
 
         private string newSubCategoryName = string.Empty;
@@ -152,7 +152,7 @@ namespace PicturePerfect.ViewModels
 
         #region Commands
         public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategoryCommand { get; }
-        public ReactiveCommand<Unit, Unit> UnlinkCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> UnlinkSubCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateSubcategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateCategoryCommand { get; }
@@ -161,7 +161,7 @@ namespace PicturePerfect.ViewModels
         public CategoryWindowViewModel()
         {
             ToggleVisibilitySubCategoryCommand = ReactiveCommand.Create(RunToggleVisibilitySubCategoryCommand);
-            UnlinkCategoryCommand = ReactiveCommand.Create(RunUnlinkCategoryCommand);
+            UnlinkSubCategoryCommand = ReactiveCommand.Create(RunUnlinkSubCategoryCommand);
             LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
             CreateSubcategoryCommand = ReactiveCommand.Create(RunCreateSubcategoryCommandAsync);
             CreateCategoryCommand = ReactiveCommand.Create(RunCreateCategoryCommand);
@@ -182,35 +182,7 @@ namespace PicturePerfect.ViewModels
                 SelectedName = category.Name;
                 SelectedNotes = category.Notes;
                 SubCategoriesList = LoadedCategoriesTree.Tree[LoadedCategoriesTree.Tree.IndexOf(category)].SubCategories;
-                SubCategoriesListAll = AllSubCategories();
-
-                // Load a list of all subcategories except the already linked subcategories
-                List<SubCategory> AllSubCategories()
-                {
-                    List<SubCategory> listAll = CategoriesTree.LoadAllSubcategories();
-                    List<int> indicesToRemove = new();
-                    int index = 0;
-
-                    foreach (SubCategory subCategory in listAll)
-                    {
-                        foreach (SubCategory assignedSubCategory in SubCategoriesList)
-                        {
-                            if (subCategory.Id == assignedSubCategory.Id) { indicesToRemove.Add(index); break; }
-                        }
-
-                        index++;
-                    }
-
-                    // order indices to remove descending to avoid mixed up index results after removing
-                    // use a distinct list for safety
-                    List<int> indicesToRemoveDistinct = indicesToRemove.Distinct().ToList();
-                    List<int> indicesToDeleteDistinctAndOrdered =  indicesToRemoveDistinct.OrderByDescending(i => i).ToList();
-
-                    // remove subcategories that are already assigned
-                    indicesToDeleteDistinctAndOrdered.ForEach(i => listAll.RemoveAt(i));
-
-                    return listAll;
-                };
+                SubCategoriesListUnlinked = CategoriesTree.LoadUnlinkedSubCategories();
 
                 if (category.Id == 1 || category.Id == 2)
                 {
@@ -266,7 +238,7 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Method to get call the methods to unlink a subcategory from its category.
         /// </summary>
-        private void RunUnlinkCategoryCommand()
+        private void RunUnlinkSubCategoryCommand()
         {           
             int listIndex = GetListIndexOfCategory();
 

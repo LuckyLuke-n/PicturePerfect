@@ -30,12 +30,12 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to load a list containing all subcategories.
+        /// Method to load a list containing all unlinked subcategories.
         /// </summary>
         /// <returns>Returns a list of subcategories.</returns>
-        public List<SubCategory> LoadAllSubcategories()
+        public List<SubCategory> LoadUnlinkedSubCategories()
         {
-            return Database.LoadAllSubCategories();
+            return Database.LoadUnlinkedSubCategories();
         }
     }
 }

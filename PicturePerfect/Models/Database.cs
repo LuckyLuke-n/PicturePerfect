@@ -919,14 +919,14 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to load a list containing all subcategories except the None entry with slite id 1.
+        /// Method to get a list of all unlinked subcategories.
         /// </summary>
         /// <returns>Returns a list of subcategories.</returns>
-        public static List<SubCategory> LoadAllSubCategories()
+        public static List<SubCategory> LoadUnlinkedSubCategories()
         {
             List<SubCategory> list = new();
 
-            string commandText = @"SELECT * FROM subcategories WHERE id NOT IN (1) ORDER BY name ASC";
+            string commandText = @"SELECT * FROM subcategories WHERE id NOT IN (SELECT subcategory_id FROM categories_subcategories) AND id NOT IN (1) ORDER BY name ASC";
 
             // Connect to the Sqlite database
             Connection.Open();
