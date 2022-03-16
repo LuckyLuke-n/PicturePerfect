@@ -82,7 +82,7 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsEnabled="{Binding IsCategory}" Command="{Binding UnlinkSubCategoryCommand}"
-					ToolTip.Tip="Cut the link to the selected subcategory.">
+					ToolTip.Tip="Cut the link to the selected subcategory. This will remove all images from this subcategory.">
 				<Image Source="/Assets/Drawables/unlink.png" Height="20"/>
 			</Button>
 
