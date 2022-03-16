@@ -15,7 +15,7 @@
         /// </summary>
         public void Create()
         {
-            Database.AddSubcategory(this);
+            Id = Database.AddSubcategory(this);
         }
     }
 }

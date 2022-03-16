@@ -155,6 +155,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> UnlinkCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateSubcategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> CreateCategoryCommand { get; }
         #endregion
 
         public CategoryWindowViewModel()
@@ -163,6 +164,7 @@ namespace PicturePerfect.ViewModels
             UnlinkCategoryCommand = ReactiveCommand.Create(RunUnlinkCategoryCommand);
             LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
             CreateSubcategoryCommand = ReactiveCommand.Create(RunCreateSubcategoryCommandAsync);
+            CreateCategoryCommand = ReactiveCommand.Create(RunCreateCategoryCommand);
         }
 
         /// <summary>
@@ -291,7 +293,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private async void RunCreateSubcategoryCommandAsync()
         {
-            // check selection
+            // check selection to avoid error when no selection is made
             if (SelectedCategoryObject != null)
             {
                 // category was selected
@@ -303,22 +305,9 @@ namespace PicturePerfect.ViewModels
                 }
                 else
                 {
-                    // method to generatate a 10 digit radom number
-                    string GenerateNumber()
-                    {
-                        Random random = new();
-                        string r = "";
-                        int i;
-                        for (i = 1; i < 11; i++)
-                        {
-                            r += random.Next(0, 9).ToString();
-                        }
-                        return r;
-                    }
-
                     // create new subcategory
                     SubCategory subCategory = new();
-                    subCategory.Name = "New subcategory " + GenerateNumber();
+                    subCategory.Name = "New subcategory";
                     subCategory.Create();
 
                     // add to categories tree observable object
@@ -326,6 +315,20 @@ namespace PicturePerfect.ViewModels
                     CategoriesTree.Tree[listIndex].LinkSubcategory(subCategory);
                 }
             }
+        }
+
+        /// <summary>
+        /// Method to call the methods for creating a new category.
+        /// </summary>
+        private void RunCreateCategoryCommand()
+        {
+            Category category = new();
+            category.Name = "New category";
+            category.Create();
+
+            // add new category as first item in list
+            CategoriesTree.Tree.Add(category);
+            CategoriesTree.Tree.Move(CategoriesTree.Tree.Count - 1, 0);
         }
     }
 }

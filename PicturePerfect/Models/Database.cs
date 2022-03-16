@@ -221,9 +221,11 @@ namespace PicturePerfect.Models
         /// Method to add a new entry to the categories table.
         /// </summary>
         /// <param name="category"></param>
-        public static void AddCategory(Category category)
+        /// <returns>Returns the id of the newly created category.</returns>
+        public static int AddCategory(Category category)
         {
             //  values and parameters
+            int id = 0;
             List<string> paramters = new() { "@name", @"notes" };
             object[] values = { category.Name, category.Notes };
 
@@ -238,19 +240,39 @@ namespace PicturePerfect.Models
 
             // add all with value, only works if each column is unique, which should always be the case
             paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
-
             // execute command and close connection
             command.ExecuteNonQuery();
-            Connection.Close();       
+
+
+            // get the last category added by its random name
+            string commandTextId = @"SELECT id FROM categories WHERE id=(SELECT MAX(id) FROM categories)";
+            SqliteCommand commandId = new(commandTextId, Connection);
+            //commandLocation.Parameters.AddWithValue("@name", category.Name);
+            // call the reader for the location by using the category id
+            SqliteDataReader readerId = commandId.ExecuteReader();
+
+            // reader for the category command will only contain one item, since id is unique
+            if (readerId.HasRows)
+            {
+                readerId.Read();
+                // set the properties of the category object
+                id = readerId.GetInt32(0);
+            }
+
+            Connection.Close();
+
+            return id;
         }
 
         /// <summary>
         /// Method to add a new entry to the table subcategories.
         /// </summary>
         /// <param name="subCategory"></param>
-        public static void AddSubcategory(SubCategory subCategory)
+        /// <returns>Returns the id of the newly created subcategory.</returns>
+        public static int AddSubcategory(SubCategory subCategory)
         {
             //  values and parameters
+            int id = 0;
             List<string> paramters = new() { "@name", @"notes" };
             object[] values = { subCategory.Name, subCategory.Notes };
 
@@ -268,7 +290,25 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            Connection.Close();         
+
+            // get the last category added by its random name
+            string commandTextId = @"SELECT id FROM subcategories WHERE id=(SELECT MAX(id) FROM subcategories)";
+            SqliteCommand commandId = new(commandTextId, Connection);
+            //commandLocation.Parameters.AddWithValue("@name", category.Name);
+            // call the reader for the location by using the category id
+            SqliteDataReader readerId = commandId.ExecuteReader();
+
+            // reader for the category command will only contain one item, since id is unique
+            if (readerId.HasRows)
+            {
+                readerId.Read();
+                // set the properties of the category object
+                id = readerId.GetInt32(0);
+            }
+
+            Connection.Close();
+
+            return id;
         }
 
         /// <summary>
@@ -278,28 +318,6 @@ namespace PicturePerfect.Models
         /// <param name="subCategory"></param>
         public static void LinkCategoryToSubCategory(Category category, SubCategory subCategory)
         {
-            if (subCategory.Id == 0)
-            {
-                // category was not read from database --> id is missing (equals 0)
-                // get the id
-                // Connect to the Sqlite database
-                Connection.Open();
-                SqliteCommand commandSubCategory = new()
-                {
-                    CommandText = @"SELECT id FROM subcategories WHERE name= @name",
-                    Connection = Connection
-                };
-                commandSubCategory.Parameters.AddWithValue("@name", subCategory.Name);
-
-                // get the id from the reader, returns 0 if id was not found
-                int subCategoryId = Convert.ToInt32(commandSubCategory.ExecuteScalar());
-
-                Connection.Close();
-
-                // set the id according to the database
-                subCategory.Id = subCategoryId;              
-            }
-
             //  values and parameters
             List<string> paramters = new() { "@category_id", "@subcategory_id"};
             object[] values = { category.Id, subCategory.Id };

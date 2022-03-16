@@ -22,7 +22,7 @@ namespace PicturePerfect.Models
         /// </summary>
         public void Create()
         {
-            Database.AddCategory(this);
+            Id = Database.AddCategory(this);
         }
 
         /// <summary>
