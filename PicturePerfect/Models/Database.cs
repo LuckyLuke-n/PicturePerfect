@@ -194,9 +194,11 @@ namespace PicturePerfect.Models
         /// Method to add a new entry to the locations table.
         /// </summary>
         /// <param name="location"></param>
-        public static void AddLocation(Locations.Location location)
+        /// <returns>Returns the id of the newly added location.</returns>
+        public static int AddLocation(Locations.Location location)
         {
             //  values and parameters
+            int id = 0;
             List<string> paramters = new() { "@name", "@geo_tag", @"notes" };
             object[] values = { location.Name, location.GeoTag, location.Notes };
 
@@ -214,7 +216,25 @@ namespace PicturePerfect.Models
 
             // execute command and close connection
             command.ExecuteNonQuery();
-            Connection.Close();     
+
+            // get the last category added by its random name
+            string commandTextId = @"SELECT id FROM locations WHERE id=(SELECT MAX(id) FROM locations)";
+            SqliteCommand commandId = new(commandTextId, Connection);
+            //commandLocation.Parameters.AddWithValue("@name", category.Name);
+            // call the reader for the location by using the category id
+            SqliteDataReader readerId = commandId.ExecuteReader();
+
+            // reader for the category command will only contain one item, since id is unique
+            if (readerId.HasRows)
+            {
+                readerId.Read();
+                // set the properties of the category object
+                id = readerId.GetInt32(0);
+            }
+
+            Connection.Close();
+
+            return id;
         }
 
         /// <summary>

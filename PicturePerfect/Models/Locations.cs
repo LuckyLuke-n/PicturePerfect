@@ -76,7 +76,7 @@ namespace PicturePerfect.Models
                     GeoTag = geoTag,
                     Notes = notes
                 };
-                Database.AddLocation(location);
+                location.Id = Database.AddLocation(location);
 
                 return location;
             }
