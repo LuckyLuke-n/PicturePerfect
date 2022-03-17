@@ -109,8 +109,7 @@ namespace PicturePerfect.Models
 
             string[] defaultQueries = { "INSERT INTO locations (name, geo_tag, notes) VALUES ('None', '', '')",
                         "INSERT INTO categories (name, notes) VALUES ('All', '')",
-                        "INSERT INTO categories (name, notes) VALUES ('None', '')",
-                        "INSERT INTO subcategories (name, notes) VALUES ('None', '')" };
+                        "INSERT INTO categories (name, notes) VALUES ('None', '')" };
 
             // run queries against database
             foreach (string query in defaultQueries)

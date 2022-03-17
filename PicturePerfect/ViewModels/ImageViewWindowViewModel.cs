@@ -499,13 +499,17 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveLocationCommand()
         {
-            Locations.Location location = Locations.Location.Create(name: NewLocationName, geoTag: string.Empty, notes: string.Empty);
+            // avoid a location with an empty string as a name
+            if (NewLocationName != string.Empty)
+            {
+                Locations.Location location = Locations.Location.Create(name: NewLocationName, geoTag: string.Empty, notes: string.Empty);
 
-            // add new location as first item in list
-            Locations.List.Add(location);
-            Locations.List.Move(Locations.List.Count-1, 0);
+                // add new location as first item in list
+                Locations.List.Add(location);
+                Locations.List.Move(Locations.List.Count - 1, 0);
 
-            RunToggleVisibilityLocationCommand();
+                RunToggleVisibilityLocationCommand();
+            }
         }
 
         /// <summary>
@@ -513,15 +517,19 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveCategoryCommand()
         {
-            Category category = new();
-            category.Name = NewCategoryName;
-            category.Create();
+            // avoid adding a new category with an empty string as a name
+            if (NewCategoryName != string.Empty)
+            {
+                Category category = new();
+                category.Name = NewCategoryName;
+                category.Create();
 
-            // add new category as first item in list
-            CategoriesTree.Tree.Add(category);
-            CategoriesTree.Tree.Move(CategoriesTree.Tree.Count-1, 0);
+                // add new category as first item in list
+                CategoriesTree.Tree.Add(category);
+                CategoriesTree.Tree.Move(CategoriesTree.Tree.Count - 1, 0);
 
-            RunToggleVisibilityCategoryCommand();
+                RunToggleVisibilityCategoryCommand();
+            }
         }
 
         /// <summary>
@@ -529,9 +537,13 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveSubCategory1Command()
         {
-            SubCategory subCategory = SaveSubCategory(NewSubCategory1Name);
-            CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
-            RunToggleVisibilitySubCategory1Command();
+            // avoid a subcatgory without a name
+            if (NewSubCategory1Name != string.Empty)
+            {
+                SubCategory subCategory = SaveSubCategory(NewSubCategory1Name);
+                CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
+                RunToggleVisibilitySubCategory1Command();
+            }
         }
 
         /// <summary>
@@ -539,9 +551,13 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunSaveSubCategory2Command()
         {
-            SubCategory subCategory = SaveSubCategory(NewSubCategory2Name);
-            CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
-            RunToggleVisibilitySubCategory2Command();
+            // avoid a subcategory without a name
+            if (NewSubCategory2Name != string.Empty)
+            {
+                SubCategory subCategory = SaveSubCategory(NewSubCategory2Name);
+                CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
+                RunToggleVisibilitySubCategory2Command();
+            }
         }
 
         /// <summary>
