@@ -17,7 +17,7 @@
 
 		<!-- Button Row -->
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right">
-			<Button Content="Save" Margin="5" IsEnabled="{Binding IsUnProtectedCategory}"/>
+			<Button Content="Save" Margin="5" IsEnabled="{Binding IsUnProtectedCategory}" Command="{Binding SaveEditsCommand}"/>
 			<Button Name="buttonClose" Content="Close" Margin="5,5,10,5" Click="ButtonClose_Click" />
 		</StackPanel>
 

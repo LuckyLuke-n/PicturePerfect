@@ -551,7 +551,7 @@ namespace PicturePerfect.Models
                 string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
 
                 Locations.Location location = GetLocation(id);
-                Category category = GetCategory(id);
+                Category category = GetCategoryByImage(id);
                 SubCategory[] subCategories = GetSubCategories(id);
 
                 imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
@@ -597,7 +597,7 @@ namespace PicturePerfect.Models
                 string notes = reader.GetString((int)TableImagesOrdinals.Notes);
 
                 Locations.Location location = GetLocation(id);
-                Category category = GetCategory(id);
+                Category category = GetCategoryByImage(id);
                 SubCategory[] subCategories = GetSubCategories(id);
 
                 ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
@@ -730,7 +730,7 @@ namespace PicturePerfect.Models
                     string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
 
                     Locations.Location location = GetLocation(id);
-                    Category category = GetCategory(id);
+                    Category category = GetCategoryByImage(id);
                     SubCategory[] subCategories = GetSubCategories(id);
 
                     ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
@@ -797,14 +797,15 @@ namespace PicturePerfect.Models
 
         /// <summary>
         /// Method to get the category of a specific image file.
+        /// This method does not open and close the connection. The connection has already to be open before calling the method.
         /// </summary>
         /// <param name="imageId"></param>
         /// <returns>Returns the category object.</returns>
-        private static Category GetCategory(int imageId)
+        private static Category GetCategoryByImage(int imageId)
         {
             Category category = new();
 
-            // query subcategory ids
+            // query category ids
             string commandText = @"SELECT category_id FROM images_categories WHERE image_id=@image_id";
 
             // Connect to the Sqlite database
@@ -844,6 +845,63 @@ namespace PicturePerfect.Models
                     };
                 }
             }
+
+            return category;
+        }
+
+        /// <summary>
+        /// Method to get the category of a specific subcategory.
+        /// This method does not open and close the connection. The connection has already to be open before calling the method.
+        /// </summary>
+        /// <param name="subCategoryId"></param>
+        /// <returns>Returns the category object.</returns>
+        private static Category GetCategoryBySubCategory(int subCategoryId)
+        {
+            Category category = new();
+
+            // query category ids
+            string commandText = @"SELECT category_id FROM categories_subcategories WHERE subcategory_id=@subcategory_id";
+
+            // Connect to the Sqlite database
+            SqliteCommand command = new(commandText, Connection);
+            command.Parameters.AddWithValue("@subcategory_id", subCategoryId);
+
+            // Sqlite data reader
+            // this reader will not contain elements if the image has no location assigned
+            SqliteDataReader reader = command.ExecuteReader();
+            // step through the reader containing the subcategory ids           
+            if (reader.HasRows)
+            {
+                // reader will only have one item since a image can only have one category
+                reader.Read();
+                int id = reader.GetInt32(0); // index 0 is the location id
+
+                string commandTextCategory = @"SELECT id, name, notes FROM categories WHERE id=@id";
+                SqliteCommand commandLocation = new(commandTextCategory, Connection);
+                commandLocation.Parameters.AddWithValue("@id", id);
+                // call the reader for the location by using the category id
+                SqliteDataReader readerLocation = commandLocation.ExecuteReader();
+
+                // reader for the category command will only contain one item, since id is unique
+                if (readerLocation.HasRows)
+                {
+                    readerLocation.Read();
+                    // set the properties of the category object
+                    int identifier = readerLocation.GetInt32(0);
+                    string name = readerLocation.GetString(1);
+                    string notes = readerLocation.GetString(2);
+
+                    category = new()
+                    {
+                        Id = identifier,
+                        Name = name,
+                        Notes = notes
+                    };
+                }
+            }
+
+            // add the subcategories
+            category.SubCategories = LoadSubcategories(category);
 
             return category;
         }
@@ -954,7 +1012,7 @@ namespace PicturePerfect.Models
         {
             List<SubCategory> list = new();
 
-            string commandText = @"SELECT * FROM subcategories WHERE id NOT IN (SELECT subcategory_id FROM categories_subcategories) AND id NOT IN (1) ORDER BY name ASC";
+            string commandText = @"SELECT * FROM subcategories WHERE id NOT IN (SELECT subcategory_id FROM categories_subcategories) ORDER BY name ASC";
 
             // Connect to the Sqlite database
             Connection.Open();
@@ -1288,6 +1346,66 @@ namespace PicturePerfect.Models
             imagesIdsDistinct.ForEach(id => images.Add(LoadImageFileById(id)));
 
             return images;
+        }
+
+        /// <summary>
+        /// Method to write the changes to the categories table.
+        /// </summary>
+        /// <param name="category"></param>
+        public static void CommitCategoryProperties(Category category)
+        {
+            // prepare values
+            List<string> paramters = new() { "@id", "@name", "@notes" };
+            object[] values = { category.Id, category.Name, category.Notes };
+
+            // connect to sqlite database
+            Connection.Open();
+
+            // set command and its properties
+            SqliteCommand command = new()
+            {
+                CommandText = "UPDATE categories SET name=@name, notes=@notes WHERE id=@id",
+                Connection = Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute and close
+            command.ExecuteNonQuery();
+            Connection.Close();
+        }
+
+        /// <summary>
+        /// Method to write the changes to the subcategories table.
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns>Returns the category object for the changed subcategory.</returns>
+        public static Category CommitSubCategoryProperties(SubCategory subCategory)
+        {
+            // prepare values
+            List<string> paramters = new() { "@id", "@name", "@notes" };
+            object[] values = { subCategory.Id, subCategory.Name, subCategory.Notes };
+
+            // connect to sqlite database
+            Connection.Open();
+
+            // set command and its properties
+            SqliteCommand command = new()
+            {
+                CommandText = "UPDATE subcategories SET name=@name, notes=@notes WHERE id=@id",
+                Connection = Connection
+            };
+
+            // add all with value, only works if each column is unique, which should always be the case
+            paramters.ForEach(parameter => command.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
+
+            // execute and close
+            command.ExecuteNonQuery();
+            Category category = GetCategoryBySubCategory(subCategory.Id);
+            Connection.Close();
+
+            return category;
         }
     }
 }

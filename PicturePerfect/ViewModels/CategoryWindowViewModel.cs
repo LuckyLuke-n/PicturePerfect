@@ -156,6 +156,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateSubcategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaveEditsCommand { get; }
         #endregion
 
         public CategoryWindowViewModel()
@@ -165,6 +166,7 @@ namespace PicturePerfect.ViewModels
             LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
             CreateSubcategoryCommand = ReactiveCommand.Create(RunCreateSubcategoryCommandAsync);
             CreateCategoryCommand = ReactiveCommand.Create(RunCreateCategoryCommand);
+            SaveEditsCommand = ReactiveCommand.Create(RunSaveEditsCommandAsync);
         }
 
         /// <summary>
@@ -260,6 +262,65 @@ namespace PicturePerfect.ViewModels
         private void RunLinkCategoryCommand()
         {
 
+        }
+
+        /// <summary>
+        /// Method to call the methods to save changed to the category or subcategory.
+        /// </summary>
+        private async void RunSaveEditsCommandAsync()
+        {
+            // check if category or subcategory
+            if (SelectedCategoryObject.GetType() == typeof(Category))
+            {
+                // category
+                Category categorySelected = (Category)SelectedCategoryObject;
+                categorySelected.Name = SelectedName;
+                categorySelected.Notes = SelectedNotes;
+                categorySelected.CommitChanges();
+
+                // get the id in the list
+                int index = 0;
+                int counter = 0;
+                foreach (Category category in LoadedCategoriesTree.Tree)
+                {
+                    if (category.Id == categorySelected.Id)
+                    {
+                        index = counter;
+                    }
+                    counter++;
+                }
+
+                // edit the observable collection to update the main windows and the category window
+                LoadedCategoriesTree.Tree[index] = categorySelected;
+            }
+            else if (SelectedCategoryObject.GetType() == typeof(SubCategory))
+            {
+                // subcategory
+                SubCategory subCategorySelected = (SubCategory)SelectedCategoryObject;
+                subCategorySelected.Name = SelectedName;
+                subCategorySelected.Notes = SelectedNotes;
+                Category correspondingCategory = subCategorySelected.CommitChanges();
+
+                // get the id in the list for the corresponding category
+                int index = 0;
+                int counter = 0;
+                foreach (Category category in LoadedCategoriesTree.Tree)
+                {
+                    if (category.Id == correspondingCategory.Id)
+                    {
+                        index = counter;
+                    }
+                    counter++;
+                }
+
+                // edit the observable collection to update the main windows and the category window
+                LoadedCategoriesTree.Tree[index] = correspondingCategory;
+            }
+            else
+            {
+                // do nothing
+                _ = await MessageBox.Show("Error processing input. No changed made to project file.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>

@@ -17,5 +17,14 @@
         {
             Id = Database.AddSubcategory(this);
         }
+
+        /// <summary>
+        /// Method to commit the property contents to the database.
+        /// </summary>
+        /// <returns>Returns the category corresponding to the changed subcategory.</returns>
+        public Category CommitChanges()
+        {
+            return Database.CommitSubCategoryProperties(this);
+        }
     }
 }

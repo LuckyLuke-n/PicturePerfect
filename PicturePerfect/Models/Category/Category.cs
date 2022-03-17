@@ -51,5 +51,13 @@ namespace PicturePerfect.Models
         {
             Database.UnlinkSubCategoryFromCategory(category: this, subCategory: subCategory);
         }
+
+        /// <summary>
+        /// Method to commit the property contents to the database.
+        /// </summary>
+        public void CommitChanges()
+        {
+            Database.CommitCategoryProperties(category: this);
+        }
     }
 }
