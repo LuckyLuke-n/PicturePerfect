@@ -26,6 +26,16 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to load a category by it's subcategory.
+        /// </summary>
+        /// <param name="subCategory"></param>
+        /// <returns>Returns the category object.</returns>
+        public static Category LoadBySubCategory(SubCategory subCategory)
+        {
+            return Database.LoadCategoryBySubCategory(subCategory);
+        }
+
+        /// <summary>
         /// Method to set the private property.
         /// </summary>
         /// <param name="id"></param>
@@ -45,19 +55,19 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to unlink a subcategory from a category. The subcategory's images are unlinked too.
-        /// </summary>
-        public void UnlinkSubCategory(SubCategory subCategory)
-        {
-            Database.UnlinkSubCategoryFromCategory(category: this, subCategory: subCategory);
-        }
-
-        /// <summary>
         /// Method to commit the property contents to the database.
         /// </summary>
         public void CommitChanges()
         {
             Database.CommitCategoryProperties(category: this);
+        }
+
+        /// <summary>
+        /// Method to delete this category from the database. This removes all connections to this category object.
+        /// </summary>
+        public void Delete()
+        {
+            Database.DeleteCategory(category: this);
         }
     }
 }

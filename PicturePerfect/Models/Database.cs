@@ -359,9 +359,41 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to unlink a subcategory from a category. The subcategory's images are unlinked too.
+        /// Method to delete a category from the database. All subcategories will be deleted, too. Images will loose their links, but not be deleted.
         /// </summary>
-        public static void UnlinkSubCategoryFromCategory(Category category, SubCategory subCategory)
+        /// <param name="category"></param>
+        public static void DeleteCategory(Category category)
+        {
+            // delete all subcategories
+            category.SubCategories.ForEach(subCategory => DeleteSubCategory(subCategory));
+
+            // delete the category itself
+            Connection.Open();
+            // delete links of images to this subcategory
+            SqliteCommand commandDeleteCategory = new()
+            {
+                CommandText = "DELETE FROM categories WHERE id=@id",
+                Connection = Connection
+            };
+            commandDeleteCategory.Parameters.AddWithValue("@id", category.Id);
+            commandDeleteCategory.ExecuteNonQuery();
+
+            // link to category "None" with index 2
+            SqliteCommand commandCategory = new()
+            {
+                CommandText = "UPDATE images_categories SET category_id=2 WHERE category_id=@category_id",
+                Connection = Connection
+            };
+            commandCategory.Parameters.AddWithValue("@category_id", category.Id);
+            commandCategory.ExecuteNonQuery();
+
+            Connection.Close();
+        }
+
+        /// <summary>
+        /// Method to delete a subcategory from a category. This deletes the link to the images, the link to the category and the subcategory itself.
+        /// </summary>
+        public static void DeleteSubCategory(SubCategory subCategory)
         {
             // new command
             Connection.Open();
@@ -375,15 +407,23 @@ namespace PicturePerfect.Models
             commandDeleteImages.Parameters.AddWithValue("@subcategory_id", subCategory.Id);
             commandDeleteImages.ExecuteNonQuery();
 
-            // delete old link
+            // delete old link to category
             SqliteCommand commandDeleteCategoryLink = new()
             {
-                CommandText = "DELETE FROM categories_subcategories WHERE subcategory_id=@subcategory_id AND category_id=@category_id",
+                CommandText = "DELETE FROM categories_subcategories WHERE subcategory_id=@subcategory_id",
                 Connection = Connection
             };
             commandDeleteCategoryLink.Parameters.AddWithValue("@subcategory_id", subCategory.Id);
-            commandDeleteCategoryLink.Parameters.AddWithValue("@category_id", category.Id);
             commandDeleteCategoryLink.ExecuteNonQuery();
+
+            // delete subcategory
+            SqliteCommand commandDeleteSubCategory = new()
+            {
+                CommandText = "DELETE FROM subcategories WHERE id=@id",
+                Connection = Connection
+            };
+            commandDeleteSubCategory.Parameters.AddWithValue("@id", subCategory.Id);
+            commandDeleteSubCategory.ExecuteNonQuery();
 
             Connection.Close();
         }
@@ -845,6 +885,20 @@ namespace PicturePerfect.Models
                     };
                 }
             }
+
+            return category;
+        }
+
+        /// <summary>
+        /// Method to load a category by it's subcategory.
+        /// </summary>
+        /// <param name="subCategory"></param>
+        /// <returns>Returns the category object.</returns>
+        public static Category LoadCategoryBySubCategory(SubCategory subCategory)
+        {
+            Connection.Open();
+            Category category = GetCategoryBySubCategory(subCategory.Id);
+            Connection.Close();
 
             return category;
         }

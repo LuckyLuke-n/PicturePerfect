@@ -46,7 +46,7 @@
 						</MenuItem.Icon>
 					</MenuItem>
 					<Separator/>
-					<MenuItem Header="Delete">
+					<MenuItem Header="Delete" Command="{Binding DeleteSelectedCategoryObjectCommand}">
 						<MenuItem.Icon>
 							<Image Source="/Assets/Drawables/delete_dark.png"/>
 						</MenuItem.Icon>
@@ -81,26 +81,11 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsEnabled="{Binding IsCategory}" Command="{Binding UnlinkSubCategoryCommand}"
-					ToolTip.Tip="Cut the link to the selected subcategory. This will remove all images from this subcategory.">
-				<Image Source="/Assets/Drawables/unlink.png" Height="20"/>
+			<Button Grid.Column="2" Grid.Row="4" Margin="2,-10,0,0" IsEnabled="{Binding IsCategory}" Command="{Binding DeleteSubCategoryCommand}"
+					ToolTip.Tip="Delete the selected subcategory. This will remove all images from this subcategory.">
+				<Image Source="/Assets/Drawables/delete.png" Height="20"/>
 			</Button>
-
-			<!-- All sub categories -->
-			<Label Content="Unlinked subcategories" Grid.Column="0" Grid.Row="6" Margin="0,0,0,10"/>
-			<ComboBox SelectedIndex="{Binding SubCategoriesAllIndexSelected}" Items="{Binding SubCategoriesListUnlinked}" IsEnabled="{Binding IsCategory}"
-					  Grid.Column="1" Grid.Row="6" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding Name}"/>
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
-			<Button Grid.Column="2" Grid.Row="6" Margin="2,-10,0,0" IsEnabled="{Binding IsCategory}"
-				ToolTip.Tip="Link the selceted subcategory to the active category.">
-				<Image Source="/Assets/Drawables/link.png" Height="20"/>
-			</Button>
-			
+		
 		</Grid>
 	
 	</Grid>

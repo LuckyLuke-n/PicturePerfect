@@ -149,10 +149,10 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
-
         #region Commands
         public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategoryCommand { get; }
-        public ReactiveCommand<Unit, Unit> UnlinkSubCategoryCommand { get; }
+        public ReactiveCommand<Unit, Unit> DeleteSelectedCategoryObjectCommand { get; }
+        public ReactiveCommand<Unit, Unit> DeleteSubCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateSubcategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateCategoryCommand { get; }
@@ -162,7 +162,8 @@ namespace PicturePerfect.ViewModels
         public CategoryWindowViewModel()
         {
             ToggleVisibilitySubCategoryCommand = ReactiveCommand.Create(RunToggleVisibilitySubCategoryCommand);
-            UnlinkSubCategoryCommand = ReactiveCommand.Create(RunUnlinkSubCategoryCommand);
+            DeleteSubCategoryCommand = ReactiveCommand.Create(RunDeleteSubCategoryCommand);
+            DeleteSelectedCategoryObjectCommand = ReactiveCommand.Create(RunDeleteSelectedCategoryObjectCommandAsync);
             LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
             CreateSubcategoryCommand = ReactiveCommand.Create(RunCreateSubcategoryCommandAsync);
             CreateCategoryCommand = ReactiveCommand.Create(RunCreateCategoryCommand);
@@ -207,19 +208,43 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to get the list index of the currently selected category set by the binding.
+        /// Method to get the list index a specific category in the category list.
         /// </summary>
         /// <returns>Returns the list index of type int.</returns>
-        private int GetListIndexOfCategory()
+        private int GetListIndexOfCategory(Category categoryInput)
         {
             int index = 0;
             int listIndex = -1;
-            Category selectedCategory = (Category)SelectedCategoryObject;
+            //Category selectedCategory = (Category)SelectedCategoryObject;
 
             // get the index of the current category in the category tree list.
             foreach (Category category in CategoriesTree.Tree)
             {
-                if (category.Id == selectedCategory.Id)
+                if (category.Id == categoryInput.Id)
+                {
+                    listIndex = index;
+                }
+                index++;
+            }
+
+            return listIndex;
+        }
+
+        /// <summary>
+        /// Method to get the list index a specific subcategory in it's categorie's subcategory list.
+        /// </summary>
+        /// <param name="subCategoryInput"></param>
+        /// <returns></returns>
+        private int GetListIndexOfSubCategory(SubCategory subCategoryInput)
+        {
+            int index = 0;
+            int listIndex = -1;
+            Category category = Category.LoadBySubCategory(subCategoryInput);
+
+            // get the index of the current category in the category tree list.
+            foreach (SubCategory subCategory in category.SubCategories)
+            {
+                if (subCategory.Id == subCategoryInput.Id)
                 {
                     listIndex = index;
                 }
@@ -238,22 +263,88 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to get call the methods to unlink a subcategory from its category.
+        /// Method to delete the selected category object. Either a category or a subcategory.
         /// </summary>
-        private void RunUnlinkSubCategoryCommand()
-        {           
-            int listIndex = GetListIndexOfCategory();
+        private async void RunDeleteSelectedCategoryObjectCommandAsync()
+        {
+            // check if category or subcategory
+            if (SelectedCategoryObject.GetType() == typeof(Category))
+            {
+                // category
+                Category selectedCategory = (Category)SelectedCategoryObject;
+
+                MessageBox.MessageBoxResult result = await MessageBox.Show($"Deleting the category '{selectedCategory.Name}' removes all subcategories. All links between images and this category will be reset to the category 'None'.", null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Information);
+                
+                if (result == MessageBox.MessageBoxResult.Ok)
+                {
+                    // prevent deleting all and none category
+                    if (selectedCategory.Id == 1 || selectedCategory.Id == 2)
+                    {
+                        // selected category is All or None
+                        _ = await MessageBox.Show("This category cannot be deleted.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        // selected category is any other category than All or None
+                        int listIndex = GetListIndexOfCategory(selectedCategory);
+                        CategoriesTree.Tree[listIndex].Delete();
+                        // remove from observable collection to update the gui
+                        CategoriesTree.Tree.RemoveAt(listIndex);
+                        // reload the images for the data grid binding
+                        LoadedImageFiles.LoadAll();
+                    }
+                }
+            }
+            else if (SelectedCategoryObject.GetType() == typeof(SubCategory))
+            {
+                // subcategory
+                SubCategory subCategorySelected = (SubCategory)SelectedCategoryObject;
+                MessageBox.MessageBoxResult result = await MessageBox.Show($"Deleting the subcategory '{subCategorySelected.Name}' removes all links between images and this subcategory. The images will stay linked to the category", null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Information);
+
+                if (result == MessageBox.MessageBoxResult.Ok)
+                {
+                    Category category = Category.LoadBySubCategory(subCategorySelected);
+
+                    // list indices
+                    int categoryIndex = GetListIndexOfCategory(category);
+                    int subCategoryIndex = GetListIndexOfSubCategory(subCategorySelected);
+
+                    // edit database
+                    CategoriesTree.Tree[categoryIndex].SubCategories[subCategoryIndex].Delete();
+                    subCategorySelected.Delete();
+
+                    // Change the observable collection
+                    category.SubCategories.RemoveAt(subCategoryIndex);
+                    CategoriesTree.Tree[categoryIndex] = category;
+
+                    // reload the images for the data grid binding
+                    LoadedImageFiles.LoadAll();
+                }
+            }
+            else
+            {
+                // do nothing
+                _ = await MessageBox.Show("Error processing input. No changed made to project.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Method to get call the methods to delete a subcategory from its category.
+        /// </summary>
+        private void RunDeleteSubCategoryCommand()
+        {
+            int listIndex = GetListIndexOfCategory((Category)SelectedCategoryObject);
 
             // call the unlink method
             if (listIndex != -1 && SubCategoryLinkedIndexSelected != -1)
             {
-                // unlink is sqlite
-                CategoriesTree.Tree[listIndex].UnlinkSubCategory(SubCategoryLinkedSelected);
+                // delete from sqlite
+                CategoriesTree.Tree[listIndex].SubCategories[SubCategoryLinkedIndexSelected].Delete();
                 // in binding list
                 CategoriesTree.Tree[listIndex].SubCategories.RemoveAt(SubCategoryLinkedIndexSelected);
                 // reload the images for the data grid binding
                 LoadedImageFiles.LoadAll();
-            }   
+            }
         }
 
         /// <summary>
@@ -319,7 +410,7 @@ namespace PicturePerfect.ViewModels
             else
             {
                 // do nothing
-                _ = await MessageBox.Show("Error processing input. No changed made to project file.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+                _ = await MessageBox.Show("Error processing input. No changed made to project.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
             }
         }
 
@@ -346,7 +437,7 @@ namespace PicturePerfect.ViewModels
                     subCategory.Create();
 
                     // add to categories tree observable object
-                    int listIndex = GetListIndexOfCategory();
+                    int listIndex = GetListIndexOfCategory(selectedCategory);
                     CategoriesTree.Tree[listIndex].LinkSubcategory(subCategory);
                 }
             }

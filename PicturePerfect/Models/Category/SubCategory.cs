@@ -26,5 +26,13 @@
         {
             return Database.CommitSubCategoryProperties(this);
         }
+
+        /// <summary>
+        /// Method to delete a subcategory.
+        /// </summary>
+        public void Delete()
+        {
+            Database.DeleteSubCategory(this);
+        }
     }
 }
