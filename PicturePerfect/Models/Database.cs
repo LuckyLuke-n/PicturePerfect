@@ -436,27 +436,16 @@ namespace PicturePerfect.Models
         public static void LinkImageToLocation(ImageFile image, Locations.Location location)
         {
             //  values and parameters
-            List<string> paramters = new() { "@image_id", "@location_id" };
-            object[] values = { image.Id, location.Id };
+            List<string> paramters = new() { "@location_id", "@image_id"};
+            object[] values = { location.Id, image.Id };
 
             // new command
             Connection.Open();
 
-            // delete old link
-            SqliteCommand commandDelete = new()
-            {
-                CommandText = "DELETE FROM images_locations WHERE image_id=@image_id",
-                Connection = Connection
-            };
-            commandDelete.Parameters.AddWithValue("@image_id", image.Id);
-            commandDelete.ExecuteNonQuery();
-
-
             // insert new row linking the image and the location
             SqliteCommand commandNew = new()
             {
-                CommandText = "INSERT INTO images_locations (image_id, location_id) " +
-                    " VALUES (@image_id, @location_id)",
+                CommandText = "UPDATE images_locations SET location_id=@location_id WHERE image_id=@image_id",
                 Connection = Connection
             };
             // add all with value, only works if each column is unique, which should always be the case
@@ -475,31 +464,16 @@ namespace PicturePerfect.Models
         public static void LinkImageToCategory(ImageFile image, Category category)
         {
             //  values and parameters
-            List<string> paramters = new() { "@image_id", "@category_id" };
-            object[] values = { image.Id, category.Id };
-
-            string[] commandsDelete = { "DELETE FROM images_categories WHERE image_id=@image_id", "DELETE FROM images_subcategories WHERE image_id=@image_id" };
+            List<string> paramters = new() { "@category_id", "@image_id" };
+            object[] values = { category.Id, image.Id };
 
             // new command
             Connection.Open();
 
-            // delete old links
-            foreach (string commandText in commandsDelete)
-            {
-                SqliteCommand commandDelete = new()
-                {
-                    CommandText = commandText,
-                    Connection = Connection
-                };
-                commandDelete.Parameters.AddWithValue("@image_id", image.Id);
-                commandDelete.ExecuteNonQuery();
-            }
-
             // insert new row linking the image and the location
             SqliteCommand commandNew = new()
             {
-                CommandText = "INSERT INTO images_categories (image_id, category_id) " +
-                    " VALUES (@image_id, @category_id)",
+                CommandText = "UPDATE images_categories SET category_id=@category_id WHERE image_id=@image_id",
                 Connection = Connection
             };
             // add all with value, only works if each column is unique, which should always be the case
