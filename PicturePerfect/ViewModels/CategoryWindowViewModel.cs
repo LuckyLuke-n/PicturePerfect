@@ -21,6 +21,7 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
+        /*
         #region Visibilty of gui elements
         private bool isVisibleAddSubCategory1 = false;
         public bool IsVisibleAddSubCategory1
@@ -29,6 +30,7 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory1, value); }
         }
         #endregion
+        */
 
         #region TreeView properties
         private object selectedCategoryObject = null;
@@ -150,7 +152,6 @@ namespace PicturePerfect.ViewModels
         #endregion
 
         #region Commands
-        public ReactiveCommand<Unit, Unit> ToggleVisibilitySubCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSelectedCategoryObjectCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSubCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
@@ -161,7 +162,6 @@ namespace PicturePerfect.ViewModels
 
         public CategoryWindowViewModel()
         {
-            ToggleVisibilitySubCategoryCommand = ReactiveCommand.Create(RunToggleVisibilitySubCategoryCommand);
             DeleteSubCategoryCommand = ReactiveCommand.Create(RunDeleteSubCategoryCommand);
             DeleteSelectedCategoryObjectCommand = ReactiveCommand.Create(RunDeleteSelectedCategoryObjectCommandAsync);
             LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
@@ -252,14 +252,6 @@ namespace PicturePerfect.ViewModels
             }
 
             return listIndex;
-        }
-
-        /// <summary>
-        /// Command to toggle the add sub category visibility.
-        /// </summary>
-        private void RunToggleVisibilitySubCategoryCommand()
-        {
-            IsVisibleAddSubCategory1 = !IsVisibleAddSubCategory1;
         }
 
         /// <summary>

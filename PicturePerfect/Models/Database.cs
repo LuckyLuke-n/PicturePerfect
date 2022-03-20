@@ -1435,5 +1435,29 @@ namespace PicturePerfect.Models
 
             return category;
         }
+
+        /// <summary>
+        /// Method to delete a location from the database.
+        /// </summary>
+        /// <param name="location"></param>
+        public static void DeleteLocation(Locations.Location location)
+        {
+            string[] queries =
+                {
+                "DELETE FROM locations WHERE id=@location_id",
+                "DELETE FROM images_locations WHERE image_id=@location_id"
+                };
+
+            Connection.Open();
+
+            foreach (string query in queries)
+            {
+                SqliteCommand command = new(query, Connection);
+                command.Parameters.AddWithValue("@location_id", location.Id);
+                command.ExecuteNonQuery();
+            }
+
+            Connection.Close();
+        }
     }
 }

@@ -80,6 +80,14 @@ namespace PicturePerfect.Models
 
                 return location;
             }
+
+            /// <summary>
+            /// Method to delete a location from the database.
+            /// </summary>
+            public void Delete()
+            {
+                Database.DeleteLocation(this);
+            }
         }
 
         /// <summary>
