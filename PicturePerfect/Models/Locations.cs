@@ -88,6 +88,25 @@ namespace PicturePerfect.Models
             {
                 Database.DeleteLocation(this);
             }
+
+            /// <summary>
+            /// Method to edit a location and commit the property changes to the database.
+            /// </summary>
+            /// <returns>Returns the updated location object.</returns>
+            public Location CommitEdits(int id, string name, string geoTag, string notes)
+            {
+                Location location = new()
+                {
+                    Id = id,
+                    Name = name,
+                    GeoTag = geoTag,
+                    Notes = notes
+                };
+
+                Database.EditLocation(location);
+
+                return location;
+            }
         }
 
         /// <summary>

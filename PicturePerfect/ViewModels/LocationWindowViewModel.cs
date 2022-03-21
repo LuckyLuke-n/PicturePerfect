@@ -118,20 +118,23 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void SetGui()
         {
-            // check if location is "None" --> prevent editing
-            if (LocationSelected.Id == 1)
+            if (LocationSelected != null)
             {
-                // set elements in gui to disabled
-                IsUnProtectedLocation = false;
-            }
-            else
-            {
-                // any other property
+                // check if location is "None" --> prevent editing
+                if (LocationSelected.Id == 1)
+                {
+                    // set elements in gui to disabled
+                    IsUnProtectedLocation = false;
+                }
+                else
+                {
+                    // any other property
+                    IsUnProtectedLocation = true;
+                }
                 LocationIdSelected = LocationSelected.Id;
                 LocationNameSelected = LocationSelected.Name;
                 LocationGeoTagSelected = LocationSelected.GeoTag;
                 LocationNotesSelected = LocationSelected.Notes;
-                IsUnProtectedLocation = true;
             }
         }
 
@@ -140,7 +143,11 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunAddLocationCommand()
         {
+            Locations.Location location = Locations.Location.Create(name: "New location", geoTag: string.Empty, notes: string.Empty);
 
+            // add new location in list as first item
+            Locations.List.Add(location);
+            Locations.List.Move(Locations.List.Count - 1, 0);
         }
 
         /// <summary>
@@ -163,7 +170,13 @@ namespace PicturePerfect.ViewModels
                     // any other location
                     // remove from database and observable collection
                     Locations.List[LocationSeletedIndex].Delete();
-                    Locations.List.Remove(LocationSelected);
+                    Locations.List.RemoveAt(LocationSeletedIndex);
+
+                    // reset gui
+                    LocationIdSelected = 0;
+                    LocationNameSelected = string.Empty;
+                    LocationGeoTagSelected = string.Empty;
+                    LocationNotesSelected = string.Empty;
                 }
             }
         }
@@ -173,7 +186,12 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunEditLocationCommand()
         {
-
+            // update the location in the datebase and receive the updated lcoation object
+            Locations.Location updatedLocation = Locations.List[LocationSeletedIndex].CommitEdits(id: LocationSelected.Id, name: LocationNameSelected, geoTag: LocationGeoTagSelected, notes: LocationNotesSelected);
+            // update the observable collection
+            Locations.List[LocationSeletedIndex] = updatedLocation;
+            // reload the loaded images
+            LoadedImageFiles.LoadAll();
         }
     }
 }

@@ -1442,20 +1442,47 @@ namespace PicturePerfect.Models
         /// <param name="location"></param>
         public static void DeleteLocation(Locations.Location location)
         {
-            string[] queries =
-                {
-                "DELETE FROM locations WHERE id=@location_id",
-                "DELETE FROM images_locations WHERE image_id=@location_id"
-                };
-
             Connection.Open();
 
-            foreach (string query in queries)
+            // delete location
+            SqliteCommand commandDelete = new()
             {
-                SqliteCommand command = new(query, Connection);
-                command.Parameters.AddWithValue("@location_id", location.Id);
-                command.ExecuteNonQuery();
-            }
+                CommandText = "DELETE FROM locations WHERE id=@location_id",
+                Connection = Connection
+            };
+            commandDelete.Parameters.AddWithValue("@location_id", location.Id);
+            commandDelete.ExecuteNonQuery();
+
+            // relink to location "None"
+            SqliteCommand commandRelink = new()
+            {
+                CommandText = "UPDATE images_locations SET location_id=1",
+                Connection = Connection
+            };
+            commandRelink.ExecuteNonQuery();
+
+            Connection.Close();
+        }
+
+        /// <summary>
+        /// Method to update the properties for a specific location in the sqlite table.
+        /// </summary>
+        /// <param name="location"></param>
+        public static void EditLocation(Locations.Location location)
+        {
+            Connection.Open();
+
+            // delete location
+            SqliteCommand command = new()
+            {
+                CommandText = "UPDATE locations SET name=@name, geo_tag=@geo_tag, notes=@notes WHERE id=@id",
+                Connection = Connection
+            };
+            command.Parameters.AddWithValue("@name", location.Name);
+            command.Parameters.AddWithValue("@geo_tag", location.GeoTag);
+            command.Parameters.AddWithValue("@notes", location.Notes);
+            command.Parameters.AddWithValue("@id", location.Id);
+            command.ExecuteNonQuery();
 
             Connection.Close();
         }
