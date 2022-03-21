@@ -106,6 +106,9 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> EditLocationCommand { get; }
         #endregion
 
+        /// <summary>
+        /// Creates a new instance of the LcoationWindowViewModel.
+        /// </summary>
         public LocationWindowViewModel()
         {
             AddLocationCommand = ReactiveCommand.Create(RunAddLocationCommand);
@@ -177,6 +180,9 @@ namespace PicturePerfect.ViewModels
                     LocationNameSelected = string.Empty;
                     LocationGeoTagSelected = string.Empty;
                     LocationNotesSelected = string.Empty;
+
+                    // reload the loaded images
+                    LoadedImageFiles.LoadAll();
                 }
             }
         }

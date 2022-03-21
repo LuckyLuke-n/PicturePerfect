@@ -154,7 +154,6 @@ namespace PicturePerfect.ViewModels
         #region Commands
         public ReactiveCommand<Unit, Unit> DeleteSelectedCategoryObjectCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteSubCategoryCommand { get; }
-        public ReactiveCommand<Unit, Unit> LinkCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateSubcategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateCategoryCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveEditsCommand { get; }
@@ -164,7 +163,6 @@ namespace PicturePerfect.ViewModels
         {
             DeleteSubCategoryCommand = ReactiveCommand.Create(RunDeleteSubCategoryCommand);
             DeleteSelectedCategoryObjectCommand = ReactiveCommand.Create(RunDeleteSelectedCategoryObjectCommandAsync);
-            LinkCategoryCommand = ReactiveCommand.Create(RunLinkCategoryCommand);
             CreateSubcategoryCommand = ReactiveCommand.Create(RunCreateSubcategoryCommandAsync);
             CreateCategoryCommand = ReactiveCommand.Create(RunCreateCategoryCommand);
             SaveEditsCommand = ReactiveCommand.Create(RunSaveEditsCommandAsync);
@@ -337,14 +335,6 @@ namespace PicturePerfect.ViewModels
                 // reload the images for the data grid binding
                 LoadedImageFiles.LoadAll();
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void RunLinkCategoryCommand()
-        {
-
         }
 
         /// <summary>
