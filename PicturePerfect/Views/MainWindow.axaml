@@ -163,7 +163,7 @@
 						</Button>
 					</StackPanel>
 					<!-- Buttons for DataGrid -->
-					<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 0, 10">
+					<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 5, 10">
 						<Button ToolTip.Tip="Add images to your database." Command="{Binding ToggleLoadImagesCommand}">
 							<Image Source="/Assets/Drawables/load_images.png" Height="40"/>
 						</Button>
@@ -176,11 +176,64 @@
 					</StackPanel>
 				</Grid>
 			</TabItem>
+			
 			<!-- RAW CONVERTER tab -->
 			<TabItem Header="Raw converter">
+				<Grid ColumnDefinitions="*" RowDefinitions="*,auto,auto">
+					<!-- DataGrid -->
+					<DataGrid Items="{Binding ImageFilesRawConverter.List}" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding ImageFile}" SelectedIndex="{Binding SelectedIndexRawConverter}"
+							VerticalAlignment="Stretch" Margin="0, 10, 10, 10" HorizontalAlignment="Stretch" Grid.Row="0"
+							BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}"
+							CanUserResizeColumns="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Name" Binding="{Binding CustomName}" Width="2*"/>
+							<DataGridTextColumn Header="Size in MB" Binding="{Binding Size}" Width="*"/>
+							<DataGridTextColumn Header="Type" Binding="{Binding FileType}" Width="*"/>
+							<DataGridTextColumn Header="Date created" Binding="{Binding DateTaken}" Width="1.5*"/>
+						</DataGrid.Columns>
+						<DataGrid.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Clear selected">
+									<MenuItem.Icon>
+										<Image Source="/Assets/Drawables/delete_dark.png"/>
+									</MenuItem.Icon>
+								</MenuItem>
+								<MenuItem Header="Clear all">
+									<MenuItem.Icon>
+										<Image Source="/Assets/Drawables/delete_dark.png"/>
+									</MenuItem.Icon>
+								</MenuItem>
+							</ContextMenu>
+						</DataGrid.ContextMenu>
+					</DataGrid>
+					<!-- Load images selector -->
+					<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,0,0,10" IsVisible="{Binding HideRawFilesDialog}">
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+							<TextBox Name="textBoRawConverterIn" Text="{Binding PathToConvertInputFolder}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
+							<Button Content="Select"/>
+							<Button Content="Load" Width="80" HorizontalContentAlignment="Center"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBox Name="textBoxSaveConverted" Text="{Binding PathToConvertOutputFolder}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
+							<Button Content="Select"/>
+						</StackPanel>
+					</StackPanel>
+
+					<!-- Buttons for DataGrid -->
+					<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 10, 10">
+						<Button ToolTip.Tip="Add images to the raw converter." Command="{Binding ToggleRawFileDialogCommand}">
+							<Image Source="/Assets/Drawables/load_images.png" Height="40"/>
+						</Button>
+						<Button ToolTip.Tip="Convert the list above.">
+							<Image Source="/Assets/Drawables/convert.png" Height="40"/>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</TabItem>			
+
 
 				
-			</TabItem>
+			
 			<!-- SETTINGS tab -->
 			<TabItem Header="Settings">
 				<Grid ColumnDefinitions="*,*" RowDefinitions="*,*">

@@ -124,6 +124,18 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
+        #region Page "RawConverter" properties
+        private bool hideRawFilesDialog = false;
+        /// <summary>
+        /// Get or set the property to hide or show the select raw files section.
+        /// </summary>
+        public bool HideRawFilesDialog
+        {
+            get { return hideRawFilesDialog; }
+            set { this.RaiseAndSetIfChanged(ref hideRawFilesDialog, value); }
+        }
+        #endregion
+
         #region Settings
         public static string NamingConventionDescription => File.ReadAllText("Resources/Descriptions/naming_convention.txt");
         public static string FileTypeDescription => File.ReadAllText("Resources/Descriptions/file_types.txt");
@@ -290,6 +302,7 @@ namespace PicturePerfect.ViewModels
             get { return pathToProjectFile; }
             set { this.RaiseAndSetIfChanged(ref pathToProjectFile, value); }
         }
+
         private string pathToProjectFolder = "Select a folder for your project";
         /// <summary>
         /// Get and set the path to the project folder or set the path.
@@ -299,6 +312,7 @@ namespace PicturePerfect.ViewModels
             get { return pathToProjectFolder; }
             set { this.RaiseAndSetIfChanged(ref pathToProjectFolder, value); }
         }
+
         private string pathToImageSourceFolder = "Select a source folder";
         /// <summary>
         /// Get and set the path to the project load images folder or set the path.
@@ -308,9 +322,29 @@ namespace PicturePerfect.ViewModels
             get { return pathToImageSourceFolder; }
             set { this.RaiseAndSetIfChanged(ref pathToImageSourceFolder, value); }
         }
+
+        private string pathToConvertInputFolder = "Select a source folder";
+        /// <summary>
+        /// Get and set the path to the folder containg the images for the raw converter input.
+        /// </summary>
+        public string PathToConvertInputFolder
+        {
+            get { return pathToConvertInputFolder; }
+            set { this.RaiseAndSetIfChanged(ref pathToConvertInputFolder, value); }
+        }
+
+        private string pathToConvertOutputFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "RawConverter_out");
+        /// <summary>
+        /// Get and set the path to the folder for the raw converter output.
+        /// </summary>
+        public string PathToConvertOutputFolder
+        {
+            get { return pathToConvertOutputFolder; }
+            set { this.RaiseAndSetIfChanged(ref pathToConvertOutputFolder, value); }
+        }
         #endregion
 
-        #region TreeView properties
+        #region TreeView category properties
         private object selectedCategoryObject;
         /// <summary>
         /// Get or set the selected object in the treeview.
@@ -322,7 +356,7 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
-        #region Commands
+        #region Commands images
         public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
         public ReactiveCommand<Unit, Unit> MarkAsFavorite1Command { get; }
         public ReactiveCommand<Unit, Unit> MarkAsFavorite2Command { get; }
@@ -343,12 +377,17 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> EditLocationsCommand { get; }
         #endregion
 
+        #region Command RawConverter
+        public ReactiveCommand<Unit, Unit> ToggleRawFileDialogCommand { get; }
+        #endregion
+
 
         /// <summary>
         /// Creates an instance of the MainWindowViewModel.
         /// </summary>
         public MainWindowViewModel()
         {
+            // commands for images section
             ShowImageCommand = ReactiveCommand.Create(RunShowImageCommandAsync);
             MarkAsFavorite1Command = ReactiveCommand.Create(RunMarkAsFavorite1CommandAsync);
             MarkAsFavorite2Command = ReactiveCommand.Create(RunMarkAsFavorite2CommandAsync);
@@ -367,6 +406,10 @@ namespace PicturePerfect.ViewModels
             SearchCommand = ReactiveCommand.Create(RunSearchCommandAsync);
             EditCategoriesCommand = ReactiveCommand.Create(RunEditCategoriesCommandAsync);
             EditLocationsCommand = ReactiveCommand.Create(RunEditLocationsCommandAsync);
+
+            // commands for raw converter section
+            ToggleRawFileDialogCommand = ReactiveCommand.Create(RunToggleRawFileDialogCommand);
+
         }
 
         /// <summary>
@@ -854,6 +897,16 @@ namespace PicturePerfect.ViewModels
                 // no project file loaded
                 _ = await MessageBox.Show("Please load a project file to go on.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
             }
+        }
+
+        /// <summary>
+        /// Method to toggle the show raw file dialog bool.
+        /// </summary>
+        private void RunToggleRawFileDialogCommand()
+        {
+            HideRawFilesDialog = !HideRawFilesDialog;
+            PathToConvertInputFolder = "Select a source folder";
+            PathToConvertOutputFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "RawConverter_out");
         }
     }
 }
