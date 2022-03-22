@@ -30,5 +30,10 @@ namespace PicturePerfect.ViewModels
         /// This makes it possible for the VMs to communicate with each other.
         /// </summary>
         public static Locations LoadedLocations { get; set; } = new();
+        /// <summary>
+        /// Get or set the images loaded for the raw converter.
+        /// This makes it possible for the VMs to communicate with each other.
+        /// </summary>
+        public static ImageFiles LoadedRawConverterFiles { get; set; } = new();
     }
 }

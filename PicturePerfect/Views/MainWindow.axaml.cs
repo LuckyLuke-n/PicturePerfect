@@ -16,6 +16,8 @@ namespace PicturePerfect.Views
         private TextBox textBoxNewProject;
         private TextBox textBoxLoadProject;
         private TextBox textBoxLoadImages;
+        private TextBox textBoxRawConverterIn;
+        private TextBox textBoxRawConverterOut;
 
         public MainWindow()
         {
@@ -33,6 +35,8 @@ namespace PicturePerfect.Views
             textBoxNewProject = this.FindControl<TextBox>("textBoxNewProject");
             textBoxLoadProject = this.FindControl<TextBox>("textBoxLoadProject");
             textBoxLoadImages = this.FindControl<TextBox>("textBoxLoadImages");
+            textBoxRawConverterIn = this.FindControl<TextBox>("textBoxRawConverterIn");
+            textBoxRawConverterOut = this.FindControl<TextBox>("textBoxRawConverterOut");
         }
 
         /// <summary>
@@ -42,7 +46,9 @@ namespace PicturePerfect.Views
         {
             NewProject,
             SelectProject,
-            LoadImages
+            LoadImages,
+            RawConverterInput,
+            RawConverterOutput
         }
 
         /// <summary>
@@ -75,6 +81,25 @@ namespace PicturePerfect.Views
             _ = GetPathAsync(DialogType.LoadImages);
         }
 
+        /// <summary>
+        /// Event for selecting images to load into the raw converter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ButtonRawConverterInput_Click(object sender, RoutedEventArgs e)
+        {
+            _ = GetPathAsync(DialogType.RawConverterInput);
+        }
+
+        /// <summary>
+        /// Event for selecting the output folder for the raw converter.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ButtonRawConverterOutput_Click(object sender, RoutedEventArgs e)
+        {
+            _ = GetPathAsync(DialogType.RawConverterOutput);
+        }
 
         /// <summary>
         /// Async method to get a path for a folder or file selection.
@@ -121,7 +146,7 @@ namespace PicturePerfect.Views
                 }
                 else { return null; }
             }
-            else // DialogType.LoadImages
+            else if (dialogType == DialogType.LoadImages)
             {
                 // file dialog to get the path to a folder
                 OpenFolderDialog dialogFolder = new();
@@ -135,6 +160,41 @@ namespace PicturePerfect.Views
                     return resultFolder.ToString();
                 }
                 else { return null; }
+            }
+            else if (dialogType == DialogType.RawConverterInput)
+            {
+                // file dialog to get the path to a folder
+                OpenFolderDialog dialogFolder = new();
+                var resultFolder = await dialogFolder.ShowAsync((Window)VisualRoot);
+
+                // check for null reference
+                if (resultFolder != null)
+                {
+                    //viewModel.PathToProjectFolder = resultFolder.ToString();
+                    textBoxRawConverterIn.Text = resultFolder.ToString();
+                    return resultFolder.ToString();
+                }
+                else { return null; }
+            }
+            else if (dialogType == DialogType.RawConverterOutput)
+            {
+                // file dialog to get the path to a folder
+                OpenFolderDialog dialogFolder = new();
+                var resultFolder = await dialogFolder.ShowAsync((Window)VisualRoot);
+
+                // check for null reference
+                if (resultFolder != null)
+                {
+                    //viewModel.PathToProjectFolder = resultFolder.ToString();
+                    textBoxRawConverterOut.Text = resultFolder.ToString();
+                    return resultFolder.ToString();
+                }
+                else { return null; }
+            }
+            else
+            {
+                _ = MessageBox.Show("An error occured while trying to get the path from the selection window.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+                return null;
             }
         }
 

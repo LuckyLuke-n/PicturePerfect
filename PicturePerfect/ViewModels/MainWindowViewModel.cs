@@ -134,6 +134,21 @@ namespace PicturePerfect.ViewModels
             get { return hideRawFilesDialog; }
             set { this.RaiseAndSetIfChanged(ref hideRawFilesDialog, value); }
         }
+
+        private int selectedIndexRawConverter;
+        /// <summary>
+        /// Get or set the selected index in the raw converter list.
+        /// </summary>
+        public int SelectedIndexRawConverter
+        {
+            get { return selectedIndexRawConverter; }
+            set { this.RaiseAndSetIfChanged(ref selectedIndexRawConverter, value); }
+        }
+
+        /// <summary>
+        /// Get the image files loaded into the raw converter from the view model base.
+        /// </summary>
+        public ImageFiles ImageFilesRawConverter => LoadedRawConverterFiles;
         #endregion
 
         #region Settings
@@ -379,6 +394,10 @@ namespace PicturePerfect.ViewModels
 
         #region Command RawConverter
         public ReactiveCommand<Unit, Unit> ToggleRawFileDialogCommand { get; }
+        public ReactiveCommand<Unit, Unit> LoadIntoRawConverterCommand { get; }
+        public ReactiveCommand<Unit, Unit> ClearRawConverterListCommand { get; }
+        public ReactiveCommand<Unit, Unit> ClearRawConverterItemCommand { get; }
+        public ReactiveCommand<Unit, Unit> StartRawConverterCommand { get; }
         #endregion
 
 
@@ -409,7 +428,10 @@ namespace PicturePerfect.ViewModels
 
             // commands for raw converter section
             ToggleRawFileDialogCommand = ReactiveCommand.Create(RunToggleRawFileDialogCommand);
-
+            LoadIntoRawConverterCommand = ReactiveCommand.Create(RunLoadIntoRawConverterCommandAsync);
+            ClearRawConverterListCommand = ReactiveCommand.Create(RunClearRawConverterListCommand);
+            ClearRawConverterItemCommand = ReactiveCommand.Create(RunClearRawConverterItemCommand);
+            StartRawConverterCommand = ReactiveCommand.Create(RunStartRawConverterCommandAsync);
         }
 
         /// <summary>
@@ -907,6 +929,57 @@ namespace PicturePerfect.ViewModels
             HideRawFilesDialog = !HideRawFilesDialog;
             PathToConvertInputFolder = "Select a source folder";
             PathToConvertOutputFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "RawConverter_out");
+        }
+
+        /// <summary>
+        /// Method add files to the raw converter.
+        /// </summary>
+        private async void RunLoadIntoRawConverterCommandAsync()
+        {
+            if (PathToConvertInputFolder != "Select a source folder")
+            {
+                List<string> filesToAdd = new();
+                // check if files are of correct files tye.
+                foreach (string path in Directory.GetFiles(PathToConvertInputFolder))
+                {
+                    filesToAdd.Add(path);
+                }
+
+                // add files to converter list
+                int numberOfFilesAdded = LoadedRawConverterFiles.AddToRawConverter(files: filesToAdd);
+
+                // hide load folder section
+                RunToggleRawFileDialogCommand();
+                _ = await MessageBox.Show($"{numberOfFilesAdded} raw images added to the RawConverter.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                _ = await MessageBox.Show("Please select a path.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+        }
+
+        /// <summary>
+        /// Method to clear the list of raw converter items.
+        /// </summary>
+        private void RunClearRawConverterListCommand()
+        {
+            LoadedRawConverterFiles.List.Clear();
+        }
+
+        /// <summary>
+        /// Method to delete a selected file from the raw converter list.
+        /// </summary>
+        private void RunClearRawConverterItemCommand()
+        {
+            LoadedRawConverterFiles.List.RemoveAt(SelectedIndexRawConverter);
+        }
+
+        /// <summary>
+        /// Method to run the async process of converting all images in the raw converter list.
+        /// </summary>
+        private async void RunStartRawConverterCommandAsync()
+        {
+
         }
     }
 }

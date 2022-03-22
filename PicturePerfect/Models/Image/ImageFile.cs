@@ -89,10 +89,10 @@ namespace PicturePerfect.Models
         public string AbsolutePath => Path.Combine(ThisApplication.ProjectFile.ImageFolder, Subfolder, Name);
 
         // file type arrays
-        private readonly string[] orf = { ".orf", ".ORF" };
-        private readonly string[] nef = { ".nef", ".NEF" };
-        private readonly string[] jpg = { ".jpg", ".JPG" };
-        private readonly string[] png = { ".png", ".PNG" };
+        public static string[] OrfStrings => new string[] { ".orf", ".ORF" };
+        public static string[] NefStrings => new string[] { ".nef", ".NEF" };
+        private static string[] JpgStrings => new string[] { ".jpg", ".JPG" };
+        private static string[] PngStrings => new string[] { ".png", ".PNG" };
 
 
         /// <summary>
@@ -154,22 +154,26 @@ namespace PicturePerfect.Models
         /// <param name="path"></param>
         /// <param name="subfolderName"></param>
         /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewFromPath(string path, string subfolderName)
+        public static ImageFile NewToDatabase(string path, string subfolderName)
         {
-            ImageFile imageFile = new();
-
-            FileInfo fileInfo = new(path);
-            imageFile.CustomName = fileInfo.Name;
-            imageFile.Name = fileInfo.Name;
+            // create an image file from the path
+            ImageFile imageFile = CreateFromPath(path);
             imageFile.Subfolder = subfolderName;
-            imageFile.FileType = fileInfo.Extension;
-            imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
-            imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
 
-            // create the entry
+            // create the entry and copy the file into the project folder
             CreateDatabaseEntry(imageFile, path);
 
             return imageFile;
+        }
+
+        /// <summary>
+        /// Method to create an image file from a specific path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>Returns the image file object.</returns>
+        public static ImageFile NewFromPath(string path)
+        {
+            return CreateFromPath(path);
         }
 
         /// <summary>
@@ -180,6 +184,25 @@ namespace PicturePerfect.Models
         public static ImageFile LoadById(int id)
         {
             return Database.LoadImageFileById(id);
+        }
+
+        /// <summary>
+        /// Method to create an image file object from a given path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>Returns the image file object.</returns>
+        private static ImageFile CreateFromPath(string path)
+        {
+            ImageFile imageFile = new();
+
+            FileInfo fileInfo = new(path);
+            imageFile.CustomName = fileInfo.Name;
+            imageFile.Name = fileInfo.Name;
+            imageFile.FileType = fileInfo.Extension;
+            imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
+            imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
+
+            return imageFile;
         }
 
         /// <summary>
@@ -269,12 +292,12 @@ namespace PicturePerfect.Models
         {
             Bitmap bitmap;
 
-            if (orf.Contains(FileType) || nef.Contains(FileType))
+            if (OrfStrings.Contains(FileType) || NefStrings.Contains(FileType))
             {
                 MagickImage magickImage = new(AbsolutePath);
                 bitmap = magickImage.ToBitmap();
             }
-            else if (jpg.Contains(FileType) || png.Contains(FileType))
+            else if (JpgStrings.Contains(FileType) || PngStrings.Contains(FileType))
             {
                 bitmap = BitmapValueConverter.Convert(AbsolutePath);
             }
@@ -320,7 +343,7 @@ namespace PicturePerfect.Models
                 File.Copy(AbsolutePath, outputFileName, true);
                 return true;
             }
-            else if ((nef.Contains(outputType) || orf.Contains(outputType)) & jpg.Contains(FileType))
+            else if ((NefStrings.Contains(outputType) || OrfStrings.Contains(outputType)) & JpgStrings.Contains(FileType))
             {
                 // jpg will not be converted to raw on output!
                 return false;
@@ -331,15 +354,15 @@ namespace PicturePerfect.Models
                 // decode the image using the MagickImage library
                 using (MagickImage rawImage = new(this.AbsolutePath))
                 {
-                    if (jpg.Contains(outputType))
+                    if (JpgStrings.Contains(outputType))
                     {
                         rawImage.Write(GetOutputFileName(), MagickFormat.Jpg);
                     }
-                    else if (png.Contains(outputType))
+                    else if (PngStrings.Contains(outputType))
                     {
                         rawImage.Write(GetOutputFileName(), MagickFormat.Png);
                     }
-                    else if (nef.Contains(outputType))
+                    else if (NefStrings.Contains(outputType))
                     {
                         // no conversion
                         // rawImage.Write(GetOutputFileName(), MagickFormat.Nef);

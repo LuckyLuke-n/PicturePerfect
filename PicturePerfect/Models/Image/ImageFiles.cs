@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace PicturePerfect.Models
 {
@@ -10,6 +11,9 @@ namespace PicturePerfect.Models
         /// Get the list of currently loaded image files.
         /// </summary>
         public ObservableCollection<ImageFile> List { get; private set; } = new();
+
+        private readonly string[] orf = { ".orf", ".ORF" };
+        private readonly string[] nef = { ".nef", ".NEF" };
 
         /// <summary>
         /// Creates a new instance of the images files class.
@@ -70,7 +74,7 @@ namespace PicturePerfect.Models
             foreach (string file in files)
             {
                 // create image file oject
-                ImageFile image = ImageFile.NewFromPath(file, subfolderName);
+                ImageFile image = ImageFile.NewToDatabase(file, subfolderName);
                 List.Add(image);
             }
 
@@ -89,6 +93,33 @@ namespace PicturePerfect.Models
             List<ImageFile> searchMatches = Database.Search(query);
 
             searchMatches.ForEach(file => List.Add(file));
+        }
+
+        /// <summary>
+        /// Method to add raw files to the images files list.
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns>Returns the number of pictures added to the list.</returns>
+        public int AddToRawConverter(List<string> files)
+        {
+            int counter = 0;
+
+            // go through files in list
+            foreach (string file in files)
+            {
+                // create image file oject
+                ImageFile image = ImageFile.NewFromPath(file);
+
+                // add to list if file is a raw file
+                if (ImageFile.OrfStrings.Contains(image.FileType) || ImageFile.NefStrings.Contains(image.FileType))
+                {
+                    // image is a raw file
+                    List.Add(image);
+                    counter++;
+                }               
+            }
+
+            return counter;
         }
     }
 }
