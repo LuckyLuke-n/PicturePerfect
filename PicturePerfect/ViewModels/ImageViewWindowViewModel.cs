@@ -251,10 +251,12 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public string ConvertTo { get; set; } = ".jpg";
 
+        /*
         /// <summary>
         /// Get a list of supported file types.
         /// </summary>
         public static List<string> ConvertToFileType => GetConvertToFileTypes();
+        */
 
         /// <summary>
         /// Get or set the path where the image file should be saved to.
@@ -600,6 +602,7 @@ namespace PicturePerfect.ViewModels
             return subCategory;
         }
 
+        /*
         /// <summary>
         /// Method to generate a list of file types to convert to.
         /// </summary>
@@ -613,6 +616,7 @@ namespace PicturePerfect.ViewModels
 
             return converToDistinct;
         }
+        */
 
         /// <summary>
         /// Method to export image to desktop.
@@ -638,8 +642,6 @@ namespace PicturePerfect.ViewModels
             backgroundWorkerExport.RunWorkerCompleted += backgroundWorkerExport_RunWorkerCompleted;
             // run the worker
             backgroundWorkerExport.RunWorkerAsync();
-
-
         }
 
         /// <summary>

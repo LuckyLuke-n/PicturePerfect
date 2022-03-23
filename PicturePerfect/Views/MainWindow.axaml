@@ -181,14 +181,14 @@
 			<TabItem Header="Raw converter">
 				<Grid ColumnDefinitions="*" RowDefinitions="*,auto,auto">
 					<!-- DataGrid -->
-					<DataGrid Items="{Binding ImageFilesRawConverter.List}" IsReadOnly="True" SelectionMode="Single" SelectedIndex="{Binding SelectedIndexRawConverter}"
+					<DataGrid Items="{Binding RawConverter.RawFiles}" IsReadOnly="True" SelectionMode="Single" SelectedIndex="{Binding SelectedIndexRawConverter}"
 							VerticalAlignment="Stretch" Margin="0, 10, 10, 10" HorizontalAlignment="Stretch" Grid.Row="0"
 							BorderBrush="{Binding DarkColor}" BorderThickness="1" Background="{Binding LightColor}"
 							CanUserResizeColumns="True" ScrollViewer.VerticalScrollBarVisibility="Visible">
 						<DataGrid.Columns>
-							<DataGridTextColumn Header="Name" Binding="{Binding CustomName}" Width="2*"/>
+							<DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*"/>
 							<DataGridTextColumn Header="Size in MB" Binding="{Binding Size}" Width="*"/>
-							<DataGridTextColumn Header="Type" Binding="{Binding FileType}" Width="*"/>
+							<DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*"/>
 							<DataGridTextColumn Header="Date created" Binding="{Binding DateTaken}" Width="1.5*"/>
 						</DataGrid.Columns>
 						<DataGrid.ContextMenu>

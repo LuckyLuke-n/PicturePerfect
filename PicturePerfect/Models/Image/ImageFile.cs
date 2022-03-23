@@ -149,7 +149,7 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to create an image file object from a path.
+        /// Method to create an image file object from a path and save the properties to the database.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="subfolderName"></param>
@@ -164,16 +164,6 @@ namespace PicturePerfect.Models
             CreateDatabaseEntry(imageFile, path);
 
             return imageFile;
-        }
-
-        /// <summary>
-        /// Method to create an image file from a specific path.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewFromPath(string path)
-        {
-            return CreateFromPath(path);
         }
 
         /// <summary>

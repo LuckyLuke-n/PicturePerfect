@@ -34,6 +34,6 @@ namespace PicturePerfect.ViewModels
         /// Get or set the images loaded for the raw converter.
         /// This makes it possible for the VMs to communicate with each other.
         /// </summary>
-        public static ImageFiles LoadedRawConverterFiles { get; set; } = new();
+        public static RawConverter LoadedRawConverter { get; set; } = new();
     }
 }

@@ -9,6 +9,7 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.ComponentModel;
+using static PicturePerfect.Models.RawConverter;
 
 namespace PicturePerfect.ViewModels
 {
@@ -148,7 +149,12 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Get the image files loaded into the raw converter from the view model base.
         /// </summary>
-        public ImageFiles ImageFilesRawConverter => LoadedRawConverterFiles;
+        public RawConverter RawConverter => LoadedRawConverter;
+
+        /// <summary>
+        /// Get or set the background worker for the raw converter.
+        /// </summary>
+        private BackgroundWorker BackgroundWorkerRawConverter { get; set; } = new();
         #endregion
 
         #region Settings
@@ -946,7 +952,7 @@ namespace PicturePerfect.ViewModels
                 }
 
                 // add files to converter list
-                int numberOfFilesAdded = LoadedRawConverterFiles.AddToRawConverter(files: filesToAdd);
+                int numberOfFilesAdded = LoadedRawConverter.AddToRawConverter(files: filesToAdd);
 
                 // hide load folder section
                 RunToggleRawFileDialogCommand();
@@ -963,7 +969,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunClearRawConverterListCommand()
         {
-            LoadedRawConverterFiles.List.Clear();
+            LoadedRawConverter.RawFiles.Clear();
         }
 
         /// <summary>
@@ -971,7 +977,7 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunClearRawConverterItemCommand()
         {
-            LoadedRawConverterFiles.List.RemoveAt(SelectedIndexRawConverter);
+            LoadedRawConverter.RawFiles.RemoveAt(SelectedIndexRawConverter);
         }
 
         /// <summary>
@@ -979,7 +985,69 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private async void RunStartRawConverterCommandAsync()
         {
+            // convert all files in the list
+            void BackgroundWorkerRawConverter_DoWork(object sender, DoWorkEventArgs e)
+            {
+                // create folder
+                Directory.CreateDirectory(PathToConvertOutputFolder);
 
+                // initiate counter and progress bar
+                int counter = 0;
+                LabelProgressBar = "0%";
+                PercentageProgressBar = 0;
+
+                // convert all files
+                foreach (RawFile rawImage in LoadedRawConverter.RawFiles)
+                {
+                    // check if cancellation was requested
+                    if (BackgroundWorkerRawConverter.CancellationPending == true)
+                    {
+                        // abort requested
+                        e.Cancel = true;
+                        break;
+                    }
+                    else
+                    {
+                        // no cancellation
+                        rawImage.Convert(toFolder: PathToConvertOutputFolder);
+                        counter++;
+
+                        // current job percentage
+                        // this must be a double value in order to prevent the percentage being 0 in case file count is >100
+                        double percentProgress = (double)counter / LoadedRawConverter.RawFiles.Count * 100;
+                        BackgroundWorkerRawConverter.ReportProgress((int)percentProgress);
+                    }
+                }
+            }
+
+            // all converted
+            void BackgroundWorkerRawConverter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+            {
+                // set progress bar properties
+                LabelProgressBar = "100%";
+                PercentageProgressBar = 100;
+            }
+
+            // update progressbar and value
+            void BackgroundWorkerRawConverter_ProgressChanged(object sender, ProgressChangedEventArgs e)
+            {
+                // set progress bar properties
+                LabelProgressBar = $"{e.ProgressPercentage}%";
+                PercentageProgressBar = e.ProgressPercentage;
+            }
+
+            // new backgroundworker
+            BackgroundWorkerRawConverter = new()
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            BackgroundWorkerRawConverter.DoWork += BackgroundWorkerRawConverter_DoWork;
+            BackgroundWorkerRawConverter.RunWorkerCompleted += BackgroundWorkerRawConverter_RunWorkerCompleted;
+            BackgroundWorkerRawConverter.ProgressChanged += BackgroundWorkerRawConverter_ProgressChanged;
+
+            // run the worker
+            BackgroundWorkerRawConverter.RunWorkerAsync();
         }
     }
 }
