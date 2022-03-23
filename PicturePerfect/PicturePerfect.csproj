@@ -24,6 +24,7 @@
     <None Remove="Assets\Drawables\load_images_dark.png" />
     <None Remove="Assets\Drawables\properties_dark.png" />
     <None Remove="Assets\Drawables\right.png" />
+    <None Remove="Assets\Drawables\stop.png" />
     <None Remove="Assets\Drawables\sweep_dark.png" />
     <None Remove="Assets\Drawables\unlink.png" />
     <None Remove="Assets\Drawables\unlink_dark.png" />

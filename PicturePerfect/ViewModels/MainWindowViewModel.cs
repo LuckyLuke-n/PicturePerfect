@@ -404,6 +404,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> ClearRawConverterListCommand { get; }
         public ReactiveCommand<Unit, Unit> ClearRawConverterItemCommand { get; }
         public ReactiveCommand<Unit, Unit> StartRawConverterCommand { get; }
+        public ReactiveCommand<Unit, Unit> CancelRawConverterCommand { get; }
         #endregion
 
 
@@ -438,6 +439,7 @@ namespace PicturePerfect.ViewModels
             ClearRawConverterListCommand = ReactiveCommand.Create(RunClearRawConverterListCommand);
             ClearRawConverterItemCommand = ReactiveCommand.Create(RunClearRawConverterItemCommand);
             StartRawConverterCommand = ReactiveCommand.Create(RunStartRawConverterCommandAsync);
+            CancelRawConverterCommand = ReactiveCommand.Create(RunCancelRawConverterCommand);
         }
 
         /// <summary>
@@ -983,7 +985,7 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Method to run the async process of converting all images in the raw converter list.
         /// </summary>
-        private async void RunStartRawConverterCommandAsync()
+        private void RunStartRawConverterCommandAsync()
         {
             // convert all files in the list
             void BackgroundWorkerRawConverter_DoWork(object sender, DoWorkEventArgs e)
@@ -1048,6 +1050,17 @@ namespace PicturePerfect.ViewModels
 
             // run the worker
             BackgroundWorkerRawConverter.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// Method to cancel the background worker if it is running.
+        /// </summary>
+        private void RunCancelRawConverterCommand()
+        {
+            if (BackgroundWorkerRawConverter.IsBusy == true)
+            {
+                BackgroundWorkerRawConverter.CancelAsync();
+            }
         }
     }
 }

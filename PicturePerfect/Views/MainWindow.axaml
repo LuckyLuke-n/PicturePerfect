@@ -227,6 +227,9 @@
 						<Button ToolTip.Tip="Convert the list above." Command="{Binding StartRawConverterCommand}">
 							<Image Source="/Assets/Drawables/convert.png" Height="40"/>
 						</Button>
+						<Button ToolTip.Tip="Cancel the current conversion process." Command="{Binding CancelRawConverterCommand}">
+							<Image Source="/Assets/Drawables/stop.png" Height="40"/>
+						</Button>
 					</StackPanel>
 				</Grid>
 			</TabItem>			
@@ -259,7 +262,7 @@
 						<CheckBox Content="Open image view in full screen mode" IsChecked="{Binding ImageViewFullScreenChecked}"/>
 					</StackPanel>
 
-					<!-- Performance settings -->
+					<!-- Performance settings
 					<StackPanel Margin="10" Grid.Column="1" IsEnabled="{Binding ProjectIsLoaded}">
 						<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
 						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding BufferSizeDescription}" />
@@ -268,7 +271,7 @@
 							<Label Content="{Binding BufferSize}"/>
 						</StackPanel>
 						<Slider Minimum="1" Maximum="10" Value="{Binding BufferSize}" />				
-					</StackPanel>
+					</StackPanel> -->
 				</Grid>			
 			</TabItem>
 		</TabControl>

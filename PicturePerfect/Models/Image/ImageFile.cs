@@ -272,8 +272,6 @@ namespace PicturePerfect.Models
             return this;
         }
 
-
-
         /// <summary>
         /// Method to get this image to a bitmap.
         /// </summary>
