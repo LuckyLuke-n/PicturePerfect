@@ -158,9 +158,6 @@
 						<Button ToolTip.Tip="Edit categories." Command="{Binding EditCategoriesCommand}">
 							<Image Source="/Assets/Drawables/edit_category.png" Height="40"/>
 						</Button>
-						<Button ToolTip.Tip="Delete the selected category.">
-							<Image Source="/Assets/Drawables/delete.png" Height="40"/>
-						</Button>
 					</StackPanel>
 					<!-- Buttons for DataGrid -->
 					<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 5, 10">

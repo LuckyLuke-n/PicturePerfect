@@ -602,22 +602,6 @@ namespace PicturePerfect.ViewModels
             return subCategory;
         }
 
-        /*
-        /// <summary>
-        /// Method to generate a list of file types to convert to.
-        /// </summary>
-        /// <returns>Returns a list of strings.</returns>
-        private static List<string> GetConvertToFileTypes()
-        {
-            // add supported input types to list
-            List<string> convertTo = new() { ".jpg", ".JPG" };
-            convertTo.AddRange(ThisApplication.ProjectFile.GetInputFileTypes());
-            List<string> converToDistinct = convertTo.Distinct().ToList();
-
-            return converToDistinct;
-        }
-        */
-
         /// <summary>
         /// Method to export image to desktop.
         /// </summary>

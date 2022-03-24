@@ -36,15 +36,6 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to set the private property.
-        /// </summary>
-        /// <param name="id"></param>
-        public void SetId(int id)
-        {
-            Id = id;
-        }
-
-        /// <summary>
         /// Method to link this category instance to a subcategory.
         /// </summary>
         /// <param name="subCategory"></param>
