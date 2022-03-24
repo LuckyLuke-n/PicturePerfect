@@ -160,18 +160,8 @@ namespace PicturePerfect.ViewModels
         #region Settings
         public static string NamingConventionDescription => File.ReadAllText("Resources/Descriptions/naming_convention.txt");
         public static string FileTypeDescription => File.ReadAllText("Resources/Descriptions/file_types.txt");
-        public static string BufferSizeDescription => File.ReadAllText("Resources/Descriptions/buffer_size.txt");
         public static string ViewDescription => File.ReadAllText("Resources/Descriptions/view_settings.txt");
 
-        private int bufferSize = ThisApplication.ProjectFile.BufferSize;
-        /// <summary>
-        /// Get or set the buffer size. This value will be saved to the project file.
-        /// </summary>
-        public int BufferSize
-        {
-            get { return bufferSize; }
-            set { this.RaiseAndSetIfChanged(ref bufferSize, value); ThisApplication.ProjectFile.BufferSize = value; }
-        }
         /// <summary>
         /// Get a list of possible separators. This value will be saved to the project file.
         /// </summary>
@@ -463,7 +453,6 @@ namespace PicturePerfect.ViewModels
             JpgFilesChecked = ThisApplication.ProjectFile.JpgFilesChecked;
             PngFilesChecked = ThisApplication.ProjectFile.PngFilesChecked;
             ImageViewFullScreenChecked = ThisApplication.ProjectFile.ImageViewFullScreenChecked;
-            BufferSize = ThisApplication.ProjectFile.BufferSize;
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
         }

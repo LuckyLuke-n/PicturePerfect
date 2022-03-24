@@ -136,7 +136,7 @@
 								<Separator/>
 								<MenuItem Header="Add images" Command="{Binding ToggleLoadImagesCommand}">
 									<MenuItem.Icon>
-										<Image Source="/Assets/Drawables/load_images_dark.png"/>
+										<Image Source="/Assets/Drawables/folder_dark.png"/>
 									</MenuItem.Icon>
 								</MenuItem>
 							</ContextMenu>
@@ -165,7 +165,7 @@
 					<!-- Buttons for DataGrid -->
 					<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 5, 10">
 						<Button ToolTip.Tip="Add images to your database." Command="{Binding ToggleLoadImagesCommand}">
-							<Image Source="/Assets/Drawables/load_images.png" Height="40"/>
+							<Image Source="/Assets/Drawables/folder.png" Height="40"/>
 						</Button>
 						<Button ToolTip.Tip="Open the selected image an review the properties." Command="{Binding ShowImageCommand}">
 							<Image Source="/Assets/Drawables/properties.png" Height="40"/>
@@ -222,7 +222,7 @@
 					<!-- Buttons for DataGrid -->
 					<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 10, 10">
 						<Button ToolTip.Tip="Add images to the raw converter." Command="{Binding ToggleRawFileDialogCommand}">
-							<Image Source="/Assets/Drawables/load_images.png" Height="40"/>
+							<Image Source="/Assets/Drawables/folder.png" Height="40"/>
 						</Button>
 						<Button ToolTip.Tip="Convert the list above." Command="{Binding StartRawConverterCommand}">
 							<Image Source="/Assets/Drawables/convert.png" Height="40"/>
@@ -261,17 +261,6 @@
 						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding ViewDescription}" />
 						<CheckBox Content="Open image view in full screen mode" IsChecked="{Binding ImageViewFullScreenChecked}"/>
 					</StackPanel>
-
-					<!-- Performance settings
-					<StackPanel Margin="10" Grid.Column="1" IsEnabled="{Binding ProjectIsLoaded}">
-						<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding BufferSizeDescription}" />
-						<StackPanel Orientation="Horizontal">
-							<Label Content="Current buffer size is:"/>
-							<Label Content="{Binding BufferSize}"/>
-						</StackPanel>
-						<Slider Minimum="1" Maximum="10" Value="{Binding BufferSize}" />				
-					</StackPanel> -->
 				</Grid>			
 			</TabItem>
 		</TabControl>

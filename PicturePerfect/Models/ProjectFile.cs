@@ -135,16 +135,6 @@ namespace PicturePerfect.Models
         #endregion
 
         #region Settings
-        private int bufferSize = 5;
-        /// <summary>
-        /// Get or set the buffer size for converting images while viewing.
-        /// </summary>
-        public int BufferSize
-        {
-            get { return bufferSize; }
-            set { bufferSize = value; Save(); }
-        }
-
         private bool useSeparator = false;
         /// <summary>
         /// Get or set the use separator property.
@@ -339,7 +329,6 @@ namespace PicturePerfect.Models
                 JpgFilesChecked = CheckJpgFilesCheckedException(),
                 PngFilesChecked = CheckPngFilesCheckedException(),
                 ImageViewFullScreenChecked = CheckImageViewFullScreenChecked(),
-                BufferSize = Convert.ToInt32(projectFile["BufferSize"]),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
                 Separator = projectFile["Separator"],
 

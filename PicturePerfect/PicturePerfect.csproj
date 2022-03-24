@@ -14,9 +14,11 @@
     <None Remove="Assets\Drawables\convert.png" />
     <None Remove="Assets\Drawables\delete_dark.png" />
     <None Remove="Assets\Drawables\delete_image.png" />
+    <None Remove="Assets\Drawables\edit_category.png" />
     <None Remove="Assets\Drawables\export.png" />
     <None Remove="Assets\Drawables\favorite_dark.png" />
     <None Remove="Assets\Drawables\folder.png" />
+    <None Remove="Assets\Drawables\folder_dark.png" />
     <None Remove="Assets\Drawables\globe.png" />
     <None Remove="Assets\Drawables\image_placeholder.jpg" />
     <None Remove="Assets\Drawables\left.png" />
@@ -26,8 +28,6 @@
     <None Remove="Assets\Drawables\right.png" />
     <None Remove="Assets\Drawables\stop.png" />
     <None Remove="Assets\Drawables\sweep_dark.png" />
-    <None Remove="Assets\Drawables\unlink.png" />
-    <None Remove="Assets\Drawables\unlink_dark.png" />
     <None Remove="Assets\edit_category.png" />
     <None Remove="Assets\icon.ico" />
     <None Remove="Assets\info.png" />
@@ -55,9 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="Resources\about.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Descriptions\buffer_size.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Descriptions\file_types.txt">

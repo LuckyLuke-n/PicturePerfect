@@ -1,2 +1,0 @@
-﻿Select the buffer size while viewing images. The application will convert the next images in the background and store them in the local memory.
-Depending on the perfomance of you machine you might want to change the buffer size.
