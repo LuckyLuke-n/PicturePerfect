@@ -1,3 +1,9 @@
-﻿PicutrePerfect description to be added.
+﻿PicturePerfect © Ludwig Sembach
 
-Release notes to be added.
+PicturePerfect gives you great opportunities to categorize your images and quickly find the right one at every point in time. 
+The true power is unleashed when you add the raw images to the database. You can always export the selected picture as a easily sharable jpg image.
+Apart from the image catalog PicturePerfect includes the RawConvert. It enables you to convert a selected batch of raw images to jpg files.
+
+
+Release notes version 0.1.x
+- General: First version for beta testing. (V0.1.0)

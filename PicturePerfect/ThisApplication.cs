@@ -25,7 +25,7 @@ namespace PicturePerfect
         /// <summary>
         /// Get the application build date.
         /// </summary>
-        public static string BuildDate { get; } = "2022-01-15";
+        public static string BuildDate { get; } = "2022-03-24";
 
         /// <summary>
         /// Get or set the currently loaded project file.
