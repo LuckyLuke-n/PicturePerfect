@@ -141,7 +141,7 @@
 
 			<!-- Notes -->
 			<Label Content="Notes" Grid.Column="0" Grid.Row="11" Margin="0,0,0,10"/>
-			<TextBox Text="{Binding ImageFile.Notes}" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" Margin="10,0,0,10" AcceptsReturn="True" TextWrapping="Wrap" Background="{Binding LightColor}"/>
+			<TextBox Text="{Binding NotesSelected}" Grid.Column="1" Grid.Row="11" Grid.ColumnSpan="2" Margin="10,0,0,10" AcceptsReturn="True" TextWrapping="Wrap" Background="{Binding LightColor}"/>
 
 			<!-- More info -->
 			<Label Grid.Column="0" Grid.Row="12" Margin="0,0,0,10" Content="More" IsVisible="{Binding MoreInfoVisible}"/>

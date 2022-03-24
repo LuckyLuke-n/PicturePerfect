@@ -137,7 +137,17 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref fileNameSelected, value); }
         }
 
-        private string moreInfo = "";
+        private string notesSelected = string.Empty;
+        /// <summary>
+        /// Get or set the notes for the slected file.
+        /// </summary>
+        public string NotesSelected
+        {
+            get { return notesSelected; }
+            set { this.RaiseAndSetIfChanged(ref notesSelected, value); }
+        }
+
+        private string moreInfo = string.Empty;
         /// <summary>
         /// Get or set the more information section in the image view window. 
         /// </summary>
@@ -345,6 +355,7 @@ namespace PicturePerfect.ViewModels
         {
             ImageIdSelected = ImageFile.Id;
             FileNameSelected = ImageFile.CustomName;
+            NotesSelected = ImageFile.Notes;
             DateTaken = ImageFile.DateTaken;
             LocationIndexSelected = GetLocationIndex();
             CategoryIndexSelected = GetCategoryIndex();
@@ -633,14 +644,18 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunNextImageCommand()
         {
-            // set the properties in the view model base
-            SelectedImageIndex++;         
-            SelectedImageFile = LoadedImageFiles.List[SelectedImageIndex];
+            // check index and only execute if index is in range of list
+            if (SelectedImageIndex < LoadedImageFiles.List.Count-1) // count -1 since list indices start with zero
+            {
+                // set the properties in the view model base
+                SelectedImageIndex++;
+                SelectedImageFile = LoadedImageFiles.List[SelectedImageIndex];
 
-            // set the properties in this view model
-            ImageFile = LoadedImageFiles.List[SelectedImageIndex];
-            SetAllProperties();
-            DisplayImageFile();
+                // set the properties in this view model
+                ImageFile = LoadedImageFiles.List[SelectedImageIndex];
+                SetAllProperties();
+                DisplayImageFile();
+            }
         }
 
         /// <summary>
@@ -648,14 +663,18 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         private void RunLastImageCommand()
         {
-            // set the properties in the view model base
-            SelectedImageIndex--;
-            SelectedImageFile = LoadedImageFiles.List[SelectedImageIndex];
+            // check if index is out of list range and only execute if index is in range of list
+            if (SelectedImageIndex > 0)
+            {
+                // set the properties in the view model base
+                SelectedImageIndex--;
+                SelectedImageFile = LoadedImageFiles.List[SelectedImageIndex];
 
-            // set the properties in this view model
-            ImageFile = LoadedImageFiles.List[SelectedImageIndex];
-            SetAllProperties();
-            DisplayImageFile();
+                // set the properties in this view model
+                ImageFile = LoadedImageFiles.List[SelectedImageIndex];
+                SetAllProperties();
+                DisplayImageFile();
+            }
         }
 
         /// <summary>
@@ -691,6 +710,13 @@ namespace PicturePerfect.ViewModels
             if (FileNameSelected != ImageFile.CustomName)
             {
                 changedImageFile = ImageFile.CommitCustomFileNameChange(FileNameSelected);
+                changesMade = true;
+            }
+
+            // check if the notes where changed
+            if (NotesSelected != ImageFile.Notes)
+            {
+                changedImageFile = ImageFile.CommitNotesChange(NotesSelected);
                 changesMade = true;
             }
 

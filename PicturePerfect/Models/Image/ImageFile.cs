@@ -222,6 +222,19 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Save the changed made to the notex property to the database.
+        /// </summary>
+        /// <param name="newNotes"></param>
+        /// <returns>The updated image file object.</returns>
+        public ImageFile CommitNotesChange(string newNotes)
+        {
+            Notes = newNotes;
+            Database.SetNotes(imageFile: this);
+
+            return this;
+        }
+
+        /// <summary>
         /// Save changes made to the image location.
         /// </summary>
         /// <param name="location"></param>
