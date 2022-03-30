@@ -689,12 +689,11 @@ namespace PicturePerfect.ViewModels
             {
                 // delete from database and drive
                 ImageFile.DeleteFromDatabase();
+                // remove from list
+                LoadedImageFiles.RemoveBySqliteId(ImageFile.Id);
 
                 // jump to next image by upping the SelectedIndex by one
                 RunNextImageCommand();
-
-                // remove from list
-                LoadedImageFiles.List.RemoveAt(SelectedIndex - 1);
             }
         }
 
@@ -754,7 +753,7 @@ namespace PicturePerfect.ViewModels
             if (changesMade == true && changedImageFile != null)
             {
                 // adjust field in observable collection stored in view model base to update the data grid
-                LoadedImageFiles.List[SelectedImageIndex] = changedImageFile; 
+                LoadedImageFiles.ReplaceBySqliteId(changedImageFile.Id, changedImageFile);
             }
         }
     }

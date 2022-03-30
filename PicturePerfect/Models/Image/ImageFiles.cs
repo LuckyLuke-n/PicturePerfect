@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 
 namespace PicturePerfect.Models
 {
@@ -18,6 +17,24 @@ namespace PicturePerfect.Models
         public ImageFiles()
         {
 
+        }
+
+        /// <summary>
+        /// Method to get the list index by the sqlite id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Returns and integer representing the list id.</returns>
+        private int GetListIdBySqliteId(int id)
+        {
+            int listId = 0;
+            int counter = 0;
+            foreach (ImageFile imageFile in List)
+            {
+                if (imageFile.Id == id) { listId = counter; break; }
+                counter++;
+            }
+
+            return listId;
         }
 
         /// <summary>
@@ -90,6 +107,25 @@ namespace PicturePerfect.Models
             List<ImageFile> searchMatches = Database.Search(query);
 
             searchMatches.ForEach(file => List.Add(file));
+        }
+
+        /// <summary>
+        /// Method to remove the list item with the given sqlite id.
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveBySqliteId(int id)
+        {
+            List.RemoveAt(GetListIdBySqliteId(id));
+        }
+
+        /// <summary>
+        /// Method to replace an image file object by its sqlite id with another image in the list of loaded items.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="imageFileReplacement"></param>
+        public void ReplaceBySqliteId(int id, ImageFile imageFileReplacement)
+        {
+            List[GetListIdBySqliteId(id)] = imageFileReplacement;
         }
     }
 }

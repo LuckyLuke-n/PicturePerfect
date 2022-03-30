@@ -491,25 +491,29 @@ namespace PicturePerfect.ViewModels
                     }
                     else
                     {
-                        // set image
+                        // set image if file exists
+                        // if file does not exists (maybe deleted) set the place holder image
                         switch (i)
                         {
                             case 0:
-                                ImageNo1 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo1 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                else { ImageNo1 = ThisApplication.PlaceholderImage; }
                                 break;
                             case 1:
-                                ImageNo2 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo2 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                else { ImageNo2 = ThisApplication.PlaceholderImage; }
                                 break;
                             case 2:
-                                ImageNo3 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo3 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                else { ImageNo3 = ThisApplication.PlaceholderImage; }
                                 break;
                             case 3:
-                                ImageNo4 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath);
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo4 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                else { ImageNo4 = ThisApplication.PlaceholderImage; }
                                 break;
                             default:
                                 break;
-                        }
-                        
+                        }                      
                     }
                     i++;
                     double percentage = (double)i / 4 * 100;
@@ -860,7 +864,7 @@ namespace PicturePerfect.ViewModels
                     ImageFile.DeleteFromDatabase();
 
                     // remove from list
-                    LoadedImageFiles.List.RemoveAt(SelectedIndex);
+                    LoadedImageFiles.RemoveBySqliteId(ImageFile.Id);
                 }
             }
             else
