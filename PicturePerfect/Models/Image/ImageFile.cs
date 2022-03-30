@@ -378,11 +378,12 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
-        /// Method to delete this images from the database.
+        /// Method to delete this images from the database and the folder on the drive.
         /// </summary>
         public void DeleteFromDatabase()
         {
             Database.DeleteImage(this);
+            File.Delete(AbsolutePath);
         }
     }
 }

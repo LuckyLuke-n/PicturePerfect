@@ -19,14 +19,6 @@
 
 		<!-- Button Row -->
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right">
-			<Menu Margin="5" Background="{Binding MediumColor}" CornerRadius="4" Height="{Binding ElementName=buttonClose, Path=Height}" >
-				<MenuItem Header="Set as favorite">
-					<MenuItem Header="Favorite 1"/>
-					<MenuItem Header="Favorite 2"/>
-					<MenuItem Header="Favorite 3"/>
-					<MenuItem Header="Favorite 4"/>
-				</MenuItem>
-			</Menu>
 			<Button Content="More" Margin="5" Command="{Binding ToggleVisibilityMoreInfoCommand}"/>
 			<Button Content="Save" Margin="5" Command="{Binding SaveChangesCommand}"/>
 			<Button Name="buttonClose" Content="Close" Margin="5,5,10,5" Click="ButtonClose_Click" />

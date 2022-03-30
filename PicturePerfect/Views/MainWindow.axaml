@@ -133,7 +133,7 @@
 										<Image Source="/Assets/Drawables/delete_dark.png"/>
 									</MenuItem.Icon>
 								</MenuItem>
-								<Separator/>
+								<!--<Separator/>-->
 								<MenuItem Header="Add images" Command="{Binding ToggleLoadImagesCommand}">
 									<MenuItem.Icon>
 										<Image Source="/Assets/Drawables/folder_dark.png"/>

@@ -687,7 +687,7 @@ namespace PicturePerfect.ViewModels
 
             if (result == MessageBox.MessageBoxResult.Yes)
             {
-                // delete from database
+                // delete from database and drive
                 ImageFile.DeleteFromDatabase();
 
                 // jump to next image by upping the SelectedIndex by one
