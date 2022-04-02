@@ -6,6 +6,7 @@ Apart from the image catalog PicturePerfect includes the RawConvert. It enables 
 
 
 Release notes version 0.1.x
+- Bugfix: Fixed an issue leading to skipping the next image in line after deleting the current list (V0.1.2)
 - Bugfix: Fixed an issue preventing the image being removed from the hard drive when deleting via PicturePerfect. (V0.1.1)
 - Bugfix: Fixed an issue leading to deleting the wrong image item from the loaded list. (V0.1.1)
 - Bugfix: Fixed an isse leading to a fatal and reoccuring crash when a favorite image is deleted. (V0.1.1)

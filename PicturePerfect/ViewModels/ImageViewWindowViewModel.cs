@@ -692,8 +692,11 @@ namespace PicturePerfect.ViewModels
                 // remove from list
                 LoadedImageFiles.RemoveBySqliteId(ImageFile.Id);
 
-                // jump to next image by upping the SelectedIndex by one
-                RunNextImageCommand();
+                // jump to next image in the list
+                // in this case the next image has the same list index. if the index is upped by one, one image will be skipped
+                ImageFile = LoadedImageFiles.List[SelectedImageIndex];
+                SetAllProperties();
+                DisplayImageFile();
             }
         }
 
