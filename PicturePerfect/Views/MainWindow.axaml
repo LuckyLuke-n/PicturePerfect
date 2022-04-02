@@ -206,11 +206,13 @@
 					<!-- Load images selector -->
 					<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,0,0,10" IsVisible="{Binding HideRawFilesDialog}">
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+							<Label Content="Input" Margin="0,0,5,0" Width="{Binding #labelRawConverterOutputFolder.Bounds.Width}" VerticalContentAlignment="Center" />
 							<TextBox Name="textBoxRawConverterIn" Text="{Binding PathToConvertInputFolder}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
 							<Button Content="Select" Click="ButtonRawConverterInput_Click"/>
 							<Button Content="Load" Command="{Binding LoadIntoRawConverterCommand}" Width="80" HorizontalContentAlignment="Center"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal">
+							<Label Name="labelRawConverterOutputFolder" Content="Output" Margin="0,0,5,0" VerticalContentAlignment="Center" />
 							<TextBox Name="textBoxRawConverterOut" Text="{Binding PathToConvertOutputFolder}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
 							<Button Content="Select" Click="ButtonRawConverterOutput_Click"/>
 						</StackPanel>

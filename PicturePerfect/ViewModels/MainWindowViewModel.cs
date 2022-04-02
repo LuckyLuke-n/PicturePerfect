@@ -1031,18 +1031,28 @@ namespace PicturePerfect.ViewModels
                 PercentageProgressBar = e.ProgressPercentage;
             }
 
-            // new backgroundworker
-            BackgroundWorkerRawConverter = new()
+            // check if files where seleted
+            if (LoadedRawConverter.RawFiles.Count > 0)
             {
-                WorkerReportsProgress = true,
-                WorkerSupportsCancellation = true
-            };
-            BackgroundWorkerRawConverter.DoWork += BackgroundWorkerRawConverter_DoWork;
-            BackgroundWorkerRawConverter.RunWorkerCompleted += BackgroundWorkerRawConverter_RunWorkerCompleted;
-            BackgroundWorkerRawConverter.ProgressChanged += BackgroundWorkerRawConverter_ProgressChanged;
+                // pictures in list
+                // new backgroundworker
+                BackgroundWorkerRawConverter = new()
+                {
+                    WorkerReportsProgress = true,
+                    WorkerSupportsCancellation = true
+                };
+                BackgroundWorkerRawConverter.DoWork += BackgroundWorkerRawConverter_DoWork;
+                BackgroundWorkerRawConverter.RunWorkerCompleted += BackgroundWorkerRawConverter_RunWorkerCompleted;
+                BackgroundWorkerRawConverter.ProgressChanged += BackgroundWorkerRawConverter_ProgressChanged;
 
-            // run the worker
-            BackgroundWorkerRawConverter.RunWorkerAsync();
+                // run the worker
+                BackgroundWorkerRawConverter.RunWorkerAsync();
+            }
+            else
+            {
+                // no pictures have been added to the raw converter
+                _ = MessageBox.Show("No items in converter list.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
         }
 
         /// <summary>
