@@ -5,10 +5,6 @@ The true power is unleashed when you add the raw images to the database. You can
 Apart from the image catalog PicturePerfect includes the RawConvert. It enables you to convert a selected batch of raw images to jpg files.
 
 
-Release notes version 0.1.x
-- User experience: Added labels for input and output folder selection in RawConverter. (V0.1.2)
-- Performance: Added a feature to prevent the RawConverter from running when the image list is empty. (V0.1.2)
-- Bugfix: Fixed an issue leading to skipping the next image in line after deleting the current list. (V0.1.2)
-- Bugfix: Fixed an issue preventing the image being removed from the hard drive when deleting via PicturePerfect. (V0.1.1)
-- Bugfix: Fixed an issue leading to deleting the wrong image item from the loaded list. (V0.1.1)
-- Bugfix: Fixed an isse leading to a fatal and reoccuring crash when a favorite image is deleted. (V0.1.1)
+Release notes version 0.2.x
+- Feature: Added a feature to open an image in a selected external image viewer. (V0.2.0)
+- Bugfix: Fixed an issue allowing the user to add subcategories to the categories 'All' and 'None'. (V0.2.0)
