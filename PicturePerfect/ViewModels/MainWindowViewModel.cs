@@ -234,6 +234,17 @@ namespace PicturePerfect.ViewModels
             get { return imageViewFullScreenChecked; }
             set { this.RaiseAndSetIfChanged(ref imageViewFullScreenChecked, value); ThisApplication.ProjectFile.ImageViewFullScreenChecked = value; }
         }
+
+        private string pathToExternalViewer = "";
+        /// <summary>
+        /// Get or set the path to the external image viewer.
+        /// </summary>
+        public string PathToExternalViewer
+        {
+            get { return pathToExternalViewer; }
+            set { this.RaiseAndSetIfChanged(ref pathToExternalViewer, value); ThisApplication.ProjectFile.PathToExternalViewer = value; }
+        }
+
         #endregion
 
         #region Status Bar and search box
@@ -430,6 +441,9 @@ namespace PicturePerfect.ViewModels
             ClearRawConverterItemCommand = ReactiveCommand.Create(RunClearRawConverterItemCommand);
             StartRawConverterCommand = ReactiveCommand.Create(RunStartRawConverterCommandAsync);
             CancelRawConverterCommand = ReactiveCommand.Create(RunCancelRawConverterCommand);
+
+            // clear the temp folder
+            ThisApplication.ClearTemp();
         }
 
         /// <summary>
@@ -441,7 +455,6 @@ namespace PicturePerfect.ViewModels
             Notes = ThisApplication.ProjectFile.Notes;
 
             // images page
-            //ImageFilesDatabase.LoadAll();
             LoadedImageFiles.LoadAll();
             LoadedCategoriesTree.LoadTree();
             LoadedLocations.LoadList();
@@ -455,6 +468,7 @@ namespace PicturePerfect.ViewModels
             ImageViewFullScreenChecked = ThisApplication.ProjectFile.ImageViewFullScreenChecked;
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
+            PathToExternalViewer = ThisApplication.ProjectFile.PathToExternalViewer;
         }
 
         /// <summary>

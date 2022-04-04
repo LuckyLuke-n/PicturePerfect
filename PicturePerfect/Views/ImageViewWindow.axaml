@@ -40,6 +40,9 @@
 				<Button ToolTip.Tip="Delete the current image." Command="{Binding DeleteImageCommand}">
 					<Image Source="/Assets/Drawables/delete_image.png" Height="40"/>
 				</Button>
+				<Button ToolTip.Tip="Open in external image viewer." Command="{Binding OpenExternallyCommand}">
+					<Image Source="/Assets/Drawables/open_in.png" Height="40"/>
+				</Button>
 				<Button Command="{Binding NextImageCommand}">
 					<Image Source="/Assets/Drawables/right.png" Height="40"/>
 				</Button>

@@ -5,7 +5,6 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reactive;
 
 namespace PicturePerfect.ViewModels
@@ -102,6 +101,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> NextImageCommand { get; }
         public ReactiveCommand<Unit, Unit> LastImageCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> OpenExternallyCommand { get; }
 
         public ReactiveCommand<Unit, Unit> SaveChangesCommand { get; }
         #endregion
@@ -330,13 +330,14 @@ namespace PicturePerfect.ViewModels
 
             SaveLocationCommand = ReactiveCommand.Create(RunSaveLocationCommand);
             SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
-            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1CommandAsync);
-            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2CommandAsync);
+            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1Command);
+            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
 
             ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
             NextImageCommand = ReactiveCommand.Create(RunNextImageCommand);
             LastImageCommand = ReactiveCommand.Create(RunLastImageCommand);
             DeleteImageCommand = ReactiveCommand.Create(RunDeleteImageCommandAsync);
+            OpenExternallyCommand = ReactiveCommand.Create(RunOpenExternallyCommand);
 
             SaveChangesCommand = ReactiveCommand.Create(RunSaveChangesCommand);
         }
@@ -541,7 +542,7 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Command to save the new sub category 1.
         /// </summary>
-        private async void RunSaveSubCategory1CommandAsync()
+        private void RunSaveSubCategory1Command()
         {
             // check if cateogires "All" or "None" were seleted
             if (CategoriesTree.Tree[CategoryIndexSelected].Id == 1 || CategoriesTree.Tree[CategoryIndexSelected].Id == 2)
@@ -564,7 +565,7 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Command to save the new sub category 2.
         /// </summary>
-        private void RunSaveSubCategory2CommandAsync()
+        private void RunSaveSubCategory2Command()
         {
             // check if cateogires "All" or "None" were seleted
             if (CategoriesTree.Tree[CategoryIndexSelected].Id == 1 || CategoriesTree.Tree[CategoryIndexSelected].Id == 2)
@@ -708,6 +709,22 @@ namespace PicturePerfect.ViewModels
                 ImageFile = LoadedImageFiles.List[SelectedImageIndex];
                 SetAllProperties();
                 DisplayImageFile();
+            }
+        }
+
+        /// <summary>
+        /// Method to open the image file in an external image viwer.
+        /// </summary>
+        private void RunOpenExternallyCommand()
+        {
+            try
+            {
+                ImageFile.OpenInExternalViewer(pathToExe: ThisApplication.ProjectFile.PathToExternalViewer);
+
+            }
+            catch
+            {
+                _ = MessageBox.Show("Could not open the image in an external viewer. Check the path to the executable and try again.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
             }
         }
 

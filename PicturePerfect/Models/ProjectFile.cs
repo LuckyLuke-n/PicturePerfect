@@ -204,6 +204,16 @@ namespace PicturePerfect.Models
             get { return imageViewFullScreenChecked; }
             set { imageViewFullScreenChecked = value; Save(); }
         }
+
+        private string pathToExternalViewer = "";
+        /// <summary>
+        /// Get or set the path to the external image viewer.
+        /// </summary>
+        public string PathToExternalViewer
+        {
+            get { return pathToExternalViewer; }
+            set { pathToExternalViewer = value; Save(); }
+        }
         #endregion
 
         /// <summary>
@@ -237,7 +247,8 @@ namespace PicturePerfect.Models
                 DatabasePath = Path.Combine(path, "sqlite", "database.sqlite"),
                 OrfFilesChecked = true,
                 NefFilesChecked = true,
-                ImageViewFullScreenChecked = false
+                ImageViewFullScreenChecked = false,
+                PathToExternalViewer = "Select a file"
             };
 
             // create basic folders
@@ -310,6 +321,14 @@ namespace PicturePerfect.Models
 
                 return value;
             }
+            string CheckPathToExternalViewer()
+            {
+                string value;
+                try { value = projectFile["PathToExternalViewer"]; }
+                catch { value = "Select a file"; }
+
+                return value;
+            }
 
             // update project file
             ProjectFile newFile = new()
@@ -329,6 +348,7 @@ namespace PicturePerfect.Models
                 JpgFilesChecked = CheckJpgFilesCheckedException(),
                 PngFilesChecked = CheckPngFilesCheckedException(),
                 ImageViewFullScreenChecked = CheckImageViewFullScreenChecked(),
+                PathToExternalViewer = CheckPathToExternalViewer(),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
                 Separator = projectFile["Separator"],
 

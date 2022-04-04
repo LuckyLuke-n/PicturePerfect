@@ -18,6 +18,7 @@ namespace PicturePerfect.Views
         private TextBox textBoxLoadImages;
         private TextBox textBoxRawConverterIn;
         private TextBox textBoxRawConverterOut;
+        private TextBox textBoxExternalViewer;
 
         public MainWindow()
         {
@@ -37,6 +38,7 @@ namespace PicturePerfect.Views
             textBoxLoadImages = this.FindControl<TextBox>("textBoxLoadImages");
             textBoxRawConverterIn = this.FindControl<TextBox>("textBoxRawConverterIn");
             textBoxRawConverterOut = this.FindControl<TextBox>("textBoxRawConverterOut");
+            textBoxExternalViewer = this.FindControl<TextBox>("textBoxExternalViewer");
         }
 
         /// <summary>
@@ -48,7 +50,8 @@ namespace PicturePerfect.Views
             SelectProject,
             LoadImages,
             RawConverterInput,
-            RawConverterOutput
+            RawConverterOutput,
+            PathToExternalViewer
         }
 
         /// <summary>
@@ -99,6 +102,16 @@ namespace PicturePerfect.Views
         public void ButtonRawConverterOutput_Click(object sender, RoutedEventArgs e)
         {
             _ = GetPathAsync(DialogType.RawConverterOutput);
+        }
+
+        /// <summary>
+        /// Event for selecting the path to the executeable for the external image viewer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ButtonExternalViewer_Click(object sender, RoutedEventArgs e)
+        {
+            _ = GetPathAsync(DialogType.PathToExternalViewer);
         }
 
         /// <summary>
@@ -188,6 +201,21 @@ namespace PicturePerfect.Views
                     //viewModel.PathToProjectFolder = resultFolder.ToString();
                     textBoxRawConverterOut.Text = resultFolder.ToString();
                     return resultFolder.ToString();
+                }
+                else { return null; }
+            }        
+            else if (dialogType == DialogType.PathToExternalViewer)
+            {
+                // file dialog to get the path to an exisiting project file
+                OpenFileDialog dialogFile = new();
+                dialogFile.AllowMultiple = false;
+                var result = await dialogFile.ShowAsync((Window)VisualRoot);
+
+                // check for null reference
+                if (result != null)
+                {
+                    textBoxExternalViewer.Text = result[0].ToString();
+                    return result;
                 }
                 else { return null; }
             }

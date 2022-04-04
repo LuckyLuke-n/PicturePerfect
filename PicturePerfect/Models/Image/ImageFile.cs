@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using ImageMagick;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -384,6 +385,24 @@ namespace PicturePerfect.Models
         {
             Database.DeleteImage(this);
             File.Delete(AbsolutePath);
+        }
+
+        /// <summary>
+        /// Method to open the image in an external image viewer.
+        /// </summary>
+        /// <param name="pathToExe"></param>
+        public void OpenInExternalViewer(string pathToExe)
+        {
+            // copy the image to a temp folder
+            string path = Path.Combine(ThisApplication.TempFolderPath, Name);
+            Directory.CreateDirectory(ThisApplication.TempFolderPath); // create folder if it does no exist
+            File.Copy(sourceFileName: AbsolutePath, destFileName: path, overwrite: true);
+
+            // open the file in the selected image viewer
+            Process process = new();
+            process.StartInfo.FileName = pathToExe;
+            process.StartInfo.Arguments = path;
+            process.Start();
         }
     }
 }

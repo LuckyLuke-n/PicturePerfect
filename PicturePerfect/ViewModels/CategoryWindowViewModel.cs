@@ -21,17 +21,6 @@ namespace PicturePerfect.ViewModels
         public static int LargeFontSize => 23;
         #endregion
 
-        /*
-        #region Visibilty of gui elements
-        private bool isVisibleAddSubCategory1 = false;
-        public bool IsVisibleAddSubCategory1
-        {
-            get { return isVisibleAddSubCategory1; }
-            set { this.RaiseAndSetIfChanged(ref isVisibleAddSubCategory1, value); }
-        }
-        #endregion
-        */
-
         #region TreeView properties
         private object selectedCategoryObject = null;
         /// <summary>

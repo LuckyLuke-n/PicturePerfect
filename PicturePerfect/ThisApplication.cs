@@ -1,5 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using PicturePerfect.Models;
+using System;
+using System.IO;
 
 namespace PicturePerfect
 {
@@ -31,5 +33,27 @@ namespace PicturePerfect
         /// Get or set the currently loaded project file.
         /// </summary>
         public static ProjectFile ProjectFile { get; set; } = ProjectFile.AtStartup();
+
+        /// <summary>
+        /// Get the path to the temp folder.
+        /// </summary>
+        public static string TempFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LSoftware", "PicturePerfect", "temp");
+
+        /// <summary>
+        /// Method to clear the temp folder.
+        /// </summary>
+        public static void ClearTemp()
+        {
+            // check if the temp directory exists
+            if (Directory.Exists(TempFolderPath))
+            {
+                // clear the directory
+                string[] filePaths = Directory.GetFiles(TempFolderPath);
+                foreach (string filePath in filePaths)
+                {
+                    File.Delete(filePath);
+                }
+            }           
+        }
     }
 }
