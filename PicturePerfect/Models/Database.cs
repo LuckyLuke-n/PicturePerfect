@@ -13,6 +13,16 @@ namespace PicturePerfect.Models
         private static SqliteConnection Connection { get; } = SQLiteConnector.GetConnection();
 
         /// <summary>
+        /// Get the default category names for the all and none category
+        /// </summary>
+        public static string[] DefaultCategories { get; } = { "All", "None" };
+
+        /// <summary>
+        /// Get the name of the default location.
+        /// </summary>
+        public static string DefaultLocation { get; } = "None";
+
+        /// <summary>
         /// Class to connect to the sqlite database.
         /// </summary>
         private static class SQLiteConnector
@@ -108,8 +118,8 @@ namespace PicturePerfect.Models
             }
 
             string[] defaultQueries = { "INSERT INTO locations (name, geo_tag, notes) VALUES ('None', '', '')",
-                        "INSERT INTO categories (name, notes) VALUES ('All', '')",
-                        "INSERT INTO categories (name, notes) VALUES ('None', '')" };
+                        $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[0]}', '')", // category "all"
+                        $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[1]}', '')" }; // category "none"
 
             // run queries against database
             foreach (string query in defaultQueries)

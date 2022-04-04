@@ -261,13 +261,6 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public string ConvertTo { get; set; } = ".jpg";
 
-        /*
-        /// <summary>
-        /// Get a list of supported file types.
-        /// </summary>
-        public static List<string> ConvertToFileType => GetConvertToFileTypes();
-        */
-
         /// <summary>
         /// Get or set the path where the image file should be saved to.
         /// </summary>
@@ -337,8 +330,8 @@ namespace PicturePerfect.ViewModels
 
             SaveLocationCommand = ReactiveCommand.Create(RunSaveLocationCommand);
             SaveCategoryCommand = ReactiveCommand.Create(RunSaveCategoryCommand);
-            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1Command);
-            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2Command);
+            SaveSubCategory1Command = ReactiveCommand.Create(RunSaveSubCategory1CommandAsync);
+            SaveSubCategory2Command = ReactiveCommand.Create(RunSaveSubCategory2CommandAsync);
 
             ExportImageCommand = ReactiveCommand.Create(RunExportImageCommand);
             NextImageCommand = ReactiveCommand.Create(RunNextImageCommand);
@@ -548,28 +541,46 @@ namespace PicturePerfect.ViewModels
         /// <summary>
         /// Command to save the new sub category 1.
         /// </summary>
-        private void RunSaveSubCategory1Command()
+        private async void RunSaveSubCategory1CommandAsync()
         {
-            // avoid a subcatgory without a name
-            if (NewSubCategory1Name != string.Empty)
+            // check if cateogires "All" or "None" were seleted
+            if (CategoriesTree.Tree[CategoryIndexSelected].Id == 1 || CategoriesTree.Tree[CategoryIndexSelected].Id == 2)
             {
-                SubCategory subCategory = SaveSubCategory(NewSubCategory1Name);
-                CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
-                RunToggleVisibilitySubCategory1Command();
+                // selected category is "all" or "none"
+                _ = MessageBox.Show("You cannot add a subcategory to the categories 'All' and 'None'.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                // avoid a subcatgory without a name
+                if (NewSubCategory1Name != string.Empty)
+                {
+                    SubCategory subCategory = SaveSubCategory(NewSubCategory1Name);
+                    CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
+                    RunToggleVisibilitySubCategory1Command();
+                }
             }
         }
 
         /// <summary>
         /// Command to save the new sub category 2.
         /// </summary>
-        private void RunSaveSubCategory2Command()
+        private void RunSaveSubCategory2CommandAsync()
         {
-            // avoid a subcategory without a name
-            if (NewSubCategory2Name != string.Empty)
+            // check if cateogires "All" or "None" were seleted
+            if (CategoriesTree.Tree[CategoryIndexSelected].Id == 1 || CategoriesTree.Tree[CategoryIndexSelected].Id == 2)
             {
-                SubCategory subCategory = SaveSubCategory(NewSubCategory2Name);
-                CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
-                RunToggleVisibilitySubCategory2Command();
+                // selected category is "all" or "none"
+                _ = MessageBox.Show("You cannot add a subcategory to the categories 'All' and 'None'.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Information);
+            }
+            else
+            {
+                // avoid a subcategory without a name
+                if (NewSubCategory2Name != string.Empty)
+                {
+                    SubCategory subCategory = SaveSubCategory(NewSubCategory2Name);
+                    CategoriesTree.Tree[CategoryIndexSelected].LinkSubcategory(subCategory);
+                    RunToggleVisibilitySubCategory2Command();
+                }
             }
         }
 
