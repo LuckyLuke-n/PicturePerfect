@@ -724,7 +724,8 @@ namespace PicturePerfect.ViewModels
             }
             catch
             {
-                _ = MessageBox.Show("Could not open the image in an external viewer. Check the path to the executable and try again.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+                string message = "Could not open the image in an external viewer. Go to settings and check the path to the executable and try again.";
+                _ = MessageBox.Show(message, null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
             }
         }
 
