@@ -161,6 +161,7 @@ namespace PicturePerfect.ViewModels
         public static string NamingConventionDescription => File.ReadAllText("Resources/Descriptions/naming_convention.txt");
         public static string FileTypeDescription => File.ReadAllText("Resources/Descriptions/file_types.txt");
         public static string ViewDescription => File.ReadAllText("Resources/Descriptions/view_settings.txt");
+        public static string ExternalViewerDescription => File.ReadAllText("Resources/Descriptions/external_viewer.txt");
 
         /// <summary>
         /// Get a list of possible separators. This value will be saved to the project file.

@@ -240,37 +240,49 @@
 			<TabItem Header="Settings">
 				<Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
 					<!-- Database settings -->
-					<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
-						<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding FileTypeDescription}"/>
-						<CheckBox Content=".nef (Nikon raw file)" IsChecked="{Binding NefFilesChecked}"/>
-						<CheckBox Content=".orf (Olympus raw file)" IsChecked="{Binding OrfFilesChecked}"/>
-						<CheckBox Content=".jpg" IsChecked="{Binding JpgFilesChecked}"/>
-						<CheckBox Content=".png" IsChecked="{Binding PngFilesChecked}"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,20,0,10" Text="{Binding NamingConventionDescription}"/>
-						<StackPanel Orientation="Horizontal">
-							<CheckBox Content="Use string separator" Margin="0,0,10,0" IsChecked="{Binding UseSeparator}"/>
-							<ComboBox SelectedItem="{Binding Separator}" Width="100" Items="{Binding Separators}" IsEnabled="{Binding UseSeparator}"/>
+					<ScrollViewer VerticalScrollBarVisibility="Auto">
+						<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
+							<Label Content="Database" FontWeight="Bold" Margin="0,0,0,10"/>
+							<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding FileTypeDescription}"/>
+							<CheckBox Content=".nef (Nikon raw file)" IsChecked="{Binding NefFilesChecked}"/>
+							<CheckBox Content=".orf (Olympus raw file)" IsChecked="{Binding OrfFilesChecked}"/>
+							<CheckBox Content=".jpg" IsChecked="{Binding JpgFilesChecked}"/>
+							<CheckBox Content=".png" IsChecked="{Binding PngFilesChecked}"/>
+							<TextBlock TextWrapping="Wrap" Margin="0,20,0,10" Text="{Binding NamingConventionDescription}"/>
+							<StackPanel Orientation="Horizontal">
+								<CheckBox Content="Use string separator" Margin="0,0,10,0" IsChecked="{Binding UseSeparator}"/>
+								<ComboBox SelectedItem="{Binding Separator}" Width="100" Items="{Binding Separators}" IsEnabled="{Binding UseSeparator}"/>
+							</StackPanel>
 						</StackPanel>
-					</StackPanel>
+					</ScrollViewer>
+
 
 					<!-- View settings -->
-					<StackPanel Margin="10" Grid.Row="1" IsEnabled="{Binding ProjectIsLoaded}">
-						<Label Content="View" FontWeight="Bold" Margin="0,0,0,10"/>
-						<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding ViewDescription}" />							
-						<CheckBox Content="Open image view in full screen mode" IsChecked="{Binding ImageViewFullScreenChecked}"/>
-						<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-							<Label Content="Path to executable." VerticalContentAlignment="Center" />
-							<TextBox Name="textBoxExternalViewer" Text="{Binding PathToExternalViewer}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
-							<Button Content="Select" Click="ButtonExternalViewer_Click"/>
+					<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+						<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
+							<Label Content="View" FontWeight="Bold" Margin="0,0,0,10"/>
+							<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding ViewDescription}" />
+							<CheckBox Content="Open image view in full screen mode" IsChecked="{Binding ImageViewFullScreenChecked}"/>
 						</StackPanel>
-					</StackPanel>
+					</ScrollViewer>
+
+					<!-- Performance settings -->
+					<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="1">
+						<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
+							<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
+							<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding ExternalViewerDescription}" />
+							<StackPanel Orientation="Horizontal" Margin="0,0,0,10" >
+								<Button Content="Select path" Margin="0,0,5,0" Click="ButtonExternalViewer_Click"/>
+								<TextBox Name="textBoxExternalViewer" Text="{Binding PathToExternalViewer}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
+							</StackPanel>
+						</StackPanel>
+					</ScrollViewer>
 				</Grid>			
 			</TabItem>
 		</TabControl>
 
 		<!-- ROW 2: Info button -->
-		<Button Content="Info" Grid.Row="2" CornerRadius="0" Padding="20, 5" HorizontalAlignment="Stretch" Width="{Binding MenuBarWidth}"
+		<Button Content="Info" Grid.Row="2" CornerRadius="0" Padding="20, 5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Width="{Binding MenuBarWidth}"
 				Background="{Binding DarkColor}" FontSize="{Binding LargeFontSize}" Foreground="{Binding LightFontColor}" FontWeight="Light"
 				Click="ButtonInfo_Click">
 		</Button>

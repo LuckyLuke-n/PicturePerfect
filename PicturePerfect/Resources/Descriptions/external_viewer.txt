@@ -1,0 +1,1 @@
+﻿Select the path to an external image viewer. This will be the application to open the images in when clicking the 'open in external image viewer' button in the image view window.
