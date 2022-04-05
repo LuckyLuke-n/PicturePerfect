@@ -6,5 +6,6 @@ Apart from the image catalog PicturePerfect includes the RawConvert. It enables 
 
 
 Release notes version 0.2.x
+- Bugfix: Fixed an issue leading to cluttering the settings page using certain display settings. (V0.2.1)
 - Feature: Added a feature to open an image in a selected external image viewer. (V0.2.0)
 - Bugfix: Fixed an issue allowing the user to add subcategories to the categories 'All' and 'None'. (V0.2.0)
