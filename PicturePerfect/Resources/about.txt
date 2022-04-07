@@ -5,5 +5,5 @@ The true power is unleashed when you add the raw images to the database. You can
 Apart from the image catalog PicturePerfect includes the RawConvert. It enables you to convert a selected batch of raw images to jpg files.
 
 
-Release notes version 0.3.x
-- Feature: Added a feature to tag images with a location while adding them to the project. (V0.3.0)
+Release notes version 1.0.x
+- Feature: Added a feature to tag images with a location while adding them to the project. (V1.0.0)

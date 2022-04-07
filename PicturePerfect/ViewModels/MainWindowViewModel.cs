@@ -786,7 +786,7 @@ namespace PicturePerfect.ViewModels
                     // count files in the folder
                     FolderChecker folderChecker = new();
                     int count = folderChecker.CountFiles(PathToImageSourceFolder);
-                    string message = $"{count} files will be added to your database." + Environment.NewLine + "Do you want to go on?";
+                    string message = $"{count} files will be added to your database. All images with be linked to the location '{LoadedLocations.List[DefaultLocationIndexSelected].Name}'." + Environment.NewLine + "Do you want to go on?";
                     MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.OkCancel, MessageBox.MessageBoxIcon.Question);
 
                     // check user selection and image count
