@@ -365,6 +365,16 @@ namespace PicturePerfect.ViewModels
             get { return pathToConvertOutputFolder; }
             set { this.RaiseAndSetIfChanged(ref pathToConvertOutputFolder, value); }
         }
+
+        private int defaultocationIndexSelected = 0;
+        /// <summary>
+        /// Get or set the list index of the selected location.
+        /// </summary>
+        public int DefaultLocationIndexSelected
+        {
+            get { return defaultocationIndexSelected; }
+            set { this.RaiseAndSetIfChanged(ref defaultocationIndexSelected, value); }
+        }
         #endregion
 
         #region TreeView category properties
@@ -460,6 +470,9 @@ namespace PicturePerfect.ViewModels
             LoadedCategoriesTree.LoadTree();
             LoadedLocations.LoadList();
             SetFavoriteImages();
+
+            // load images section
+            DefaultLocationIndexSelected = LoadedLocations.GetIndexForDefault();
 
             // settings page
             NefFilesChecked = ThisApplication.ProjectFile.NefFilesChecked;

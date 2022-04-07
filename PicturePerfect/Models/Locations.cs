@@ -120,5 +120,27 @@ namespace PicturePerfect.Models
             // repopulate list with location objects
             locations.ForEach(location => List.Add(location));
         }
+
+        /// <summary>
+        /// Method to get the list index for the "None" location with database id 1.
+        /// </summary>
+        /// <returns>Returns the list index as integer.</returns>
+        public int GetIndexForDefault()
+        {
+            int index = 0;
+
+            // iterate through the list and get the list index of id 1
+            // id 1 is the database id for the location "None"
+            foreach (Location location in List)
+            {
+                if (location.Id == 1)
+                {
+                    break;
+                }
+                index++;
+            }
+
+            return index;
+        }
     }
 }

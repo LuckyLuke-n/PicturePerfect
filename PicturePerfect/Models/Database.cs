@@ -117,6 +117,8 @@ namespace PicturePerfect.Models
                 command.ExecuteNonQuery();
             }
 
+            // DO NOT CHANGE THIS QUERY
+            // changing the row of those default items will lead to editing several code snippets since the idea of having those as row 1, respectively row 1 and 2 is hard coded in this application.
             string[] defaultQueries = { "INSERT INTO locations (name, geo_tag, notes) VALUES ('None', '', '')",
                         $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[0]}', '')", // category "all"
                         $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[1]}', '')" }; // category "none"
