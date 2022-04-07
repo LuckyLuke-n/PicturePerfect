@@ -366,7 +366,7 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref pathToConvertOutputFolder, value); }
         }
 
-        private int defaultocationIndexSelected = 0;
+        private int defaultocationIndexSelected = -1;
         /// <summary>
         /// Get or set the list index of the selected location.
         /// </summary>
@@ -829,10 +829,11 @@ namespace PicturePerfect.ViewModels
                         else
                         {
                             name = $"{minDate}_to_{maxDate}";
-                        }      
+                        }
 
                         // add files to database
-                        LoadedImageFiles.AddImages(files: filesToAdd, subfolderName: name);
+                        Locations.Location autoTagLocation = LoadedLocations.List[DefaultLocationIndexSelected];
+                        LoadedImageFiles.AddImages(files: filesToAdd, subfolderName: name, location: autoTagLocation);
                     }
                     // hide load folder section
                     RunToggleLoadImagesCommand();

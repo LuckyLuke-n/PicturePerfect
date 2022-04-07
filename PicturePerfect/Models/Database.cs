@@ -190,7 +190,7 @@ namespace PicturePerfect.Models
                     Connection = Connection
                 };
                 commandLocation.Parameters.AddWithValue("@image_id", imageId);
-                commandLocation.Parameters.AddWithValue("@location_id", 1);
+                commandLocation.Parameters.AddWithValue("@location_id", imageFile.Location.Id); // location id is either 1 for "None" or a user selection
                 commandLocation.ExecuteNonQuery();
             }
 

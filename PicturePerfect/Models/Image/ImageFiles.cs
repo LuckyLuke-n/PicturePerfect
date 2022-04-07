@@ -79,7 +79,8 @@ namespace PicturePerfect.Models
         /// </summary>
         /// <param name="files">List of files to be added.</param>
         /// <param name="subfolderName">Name of the subfolder created in \images\</param>
-        public void AddImages(List<string> files, string subfolderName)
+        /// <param name="location">Name of the auto tag location.</param>
+        public void AddImages(List<string> files, string subfolderName, Locations.Location location)
         {
             // create subfolder in \images\
             string newDirectory = Path.Combine(ThisApplication.ProjectFile.ImageFolder, subfolderName);
@@ -88,7 +89,7 @@ namespace PicturePerfect.Models
             foreach (string file in files)
             {
                 // create image file oject
-                ImageFile image = ImageFile.NewToDatabase(file, subfolderName);
+                ImageFile image = ImageFile.NewToDatabase(file, subfolderName, location);
                 List.Add(image);
             }
 

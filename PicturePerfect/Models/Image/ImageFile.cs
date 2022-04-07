@@ -155,11 +155,12 @@ namespace PicturePerfect.Models
         /// <param name="path"></param>
         /// <param name="subfolderName"></param>
         /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewToDatabase(string path, string subfolderName)
+        public static ImageFile NewToDatabase(string path, string subfolderName, Locations.Location location)
         {
             // create an image file from the path
             ImageFile imageFile = CreateFromPath(path);
             imageFile.Subfolder = subfolderName;
+            imageFile.Location = location; // this is either the default location "None" or a user selection.
 
             // create the entry and copy the file into the project folder
             CreateDatabaseEntry(imageFile, path);
