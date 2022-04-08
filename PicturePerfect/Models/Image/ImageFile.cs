@@ -95,7 +95,7 @@ namespace PicturePerfect.Models
         // file type arrays
         public static string[] OrfStrings => new string[] { ".orf", ".ORF" };
         public static string[] NefStrings => new string[] { ".nef", ".NEF" };
-        private static string[] JpgStrings => new string[] { ".jpg", ".JPG" };
+        public static string[] JpgStrings => new string[] { ".jpg", ".JPG" };
         private static string[] PngStrings => new string[] { ".png", ".PNG" };
 
 

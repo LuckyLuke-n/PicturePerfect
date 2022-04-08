@@ -146,7 +146,7 @@
 
 			<!-- Export options -->
 			<Label Grid.Column="0" Grid.Row="13" Margin="0,0,0,10" Content="Export options" IsVisible="{Binding MoreInfoVisible}"/>
-			<ComboBox Items="{Binding ConvertToFileType}" SelectedItem="{Binding ConvertTo}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="13" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}"/>
+			<ComboBox Items="{Binding ConvertToFileTypes}" SelectedItem="{Binding ConvertTo}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="13" Margin="10,0,0,10" HorizontalAlignment="Stretch" Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}"/>
 			<TextBox Name="textBoxSelectFolder" Text="{Binding SaveToPath}" Grid.Column="1" Grid.Row="14" Margin="10,0,0,10" Background="{Binding LightColor}" IsVisible="{Binding MoreInfoVisible}" IsReadOnly="True"/>
 			<Button Grid.Column="2" Grid.Row="14" Margin="2,-10,0,0" IsVisible="{Binding MoreInfoVisible}" Click="ButtonSelectFolder_Click">
 				<Image Source="/Assets/Drawables/folder.png" Height="20"/>

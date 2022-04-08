@@ -5,6 +5,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive;
 
 namespace PicturePerfect.ViewModels
@@ -261,6 +262,13 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public string ConvertTo { get; set; } = ".jpg";
 
+        private List<string> convertToFileTypes = new();
+        public List<string> ConvertToFileTypes
+        {
+            get { return convertToFileTypes; }
+            set { this.RaiseAndSetIfChanged(ref convertToFileTypes, value); }
+        }
+
         /// <summary>
         /// Get or set the path where the image file should be saved to.
         /// </summary>
@@ -350,6 +358,7 @@ namespace PicturePerfect.ViewModels
             ImageIdSelected = ImageFile.Id;
             FileNameSelected = ImageFile.CustomName;
             NotesSelected = ImageFile.Notes;
+            MoreInfo = GetMoreInfo();
             DateTaken = ImageFile.DateTaken;
             LocationIndexSelected = GetLocationIndex();
             CategoryIndexSelected = GetCategoryIndex();
@@ -357,6 +366,23 @@ namespace PicturePerfect.ViewModels
 
             SubCategory1IndexSelected = GetSubCategoryIndex(1);
             SubCategory2IndexSelected = GetSubCategoryIndex(2);
+
+            // check for file type to set the selections in the convert to file type selection
+            if (ImageFile.OrfStrings.Contains(ImageFile.FileType))
+            {
+                // type is .orf
+                ConvertToFileTypes = new() { ".jpg", ".orf" };
+            }
+            else if (ImageFile.JpgStrings.Contains(ImageFile.FileType))
+            {
+                // type is .jpg
+                ConvertToFileTypes = new() { ".jpg" };
+            }
+            else
+            {
+                // type is .png or .nef
+                ConvertToFileTypes = new() { ".jpg" };
+            }
         }
 
         /// <summary>
@@ -591,8 +617,7 @@ namespace PicturePerfect.ViewModels
         /// <returns>Returns a string containg the metadata.</returns>
         private string GetMoreInfo()
         {
-            string moreInfo = string.Empty;
-
+            string moreInfo;
             if (ImageFile == null)
             {
                 return moreInfo = "";
