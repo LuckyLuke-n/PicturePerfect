@@ -1,6 +1,9 @@
 ﻿using Avalonia.Media.Imaging;
 using ImageMagick;
+using MetadataExtractor;
+using MetadataExtractor.Formats.Exif;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -162,8 +165,12 @@ namespace PicturePerfect.Models
             imageFile.Subfolder = subfolderName;
             imageFile.Location = location; // this is either the default location "None" or a user selection.
 
-            // create the entry and copy the file into the project folder
-            CreateDatabaseEntry(imageFile, path);
+            // copy the file to the image folder's subfolder
+            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
+            File.Copy(path, destination, true);
+
+            // add to sqlite
+            Database.AddImage(imageFile);
 
             return imageFile;
         }
@@ -194,20 +201,54 @@ namespace PicturePerfect.Models
             imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
             imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
 
+
+            // extract metadata, but this is not possible at all times, since the output dor the tags might differ
+            try
+            {
+                ExtractMetaData();
+            }
+            catch (Exception ex)
+            {
+                // throw the exception for further handling
+                throw new ArgumentException("Error while extracting metadata.", ex);
+            }
+
+            // function to extragt the meta data
+            void ExtractMetaData()
+            {
+                IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
+                ExifSubIfdDirectory? subIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
+
+                // check which meta data extration is to be performed
+                if (subIfdDirectory != null && OrfStrings.Contains(imageFile.FileType))
+                {
+                    // file is a orf file
+                    imageFile.Camera = subIfdDirectory.Tags[32].Description; // lens model as string
+                    imageFile.FStop = double.Parse(subIfdDirectory.Tags[1].Description.Split('/')[1]); // e.g. f/8,0
+                    imageFile.ISO = Convert.ToInt32(subIfdDirectory.Tags[3].Description); // e.g.250
+                    string exposureTime = subIfdDirectory.Tags[0].Description.Split(' ')[0]; // e.g. 1/500 sec
+                    imageFile.ExposureTime = (int)(Convert.ToDouble(exposureTime.Split('/')[0]) / Convert.ToDouble(exposureTime.Split('/')[1]) * 1000);
+                    imageFile.ExposureBias = double.Parse(subIfdDirectory.Tags[11].Description.Split(' ')[0]); // e.g. 38 0 EV;
+                    imageFile.FocalLength = double.Parse(subIfdDirectory.Tags[16].Description.Split(' ')[0]); // e.g. 38 mm;
+                }
+                else if (subIfdDirectory != null && JpgStrings.Contains(imageFile.FileType))
+                {
+                    // file is a jpg file
+                    imageFile.Camera = "not available";
+                    imageFile.FStop = double.Parse(subIfdDirectory.Tags[1].Description.Split('/')[1]); // e.g. f/1,8
+                    imageFile.ISO = Convert.ToInt32(subIfdDirectory.Tags[0].Description); // e.g.250
+                    string exposureTime = subIfdDirectory.Tags[2].Description.Split(' ')[0]; // e.g. 1/20 sec
+                    imageFile.ExposureTime = (int)(Convert.ToDouble(subIfdDirectory.Tags[2].Description.Split(' ')[0]) * 1000);
+                    imageFile.ExposureBias = double.Parse(subIfdDirectory.Tags[15].Description.Split(' ')[0]); // e.g. 38 0 EV;
+                    imageFile.FocalLength = double.Parse(subIfdDirectory.Tags[12].Description.Split(' ')[0]); // e.g. 38 mm;
+                }
+                else
+                {
+                    // no meta data will be set
+                }
+            }
+
             return imageFile;
-        }
-
-        /// <summary>
-        /// Method to copy the files and create a sqlite entry for this image.
-        /// </summary>
-        private static void CreateDatabaseEntry(ImageFile imageFile, string path)
-        {
-            // copy the file to the image folder's subfolder
-            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
-            File.Copy(path, destination, true);
-
-            // add to sqlite
-            Database.AddImage(imageFile);
         }
 
         /// <summary>
@@ -396,7 +437,7 @@ namespace PicturePerfect.Models
         {
             // copy the image to a temp folder
             string path = Path.Combine(ThisApplication.TempFolderPath, Name);
-            Directory.CreateDirectory(ThisApplication.TempFolderPath); // create folder if it does no exist
+            System.IO.Directory.CreateDirectory(ThisApplication.TempFolderPath); // create folder if it does no exist
             File.Copy(sourceFileName: AbsolutePath, destFileName: path, overwrite: true);
 
             // open the file in the selected image viewer

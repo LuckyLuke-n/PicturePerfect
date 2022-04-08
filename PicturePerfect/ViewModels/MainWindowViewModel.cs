@@ -836,6 +836,13 @@ namespace PicturePerfect.ViewModels
                         // add files to database
                         Locations.Location autoTagLocation = LoadedLocations.List[DefaultLocationIndexSelected];
                         LoadedImageFiles.AddImages(files: filesToAdd, subfolderName: name, location: autoTagLocation);
+
+                        // handle the errors and notify user
+                        if (LoadedImageFiles.MetadataErrors > 0)
+                        {
+                            _ = await MessageBox.Show($"Error while extracting advanced meta data in {LoadedImageFiles.MetadataErrors} case/s.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+                        }
+
                     }
                     // hide load folder section
                     RunToggleLoadImagesCommand();

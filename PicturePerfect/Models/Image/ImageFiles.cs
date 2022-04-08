@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -10,6 +11,11 @@ namespace PicturePerfect.Models
         /// Get the list of currently loaded image files.
         /// </summary>
         public ObservableCollection<ImageFile> List { get; private set; } = new();
+
+        /// <summary>
+        /// Get or set the number of metadata extraction errors.
+        /// </summary>
+        public int MetadataErrors { get; private set; } = 0;
 
         /// <summary>
         /// Creates a new instance of the images files class.
@@ -86,11 +92,21 @@ namespace PicturePerfect.Models
             string newDirectory = Path.Combine(ThisApplication.ProjectFile.ImageFolder, subfolderName);
             Directory.CreateDirectory(newDirectory);
 
+            MetadataErrors = 0;
             foreach (string file in files)
             {
                 // create image file oject
-                ImageFile image = ImageFile.NewToDatabase(file, subfolderName, location);
-                List.Add(image);
+                try
+                {
+                    ImageFile image = ImageFile.NewToDatabase(file, subfolderName, location);
+                    List.Add(image);
+                }
+                catch (ArgumentException)
+                {
+                    MetadataErrors++;
+                }
+                //ImageFile image = ImageFile.NewToDatabase(file, subfolderName, location);
+                //List.Add(image);
             }
 
             // reload all images from the sqlite database in order to get the info about the id
