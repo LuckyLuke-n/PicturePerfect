@@ -535,19 +535,19 @@ namespace PicturePerfect.ViewModels
                         switch (i)
                         {
                             case 0:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo1 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo1 = ImageFile.LoadById(id).ToBitmap(); }
                                 else { ImageNo1 = ThisApplication.PlaceholderImage; }
                                 break;
                             case 1:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo2 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo2 = ImageFile.LoadById(id).ToBitmap(); }
                                 else { ImageNo2 = ThisApplication.PlaceholderImage; }
                                 break;
                             case 2:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo3 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo3 = ImageFile.LoadById(id).ToBitmap(); }
                                 else { ImageNo3 = ThisApplication.PlaceholderImage; }
                                 break;
                             case 3:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo4 = BitmapValueConverter.Convert(ImageFile.LoadById(id).AbsolutePath); }
+                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo4 = ImageFile.LoadById(id).ToBitmap(); }
                                 else { ImageNo4 = ThisApplication.PlaceholderImage; }
                                 break;
                             default:
