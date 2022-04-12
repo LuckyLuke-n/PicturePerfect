@@ -96,7 +96,8 @@ namespace PicturePerfect.Models
         public static string[] OrfStrings => new string[] { ".orf", ".ORF" };
         public static string[] NefStrings => new string[] { ".nef", ".NEF" };
         public static string[] JpgStrings => new string[] { ".jpg", ".JPG" };
-        private static string[] PngStrings => new string[] { ".png", ".PNG" };
+        public static string[] PngStrings => new string[] { ".png", ".PNG" };
+        public static string[] TifStrings => new string[] { ".tif", ".TIF", ".tiff", ".TIFF" };
 
 
         /// <summary>
@@ -336,7 +337,7 @@ namespace PicturePerfect.Models
         {
             Bitmap bitmap;
 
-            if (OrfStrings.Contains(FileType) || NefStrings.Contains(FileType))
+            if (OrfStrings.Contains(FileType) || NefStrings.Contains(FileType) || TifStrings.Contains(FileType))
             {
                 MagickImage magickImage = new(AbsolutePath);
                 bitmap = magickImage.ToBitmap();

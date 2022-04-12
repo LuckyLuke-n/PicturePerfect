@@ -195,6 +195,16 @@ namespace PicturePerfect.Models
             set { pngFilesChecked = value; Save(); }
         }
 
+        private bool tifFilesChecked  = false;
+        /// <summary>
+        /// Get or set the rif files property. The change will be saved to the project file.
+        /// </summary>
+        public bool TifFilesChecked
+        {
+            get { return tifFilesChecked; }
+            set { tifFilesChecked = value; Save(); }
+        }
+
         private bool imageViewFullScreenChecked = false;
         /// <summary>
         /// Get or set the behavior for the image view window.
@@ -321,6 +331,14 @@ namespace PicturePerfect.Models
 
                 return value;
             }
+            bool CheckTifFilesCheckedException()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["TifFilesChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
             string CheckPathToExternalViewer()
             {
                 string value;
@@ -347,6 +365,7 @@ namespace PicturePerfect.Models
                 OrfFilesChecked = CheckOrfFilesCheckedException(),
                 JpgFilesChecked = CheckJpgFilesCheckedException(),
                 PngFilesChecked = CheckPngFilesCheckedException(),
+                TifFilesChecked = CheckTifFilesCheckedException(),
                 ImageViewFullScreenChecked = CheckImageViewFullScreenChecked(),
                 PathToExternalViewer = CheckPathToExternalViewer(),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
@@ -387,17 +406,15 @@ namespace PicturePerfect.Models
         public List<string> GetInputFileTypes()
         {
             List<string> inputList = new();
-            List<string> inputListWithUpperCase = new();
 
             // add file types to list
-            if (NefFilesChecked == true) { inputList.Add(ImageTypes.nef.ToString()); }
-            if (OrfFilesChecked == true) { inputList.Add(ImageTypes.orf.ToString()); }
-            if (JpgFilesChecked == true) { inputList.Add(ImageTypes.jpg.ToString()); }
-            if (PngFilesChecked == true) { inputList.Add(ImageTypes.png.ToString()); }
+            if (NefFilesChecked == true) { inputList.AddRange(ImageFile.NefStrings.ToList()); }
+            if (OrfFilesChecked == true) { inputList.AddRange(ImageFile.OrfStrings.ToList()); }
+            if (JpgFilesChecked == true) { inputList.AddRange(ImageFile.JpgStrings.ToList()); }
+            if (PngFilesChecked == true) { inputList.AddRange(ImageFile.PngStrings.ToList()); }
+            if (TifFilesChecked == true) { inputList.AddRange(ImageFile.TifStrings.ToList()); }
 
-            inputList.ForEach(fileType => inputListWithUpperCase.AddRange(new List<string>() { $".{fileType}", $".{fileType.ToUpper()}" }));
-
-            return inputListWithUpperCase;
+            return inputList;
         }
 
         /// <summary>

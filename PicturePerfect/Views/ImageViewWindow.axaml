@@ -27,10 +27,10 @@
 			<ProgressBar Margin="10,0,10,0" IsIndeterminate="{Binding IsIndeterminateBar}"/>
 		</StackPanel>
 
-		<!-- Image column -->
-		<StackPanel VerticalAlignment="Center">
-			<Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="20, 20, 20, 10" Source="{Binding BitmapToDraw}"/>
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+		<!-- Grid for Image column -->
+		<Grid Grid.Column="0" Grid.Row="0" RowDefinitions="*,auto">
+			<Image Grid.Row="0" Margin="20, 20, 20, 10" Source="{Binding BitmapToDraw}"/>
+			<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 0, 0, 10" HorizontalAlignment="Center" >
 				<Button Command="{Binding LastImageCommand}">
 					<Image Source="/Assets/Drawables/left.png" Height="40"/>
 				</Button>
@@ -47,7 +47,7 @@
 					<Image Source="/Assets/Drawables/right.png" Height="40"/>
 				</Button>
 			</StackPanel>
-		</StackPanel>
+		</Grid>
 
 		<!-- Grid for properties -->
 		<Grid Grid.Column="2" Grid.Row="0" Margin="10,10,10,0"

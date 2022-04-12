@@ -378,6 +378,11 @@ namespace PicturePerfect.ViewModels
                 // type is .jpg
                 ConvertToFileTypes = new() { ".jpg" };
             }
+            else if (ImageFile.TifStrings.Contains(ImageFile.FileType))
+            {
+                // type is .tif
+                ConvertToFileTypes = new() { ".jpg" ,".tif" };
+            }
             else
             {
                 // type is .png or .nef

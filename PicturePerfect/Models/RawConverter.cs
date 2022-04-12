@@ -25,12 +25,6 @@ namespace PicturePerfect.Models
             public DateTime DateTaken { get; private set; }
             public string AbsolutePath { get; private set; }
 
-            // file type arrays
-            public static string[] OrfStrings => new string[] { ".orf", ".ORF" };
-            public static string[] NefStrings => new string[] { ".nef", ".NEF" };
-            private static string[] JpgStrings => new string[] { ".jpg", ".JPG" };
-            private static string[] PngStrings => new string[] { ".png", ".PNG" };
-
             /// <summary>
             /// Creates a new instance of the raw file class
             /// </summary>
@@ -69,13 +63,17 @@ namespace PicturePerfect.Models
                 // decode the image using the MagickImage library
                 using (MagickImage rawImage = new(AbsolutePath))
                 {
-                    if (JpgStrings.Contains(outputType))
+                    if (ImageFile.JpgStrings.Contains(outputType))
                     {
                         rawImage.Write(GetOutputFileName(), MagickFormat.Jpg);
                     }
-                    else if (PngStrings.Contains(outputType))
+                    else if (ImageFile.PngStrings.Contains(outputType))
                     {
                         rawImage.Write(GetOutputFileName(), MagickFormat.Png);
+                    }
+                    else if (ImageFile.TifStrings.Contains(outputType))
+                    {
+                        rawImage.Write(GetOutputFileName(), MagickFormat.Tif);
                     }
                     else
                     {
@@ -102,7 +100,7 @@ namespace PicturePerfect.Models
                 RawFile image = new(name: fileInfo.Name, size: Math.Round((double)fileInfo.Length/1000000, 3), type: fileInfo.Extension, dateTaken: fileInfo.LastWriteTime, path: fileInfo.FullName);
 
                 // add to list if file is a raw file
-                if (RawFile.OrfStrings.Contains(image.Type) || RawFile.NefStrings.Contains(image.Type))
+                if (ImageFile.OrfStrings.Contains(image.Type) || ImageFile.NefStrings.Contains(image.Type))
                 {
                     // image is a raw file
                     RawFiles.Add(image);

@@ -226,6 +226,16 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref pngFilesChecked, value); ThisApplication.ProjectFile.PngFilesChecked = value; }
         }
 
+        private bool tifFilesChecked = false;
+        /// <summary>
+        /// Get or set the property for using tif files as input.
+        /// </summary>
+        public bool TifFilesChecked
+        {
+            get { return tifFilesChecked; }
+            set { this.RaiseAndSetIfChanged(ref tifFilesChecked, value); ThisApplication.ProjectFile.TifFilesChecked = value; }
+        }
+
         private bool imageViewFullScreenChecked = false;
         /// <summary>
         /// Get or set the property for opening the image view window in full screen.
@@ -479,6 +489,7 @@ namespace PicturePerfect.ViewModels
             OrfFilesChecked = ThisApplication.ProjectFile.OrfFilesChecked;
             JpgFilesChecked = ThisApplication.ProjectFile.JpgFilesChecked;
             PngFilesChecked = ThisApplication.ProjectFile.PngFilesChecked;
+            TifFilesChecked = ThisApplication.ProjectFile.TifFilesChecked;
             ImageViewFullScreenChecked = ThisApplication.ProjectFile.ImageViewFullScreenChecked;
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };

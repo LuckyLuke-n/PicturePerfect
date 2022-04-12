@@ -12,6 +12,6 @@ Magick.NET-Q16-AnyCPU V11.1.0 by Dirk Lemstra licensed under Apache License 2.0
 
 MetadataExtractor V2.7.2 by Drew Noakes and contributors licensed under Apache License 2.0
 
-Microsoft.Data.Sqlite V6.0.3 by Microsoft licensed under MIT License
+Microsoft.Data.Sqlite V6.0.4 by Microsoft licensed under MIT License
 
 Newtonsoft.Json V13.0.1 by James Newton-King licensed under MIT License
