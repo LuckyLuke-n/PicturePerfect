@@ -520,44 +520,51 @@ namespace PicturePerfect.ViewModels
                 int[] favoriteIds = { ThisApplication.ProjectFile.Favorite1Id, ThisApplication.ProjectFile.Favorite2Id, ThisApplication.ProjectFile.Favorite3Id, ThisApplication.ProjectFile.Favorite4Id };
                 Bitmap[] favoriteImages = { ImageNo1, ImageNo2, ImageNo3, ImageNo4 };
 
-                // load image as bitmaps
-                foreach (int id in favoriteIds)
+                // error handling when loading the bitmap from image should fail.
+                // this would case terminal damage an avoid the project from being loaded again.
+                try
                 {
-                    if (id == 0)
+                    // load image as bitmaps
+                    foreach (int id in favoriteIds)
                     {
-                        // no image set
-                        favoriteImages[i] = ThisApplication.PlaceholderImage;
-                    }
-                    else
-                    {
-                        // set image if file exists
-                        // if file does not exists (maybe deleted) set the place holder image
-                        switch (i)
+                        if (id == 0)
                         {
-                            case 0:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo1 = ImageFile.LoadById(id).ToBitmap(); }
-                                else { ImageNo1 = ThisApplication.PlaceholderImage; }
-                                break;
-                            case 1:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo2 = ImageFile.LoadById(id).ToBitmap(); }
-                                else { ImageNo2 = ThisApplication.PlaceholderImage; }
-                                break;
-                            case 2:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo3 = ImageFile.LoadById(id).ToBitmap(); }
-                                else { ImageNo3 = ThisApplication.PlaceholderImage; }
-                                break;
-                            case 3:
-                                if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo4 = ImageFile.LoadById(id).ToBitmap(); }
-                                else { ImageNo4 = ThisApplication.PlaceholderImage; }
-                                break;
-                            default:
-                                break;
-                        }                      
+                            // no image set
+                            favoriteImages[i] = ThisApplication.PlaceholderImage;
+                        }
+                        else
+                        {
+                            // set image if file exists
+                            // if file does not exists (maybe deleted) set the place holder image
+                            switch (i)
+                            {
+                                case 0:
+                                    if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo1 = ImageFile.LoadById(id).ToBitmap(); }
+                                    else { ImageNo1 = ThisApplication.PlaceholderImage; }
+                                    break;
+                                case 1:
+                                    if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo2 = ImageFile.LoadById(id).ToBitmap(); }
+                                    else { ImageNo2 = ThisApplication.PlaceholderImage; }
+                                    break;
+                                case 2:
+                                    if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo3 = ImageFile.LoadById(id).ToBitmap(); }
+                                    else { ImageNo3 = ThisApplication.PlaceholderImage; }
+                                    break;
+                                case 3:
+                                    if (File.Exists(ImageFile.LoadById(id).AbsolutePath)) { ImageNo4 = ImageFile.LoadById(id).ToBitmap(); }
+                                    else { ImageNo4 = ThisApplication.PlaceholderImage; }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        i++;
+                        double percentage = (double)i / 4 * 100;
+                        backgroundWorker.ReportProgress((int)percentage);
                     }
-                    i++;
-                    double percentage = (double)i / 4 * 100;
-                    backgroundWorker.ReportProgress((int)percentage);
                 }
+                catch { }
+
             }
 
             void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -669,7 +676,7 @@ namespace PicturePerfect.ViewModels
             if (ProjectIsLoaded == true)
                 {
                 ThisApplication.ProjectFile.Favorite1Id = ImageFile.Id;
-                ImageNo1 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+                ImageNo1 = ImageFile.ToBitmap();
             }
             else
             {
@@ -686,7 +693,7 @@ namespace PicturePerfect.ViewModels
             if (ProjectIsLoaded == true)
             {
                 ThisApplication.ProjectFile.Favorite2Id = ImageFile.Id;
-                ImageNo2 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+                ImageNo2 = ImageFile.ToBitmap();
             }
             else
             {
@@ -703,7 +710,7 @@ namespace PicturePerfect.ViewModels
             if (ProjectIsLoaded == true)
             {
                 ThisApplication.ProjectFile.Favorite3Id = ImageFile.Id;
-                ImageNo3 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+                ImageNo3 = ImageFile.ToBitmap();
             }
             else
             {
@@ -720,7 +727,7 @@ namespace PicturePerfect.ViewModels
             if (ProjectIsLoaded == true)
             {
                 ThisApplication.ProjectFile.Favorite4Id = ImageFile.Id;
-                ImageNo4 = BitmapValueConverter.Convert(ImageFile.AbsolutePath);
+                ImageNo4 = ImageFile.ToBitmap();
             }
             else
             {
