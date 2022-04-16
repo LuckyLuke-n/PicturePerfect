@@ -139,8 +139,8 @@ namespace PicturePerfect.Models
         public static void AddImage(ImageFile imageFile)
         {
             //  values and parameters
-            List<string> paramters = new() { "@custom_name", "@name", "@subfolder", "@file_type", "@date_taken", "@size", "@camera", "@iso", "@fstop", @"exposure_time", @"exposure_bias", @"focal_length", @"notes" };
-            object[] values = { imageFile.CustomName, imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Camera, imageFile.ISO, imageFile.FStop, imageFile.ExposureTime, imageFile.ExposureBias, imageFile.FocalLength, imageFile.Notes };
+            List<string> paramters = new() { "@custom_name", "@name", "@subfolder", "@file_type", "@date_taken", "@size", @"notes" };
+            object[] values = { imageFile.CustomName, imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Notes };
 
             // new command
             Connection.Open();
@@ -150,8 +150,8 @@ namespace PicturePerfect.Models
                 // new command
                 SqliteCommand command = new()
                 {
-                    CommandText = "INSERT INTO images ( custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes) " +
-                        " VALUES (@custom_name, @name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
+                    CommandText = "INSERT INTO images ( custom_name, name, subfolder, file_type, date_taken, size, notes) " +
+                        " VALUES (@custom_name, @name, @subfolder, @file_type, @date_taken, @size, @notes)",
                     Connection = Connection
                 };
 
@@ -568,19 +568,13 @@ namespace PicturePerfect.Models
                 string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
                 DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
                 double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
-                string camera = readerImage.GetString((int)TableImagesOrdinals.Camera);
-                int iso = readerImage.GetInt32((int)TableImagesOrdinals.ISO);
-                double fStop = readerImage.GetDouble((int)TableImagesOrdinals.FStop);
-                int exposureTime = readerImage.GetInt32((int)TableImagesOrdinals.ExposureTime);
-                double exposureBias = readerImage.GetDouble((int)TableImagesOrdinals.ExposureBias);
-                double focalLength = readerImage.GetDouble((int)TableImagesOrdinals.FocalLength);
                 string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
 
                 Locations.Location location = GetLocation(id);
                 Category category = GetCategoryByImage(id);
                 SubCategory[] subCategories = GetSubCategories(id);
 
-                imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
+                imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, notes, location, category, subCategories[0], subCategories[1]);
             }
 
             Connection.Close();
@@ -614,19 +608,13 @@ namespace PicturePerfect.Models
                 string fileType = reader.GetString((int)TableImagesOrdinals.FileType);
                 DateTime dateTaken = DateTime.Parse(reader.GetString((int)TableImagesOrdinals.DateTaken));
                 double size = reader.GetDouble((int)TableImagesOrdinals.Size);
-                string camera = reader.GetString((int)TableImagesOrdinals.Camera);
-                int iso = reader.GetInt32((int)TableImagesOrdinals.ISO);
-                double fStop = reader.GetDouble((int)TableImagesOrdinals.FStop);
-                int exposureTime = reader.GetInt32((int)TableImagesOrdinals.ExposureTime);
-                double exposureBias = reader.GetDouble((int)TableImagesOrdinals.ExposureBias);
-                double focalLength = reader.GetDouble((int)TableImagesOrdinals.FocalLength);
                 string notes = reader.GetString((int)TableImagesOrdinals.Notes);
 
                 Locations.Location location = GetLocation(id);
                 Category category = GetCategoryByImage(id);
                 SubCategory[] subCategories = GetSubCategories(id);
 
-                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
+                ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, notes, location, category, subCategories[0], subCategories[1]);
 
                 list.Add(imageFile);
             }
@@ -684,18 +672,12 @@ namespace PicturePerfect.Models
                         string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
                         DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
                         double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
-                        string camera = readerImage.GetString((int)TableImagesOrdinals.Camera);
-                        int iso = readerImage.GetInt32((int)TableImagesOrdinals.ISO);
-                        double fStop = readerImage.GetDouble((int)TableImagesOrdinals.FStop);
-                        int exposureTime = readerImage.GetInt32((int)TableImagesOrdinals.ExposureTime);
-                        double exposureBias = readerImage.GetDouble((int)TableImagesOrdinals.ExposureBias);
-                        double focalLength = readerImage.GetDouble((int)TableImagesOrdinals.FocalLength);
                         string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
 
                         Locations.Location location = GetLocation(id);
                         SubCategory[] subCategories = GetSubCategories(id);
 
-                        ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
+                        ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, notes, location, category, subCategories[0], subCategories[1]);
 
                         list.Add(imageFile);
                     }
@@ -747,19 +729,13 @@ namespace PicturePerfect.Models
                     string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
                     DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
                     double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
-                    string camera = readerImage.GetString((int)TableImagesOrdinals.Camera);
-                    int iso = readerImage.GetInt32((int)TableImagesOrdinals.ISO);
-                    double fStop = readerImage.GetDouble((int)TableImagesOrdinals.FStop);
-                    int exposureTime = readerImage.GetInt32((int)TableImagesOrdinals.ExposureTime);
-                    double exposureBias = readerImage.GetDouble((int)TableImagesOrdinals.ExposureBias);
-                    double focalLength = readerImage.GetDouble((int)TableImagesOrdinals.FocalLength);
                     string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
 
                     Locations.Location location = GetLocation(id);
                     Category category = GetCategoryByImage(id);
                     SubCategory[] subCategories = GetSubCategories(id);
 
-                    ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, camera, fStop, iso, exposureTime, exposureBias, focalLength, notes, location, category, subCategories[0], subCategories[1]);
+                    ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, notes, location, category, subCategories[0], subCategories[1]);
 
                     list.Add(imageFile);
                 }

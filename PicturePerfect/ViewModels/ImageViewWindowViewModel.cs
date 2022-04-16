@@ -631,10 +631,10 @@ namespace PicturePerfect.ViewModels
             {
                 moreInfo = $"Camera maker/lens type: {ImageFile.Camera}" + Environment.NewLine +
                     $"ISO: {ImageFile.ISO}" + Environment.NewLine +
-                    $"F-stop: f/{ImageFile.FStop}" + Environment.NewLine +
-                    $"Exposure time: {ImageFile.ExposureTime} ms" + Environment.NewLine +
-                    $"Exposure bias: {ImageFile.ExposureBias} EV" + Environment.NewLine +
-                    $"Focal length: {ImageFile.FocalLength} mm" + Environment.NewLine +
+                    $"F-stop: {ImageFile.FStop}" + Environment.NewLine +
+                    $"Exposure time: {ImageFile.ExposureTime}" + Environment.NewLine +
+                    $"Exposure bias: {ImageFile.ExposureBias}" + Environment.NewLine +
+                    $"Focal length: {ImageFile.FocalLength}" + Environment.NewLine +
                     $"Absolute path: {ImageFile.AbsolutePath}";
 
                 return moreInfo;

@@ -38,30 +38,29 @@ namespace PicturePerfect.Models
         /// </summary>
         public double Size { get; private set; }
         /// <summary>
-        /// Get or set the camera manufacturer and model.
+        /// Get the camera manufacturer and model.
         /// </summary>
-        public string Camera { get; private set; } = string.Empty;
+        public string Camera => ExtractMetadata(MetadataDescriptions.CameraInfo);
         /// <summary>
-        /// Get or set the ISO value set for this image.
+        /// Get the ISO value set for this image.
         /// </summary>
-        public int ISO { get; private set; }
+        public string ISO => ExtractMetadata(MetadataDescriptions.ISO);
         /// <summary>
-        /// Get or set the F-stop value for this image.
-        /// It should be displayed as f/[value]
+        /// Get the F-stop value for this image.
         /// </summary>
-        public double FStop { get; private set; }
+        public string FStop => ExtractMetadata(MetadataDescriptions.FStop);
         /// <summary>
-        /// Get or set the exposure time in milli-sec.
+        /// Get the exposure time for this image.
         /// </summary>
-        public int ExposureTime { get; private set; }
+        public string ExposureTime => ExtractMetadata(MetadataDescriptions.ExposureTime);
         /// <summary>
-        /// Get or set the exposure bias in steps for this image.
+        /// Get the exposure bias for this image.
         /// </summary>
-        public double ExposureBias { get; private set; }
+        public string ExposureBias => ExtractMetadata(MetadataDescriptions.ExposureBias);
         /// <summary>
-        /// Get or set the focal length in mm for this image.
+        /// Get the focal length for this image.
         /// </summary>
-        public double FocalLength { get; private set; }
+        public string FocalLength => ExtractMetadata(MetadataDescriptions.FocalLength);
 
         /// <summary>
         /// Get or set the loacation where this image was taken.
@@ -99,13 +98,27 @@ namespace PicturePerfect.Models
         public static string[] PngStrings => new string[] { ".png", ".PNG" };
         public static string[] TifStrings => new string[] { ".tif", ".TIF", ".tiff", ".TIFF" };
 
+        // metadata directories
+        private ExifSubIfdDirectory? SubIfdDirectory { get; set; } = null;
 
         /// <summary>
         /// Creates a new instance of the image file class.
         /// </summary>
         public ImageFile()
         {
+        }
 
+        /// <summary>
+        /// Possible metadata to be extracted from the image files.
+        /// </summary>
+        private enum MetadataDescriptions
+        {
+            CameraInfo,
+            FStop,
+            ISO,
+            ExposureTime,
+            ExposureBias,
+            FocalLength
         }
 
         /// <summary>
@@ -126,7 +139,7 @@ namespace PicturePerfect.Models
         /// <param name="focalLength"></param>
         /// <param name="notes"></param>
         /// <returns>Returns the image file object.</returns>
-        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string camera, double fStop, int iso, int exposureTime, double exposureBias, double focalLength, string notes, Locations.Location location, Category category, SubCategory subCategory1, SubCategory subCategory2)
+        public static ImageFile NewFromDatabase(int id, string name, string customName, string subfolderName, string fileType, DateTime dateTaken, double size, string notes, Locations.Location location, Category category, SubCategory subCategory1, SubCategory subCategory2)
         {
             ImageFile imageFile = new()
             {
@@ -137,18 +150,17 @@ namespace PicturePerfect.Models
                 FileType = fileType,
                 DateTaken = dateTaken,
                 Size = size,
-                Camera = camera,
-                ISO = iso,
-                FStop = fStop,
-                ExposureTime = exposureTime,
-                ExposureBias = exposureBias,
-                FocalLength = focalLength,
                 Notes = notes,
                 Location = location,
                 Category = category,
                 SubCategory1 = subCategory1,
                 SubCategory2 = subCategory2
             };
+
+            // store the metadata directory 
+            // this can be null
+            IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(imageFile.AbsolutePath);
+            imageFile.SubIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
 
             return imageFile;
         }
@@ -162,13 +174,26 @@ namespace PicturePerfect.Models
         public static ImageFile NewToDatabase(string path, string subfolderName, Locations.Location location)
         {
             // create an image file from the path
-            ImageFile imageFile = CreateFromPath(path);
+            ImageFile imageFile = new();
+
+            FileInfo fileInfo = new(path);
+            imageFile.CustomName = fileInfo.Name;
+            imageFile.Name = fileInfo.Name;
+            imageFile.FileType = fileInfo.Extension;
+            imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
+            imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
+            //ImageFile imageFile = CreateFromPath(path);
             imageFile.Subfolder = subfolderName;
             imageFile.Location = location; // this is either the default location "None" or a user selection.
 
             // copy the file to the image folder's subfolder
             string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
             File.Copy(path, destination, true);
+
+            // store the metadata directory 
+            // this can be null
+            IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
+            imageFile.SubIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
 
             // add to sqlite
             Database.AddImage(imageFile);
@@ -202,7 +227,7 @@ namespace PicturePerfect.Models
             imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
             imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
 
-
+            /*
             // extract metadata, but this is not possible at all times, since the output dor the tags might differ
             try
             {
@@ -213,7 +238,9 @@ namespace PicturePerfect.Models
                 // throw the exception for further handling
                 throw new ArgumentException("Error while extracting metadata.", ex);
             }
+            */
 
+            /*
             // function to extragt the meta data
             void ExtractMetaData()
             {
@@ -248,6 +275,7 @@ namespace PicturePerfect.Models
                     // no meta data will be set
                 }
             }
+            */
 
             return imageFile;
         }
@@ -446,6 +474,92 @@ namespace PicturePerfect.Models
             process.StartInfo.FileName = pathToExe;
             process.StartInfo.Arguments = path;
             process.Start();
+        }
+
+        /// <summary>
+        /// Extract a metadata description from this image file.
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="fileType"></param>
+        /// <returns>Returns the metadata as a string.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        private string ExtractMetadata(MetadataDescriptions description)
+        {
+            string metadata;
+
+            // check for file type
+            if (SubIfdDirectory != null && OrfStrings.Contains(FileType))
+            {
+                // file is of type orf
+                // check cases
+                switch (description)
+                {
+                    case MetadataDescriptions.CameraInfo:
+                        metadata = SubIfdDirectory.Tags[32].Description; // lens model as string
+                        break;
+                    case MetadataDescriptions.FStop:
+                        metadata = SubIfdDirectory.Tags[1].Description; // e.g. f/8,0
+                        break;
+                    case MetadataDescriptions.ISO:
+                        metadata = SubIfdDirectory.Tags[3].Description; // e.g.250
+                        break;
+                    case MetadataDescriptions.ExposureTime:
+                        metadata = SubIfdDirectory.Tags[0].Description; // e.g. 1/500 sec
+                        break;
+                    case MetadataDescriptions.ExposureBias:
+                        metadata = SubIfdDirectory.Tags[11].Description; // e.g. 38 0 EV;
+                        break;
+                    case MetadataDescriptions.FocalLength:
+                        metadata = SubIfdDirectory.Tags[16].Description; // e.g. 38 mm;
+                        break;
+                    default:
+                        throw new ArgumentException("Error while extracting metadata.");
+                        //break;
+                }
+            }
+            else if (SubIfdDirectory != null && JpgStrings.Contains(FileType))
+            {
+                // file is of type jpg
+                // check cases
+                switch (description)
+                {
+                    case MetadataDescriptions.CameraInfo:
+                        metadata = "unknown";
+                        break;
+                    case MetadataDescriptions.FStop:
+                        metadata = SubIfdDirectory.Tags[1].Description; // e.g. f/8,0
+                        break;
+                    case MetadataDescriptions.ISO:
+                        metadata = SubIfdDirectory.Tags[0].Description; // e.g.250
+                        break;
+                    case MetadataDescriptions.ExposureTime:
+                        metadata = SubIfdDirectory.Tags[2].Description; // e.g. 1/500 sec
+                        break;
+                    case MetadataDescriptions.ExposureBias:
+                        metadata = SubIfdDirectory.Tags[15].Description; // e.g. 38 0 EV;
+                        break;
+                    case MetadataDescriptions.FocalLength:
+                        metadata = SubIfdDirectory.Tags[12].Description; // e.g. 38 mm;
+                        break;
+                    default:
+                        throw new ArgumentException("Error while extracting metadata.");
+                        //break;
+                }
+            }
+            else
+            {
+                // image file is of type tif or nef
+                // no metadata extractable yet
+                metadata = "unknown";
+            }
+
+            // avoid null return --> display "not found"
+            if (metadata == null)
+            {
+                metadata = "not found";
+            }
+
+            return metadata;
         }
     }
 }
