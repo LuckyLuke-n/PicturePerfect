@@ -19,7 +19,7 @@ namespace PicturePerfect
         /// <summary>
         /// Get the current application Version.
         /// </summary>
-        public static string ApplicationVersion { get; } = "V1.1.1"; // not released yet
+        public static string ApplicationVersion { get; } = "V1.1.1";
         /// <summary>
         /// Get the application name.
         /// </summary>
