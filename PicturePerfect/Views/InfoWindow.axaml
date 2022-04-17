@@ -19,6 +19,7 @@
 			<Label Content="{Binding ApplicatonName}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
 			<Label Content="{Binding ApplicationVersion}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
 			<Label Content="{Binding BuildDate}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
+			<Label Content="{Binding DatabaseVersion}" Padding="10" Foreground="{Binding LightColor}"/>
 		</StackPanel>
 		
 		

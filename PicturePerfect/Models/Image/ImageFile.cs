@@ -99,6 +99,9 @@ namespace PicturePerfect.Models
         public static string[] TifStrings => new string[] { ".tif", ".TIF", ".tiff", ".TIFF" };
 
         // metadata directories
+        /// <summary>
+        /// Get the ExifDirectory for meta data tags of images. In PicutrePerfect this is currently supported only for .orf and .jpg files.
+        /// </summary>
         private ExifSubIfdDirectory? SubIfdDirectory { get; set; } = null;
 
         /// <summary>
@@ -182,7 +185,7 @@ namespace PicturePerfect.Models
             imageFile.FileType = fileInfo.Extension;
             imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
             imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
-            //ImageFile imageFile = CreateFromPath(path);
+
             imageFile.Subfolder = subfolderName;
             imageFile.Location = location; // this is either the default location "None" or a user selection.
 
@@ -209,75 +212,6 @@ namespace PicturePerfect.Models
         public static ImageFile LoadById(int id)
         {
             return Database.LoadImageFileById(id);
-        }
-
-        /// <summary>
-        /// Method to create an image file object from a given path.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns>Returns the image file object.</returns>
-        private static ImageFile CreateFromPath(string path)
-        {
-            ImageFile imageFile = new();
-
-            FileInfo fileInfo = new(path);
-            imageFile.CustomName = fileInfo.Name;
-            imageFile.Name = fileInfo.Name;
-            imageFile.FileType = fileInfo.Extension;
-            imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
-            imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
-
-            /*
-            // extract metadata, but this is not possible at all times, since the output dor the tags might differ
-            try
-            {
-                ExtractMetaData();
-            }
-            catch (Exception ex)
-            {
-                // throw the exception for further handling
-                throw new ArgumentException("Error while extracting metadata.", ex);
-            }
-            */
-
-            /*
-            // function to extragt the meta data
-            void ExtractMetaData()
-            {
-                IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
-                ExifSubIfdDirectory? subIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
-
-                // check which meta data extration is to be performed
-                if (subIfdDirectory != null && OrfStrings.Contains(imageFile.FileType))
-                {
-                    // file is a orf file
-                    imageFile.Camera = subIfdDirectory.Tags[32].Description; // lens model as string
-                    imageFile.FStop = double.Parse(subIfdDirectory.Tags[1].Description.Split('/')[1]); // e.g. f/8,0
-                    imageFile.ISO = Convert.ToInt32(subIfdDirectory.Tags[3].Description); // e.g.250
-                    string exposureTime = subIfdDirectory.Tags[0].Description.Split(' ')[0]; // e.g. 1/500 sec
-                    imageFile.ExposureTime = (int)(Convert.ToDouble(exposureTime.Split('/')[0]) / Convert.ToDouble(exposureTime.Split('/')[1]) * 1000);
-                    imageFile.ExposureBias = double.Parse(subIfdDirectory.Tags[11].Description.Split(' ')[0]); // e.g. 38 0 EV;
-                    imageFile.FocalLength = double.Parse(subIfdDirectory.Tags[16].Description.Split(' ')[0]); // e.g. 38 mm;
-                }
-                else if (subIfdDirectory != null && JpgStrings.Contains(imageFile.FileType))
-                {
-                    // file is a jpg file
-                    imageFile.Camera = "not available";
-                    imageFile.FStop = double.Parse(subIfdDirectory.Tags[1].Description.Split('/')[1]); // e.g. f/1,8
-                    imageFile.ISO = Convert.ToInt32(subIfdDirectory.Tags[0].Description); // e.g.250
-                    string exposureTime = subIfdDirectory.Tags[2].Description.Split(' ')[0]; // e.g. 1/20 sec
-                    imageFile.ExposureTime = (int)(Convert.ToDouble(subIfdDirectory.Tags[2].Description.Split(' ')[0]) * 1000);
-                    imageFile.ExposureBias = double.Parse(subIfdDirectory.Tags[15].Description.Split(' ')[0]); // e.g. 38 0 EV;
-                    imageFile.FocalLength = double.Parse(subIfdDirectory.Tags[12].Description.Split(' ')[0]); // e.g. 38 mm;
-                }
-                else
-                {
-                    // no meta data will be set
-                }
-            }
-            */
-
-            return imageFile;
         }
 
         /// <summary>

@@ -8,6 +8,11 @@ namespace PicturePerfect.Models
     public static class Database
     {
         /// <summary>
+        /// Get the current database version as an integer value, or null in case of error.
+        /// </summary>
+        public static int? CurrentVersion => GetDatabaseVersion();
+
+        /// <summary>
         /// Get or set the connection to the database.
         /// </summary>
         private static SqliteConnection Connection { get; } = SQLiteConnector.GetConnection();
@@ -16,11 +21,6 @@ namespace PicturePerfect.Models
         /// Get the default category names for the all and none category
         /// </summary>
         public static string[] DefaultCategories { get; } = { "All", "None" };
-
-        /// <summary>
-        /// Get the name of the default location.
-        /// </summary>
-        public static string DefaultLocation { get; } = "None";
 
         /// <summary>
         /// Class to connect to the sqlite database.
@@ -108,7 +108,8 @@ namespace PicturePerfect.Models
                         "CREATE TABLE categories_subcategories (id INTEGER PRIMARY KEY, category_id INTEGER, subcategory_id INTEGER)",
                         "CREATE TABLE images_categories (id INTEGER PRIMARY KEY, image_id INTEGER, category_id INTEGER)",
                         "CREATE TABLE images_subcategories (id INTEGER PRIMARY KEY, image_id INTEGER, subcategory_id INTEGER)",
-                        "CREATE TABLE images_locations (id INTEGER PRIMARY KEY, image_id INTEGER, location_id INTEGER)"};
+                        "CREATE TABLE images_locations (id INTEGER PRIMARY KEY, image_id INTEGER, location_id INTEGER)",
+                        "CREATE TABLE info (id INTEGER PRIMARY KEY, version INTEGER, notes TEXT)" };
 
             // run queries against database
             foreach (string query in queries)
@@ -121,7 +122,8 @@ namespace PicturePerfect.Models
             // changing the row of those default items will lead to editing several code snippets since the idea of having those as row 1, respectively row 1 and 2 is hard coded in this application.
             string[] defaultQueries = { "INSERT INTO locations (name, geo_tag, notes) VALUES ('None', '', '')",
                         $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[0]}', '')", // category "all"
-                        $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[1]}', '')" }; // category "none"
+                        $"INSERT INTO categories (name, notes) VALUES ('{DefaultCategories[1]}', '')",  // category "none"
+                        $"INSERT INTO info (version, notes) VALUES ('{ThisApplication.DatabaseVersion}', '')" }; // current database version
 
             // run queries against database
             foreach (string query in defaultQueries)
@@ -134,13 +136,107 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to upgrade the database. This implements changes to the tables and datatypes.
+        /// </summary>
+        public static void UpgradeDatabase()
+        {
+            if (CurrentVersion == null)
+            {
+                // error or other exception
+                // version number not foud
+                // throw exception https://docs.microsoft.com/en-us/dotnet/api/system.exception?view=net-6.0
+                throw new ArgumentException("Custom Exception: Database version could not be read from table 'info'.");
+            }
+            else if (CurrentVersion == 1 && ThisApplication.DatabaseVersion == 2)
+            {
+                Upgrade1To2();
+            }
+            else if (CurrentVersion == 1 && ThisApplication.DatabaseVersion == 3)
+            {
+                Upgrade1To2();
+                Upgrade2To3();
+            }
+            else if (CurrentVersion == 2 && ThisApplication.DatabaseVersion == 3)
+            {
+                Upgrade2To3();
+            }
+            else
+            {
+                throw new ArgumentException("Custom Exception: Database version from table 'info' was neither an integer, nor null.");
+            }
+
+            // create table 'info'
+            void Upgrade1To2()
+            {
+                string[] queries1To2 = { "CREATE TABLE IF NOT EXISTS info (id INTEGER PRIMARY KEY, notes TEXT, version INTEGER)",
+                            $"INSERT INTO info (notes, version) VALUES ('', '{ThisApplication.DatabaseVersion}')" };
+
+                Connection.Open();
+
+                // run queries against database
+                foreach (string query in queries1To2)
+                {
+                    var command = new SqliteCommand(query, Connection);
+                    command.ExecuteNonQuery();
+                }
+
+                Connection.Close();
+            }
+
+            void Upgrade2To3()
+            {
+                // empty
+            }
+        }
+
+        /// <summary>
+        /// Method to get the version of the this database.
+        /// </summary>
+        /// <returns>Returns an integer representing the database version. Returns 1 when version was not found in database.</returns>
+        private static int? GetDatabaseVersion()
+        {
+            int? version = null;
+
+            // check if the table "info" exists -> create if not version is 1;
+            Connection.Open();
+            SqliteCommand commandCheck = new("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='info'", Connection);
+            SqliteDataReader readerCheck = commandCheck.ExecuteReader();
+
+            readerCheck.Read();
+
+            if (readerCheck.GetInt32(0) == 0)
+            {
+                // zero tables called 'info'
+                // no database loaded
+                version = 1;
+            }
+            else
+            {
+                // table 'info' was found
+                SqliteCommand commandVersion = new("SELECT version FROM info WHERE id=1", Connection);
+                SqliteDataReader readerVersion = commandVersion.ExecuteReader();
+
+                if (readerVersion.HasRows)
+                {
+                    // one row will be there
+                    readerVersion.Read();
+                    version = readerVersion.GetInt32(0);
+                }
+            }
+
+            Connection.Close();
+
+            return version;
+        }
+
+        /// <summary>
         /// Method to add a image to the SQLite table "images".
         /// </summary>
         public static void AddImage(ImageFile imageFile)
         {
             //  values and parameters
-            List<string> paramters = new() { "@custom_name", "@name", "@subfolder", "@file_type", "@date_taken", "@size", @"notes" };
-            object[] values = { imageFile.CustomName, imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, imageFile.Notes };
+            List<string> paramters = new() { "@custom_name", "@name", "@subfolder", "@file_type", "@date_taken", "@size", "@camera", "@iso", "@fstop", "@exposure_time", "@exposure_bias", "@focal_length",  @"notes" };
+            object[] values = { imageFile.CustomName, imageFile.Name, imageFile.Subfolder, imageFile.FileType, imageFile.DateTaken.ToString(), imageFile.Size, "", 0, 0, 0, 0, 0, imageFile.Notes };
 
             // new command
             Connection.Open();
@@ -150,8 +246,8 @@ namespace PicturePerfect.Models
                 // new command
                 SqliteCommand command = new()
                 {
-                    CommandText = "INSERT INTO images ( custom_name, name, subfolder, file_type, date_taken, size, notes) " +
-                        " VALUES (@custom_name, @name, @subfolder, @file_type, @date_taken, @size, @notes)",
+                    CommandText = "INSERT INTO images ( custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes) " +
+                        " VALUES (@custom_name, @name, @subfolder, @file_type, @date_taken, @size, @camera, @iso, @fstop, @exposure_time, @exposure_bias, @focal_length, @notes)",
                     Connection = Connection
                 };
 

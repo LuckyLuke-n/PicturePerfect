@@ -784,7 +784,73 @@ namespace PicturePerfect.ViewModels
                 // hide menu bar and clear boxes
                 RunToggleFileDialogCommand();
                 ProjectIsLoaded = true;
-                SetMainWindowPages();
+
+                // check if database version changed
+                // upgrade necessary
+                if (Database.CurrentVersion < ThisApplication.DatabaseVersion)
+                {
+                    // upgrade necessary
+                    // make backup copy
+                    string currentDatabase = ThisApplication.ProjectFile.DatabasePath;
+                    FileInfo fileInfo = new FileInfo(currentDatabase); // get the folder from fileinfo to construct a new name
+                    string databaseFolder = fileInfo.DirectoryName;
+                    string backupDatabase = Path.Combine(databaseFolder, $"database_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}_.backup.sqlite");
+
+                    // copy the file to the currently used sqlite folder
+                    File.Copy(currentDatabase, backupDatabase, true);
+                    
+                    // try the upgrade and handle the errors in user error messages
+                    try
+                    {
+                        Database.UpgradeDatabase();
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        // database version could not be read, or database could not be upgraded
+                        string message = "Database error. Could not upgrade the database file." + Environment.NewLine +
+                            $"Original error: '{ex.Message}' with parameter '{ex.ParamName}'" + Environment.NewLine +
+                            "Your project file was backed up into the sqlite folder. The old one might be corrupted. Do not make any changes to your project. Please reach out for support." + Environment.NewLine + Environment.NewLine +
+                            "Click OK to terminate.";
+                        MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+
+                        if (result == MessageBox.MessageBoxResult.Ok) { Environment.Exit(0); }
+                    }
+                    catch (Exception ex)
+                    {
+                        // any other exception than the customized ArgumentException from above
+                        string message = "Unknown error." + Environment.NewLine +
+                            $"Original error: '{ex.Message}'" + Environment.NewLine +
+                            "Your project file was backed up into the sqlite folder. The old one might be corrupted. Do not make any changes to your project. Please reach out for support." + Environment.NewLine + Environment.NewLine +
+                            "Click OK to terminate.";
+                        MessageBox.MessageBoxResult result = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+
+                        if (result == MessageBox.MessageBoxResult.Ok) { Environment.Exit(0); }
+                    }
+                    finally
+                    {
+                        // set main window gui
+                        SetMainWindowPages();
+                    }
+                }
+                // database is up to date
+                else if (Database.CurrentVersion == ThisApplication.DatabaseVersion)
+                {
+                    // database is up to date
+                    // set main window gui
+                    SetMainWindowPages();
+                }
+                // database is newer than supported by this version of PicturePerfect
+                else
+                {
+                    // database has a higher version than supported by this version of PicturePerfect
+                    // at the moment this is no problem since the version 2 is downwards compatible
+                    SetMainWindowPages();
+                    /*
+                    string message = $"The selected project's database version is {Database.CurrentVersion}. This release of {ThisApplication.ApplicationName} supports database version {ThisApplication.DatabaseVersion} as a highest version." + Environment.NewLine +
+                        $"Please select another project or use a newer version of {ThisApplication.ApplicationName}."; 
+                    _ = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
+                    */
+                }
             }
             else
             {

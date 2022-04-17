@@ -19,7 +19,7 @@ namespace PicturePerfect
         /// <summary>
         /// Get the current application Version.
         /// </summary>
-        public static string ApplicationVersion { get; } = "V1.1.0";
+        public static string ApplicationVersion { get; } = "V1.1.1"; // not released yet
         /// <summary>
         /// Get the application name.
         /// </summary>
@@ -27,7 +27,12 @@ namespace PicturePerfect
         /// <summary>
         /// Get the application build date.
         /// </summary>
-        public static string BuildDate { get; } = "2022-04-14";
+        public static string BuildDate { get; } = "2022-04-17";
+
+        /// <summary>
+        /// Get the database version.
+        /// </summary>
+        public static int DatabaseVersion { get; } = 2;
 
         /// <summary>
         /// Get or set the currently loaded project file.

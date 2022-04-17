@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using PicturePerfect.Models;
+using System.IO;
 
 namespace PicturePerfect.ViewModels
 {
@@ -17,6 +18,7 @@ namespace PicturePerfect.ViewModels
         public static string ApplicatonName => ThisApplication.ApplicationName;
         public static string ApplicationVersion => ThisApplication.ApplicationVersion;
         public static string BuildDate => "Build date: " + ThisApplication.BuildDate;
+        public static string DatabaseVersion => $"Database version of currently loaded project: {Database.CurrentVersion}";
 
         public static string About => File.ReadAllText("Resources/about.txt");
         public static string Libraries => File.ReadAllText("Resources/libraries.txt");
