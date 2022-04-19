@@ -1,0 +1,2 @@
+﻿The automated backup for your database will occur once a day when the application is launched. You can turn this feature off if necessary.
+It is highly recommended to activate the automated backup to avoid potential frustration some point in the future. To activate the backup navigate to your project folder and go to \your-project\sqlite\backup and copy the file to \your-project. Remove the existing database.sqlite and rename the backup file to database.sqlite.

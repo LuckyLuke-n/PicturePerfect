@@ -162,6 +162,7 @@ namespace PicturePerfect.ViewModels
         public static string FileTypeDescription => File.ReadAllText("Resources/Descriptions/file_types.txt");
         public static string ViewDescription => File.ReadAllText("Resources/Descriptions/view_settings.txt");
         public static string ExternalViewerDescription => File.ReadAllText("Resources/Descriptions/external_viewer.txt");
+        public static string AutoBackupDescription => File.ReadAllText("Resources/Descriptions/backup_feature.txt");
 
         /// <summary>
         /// Get a list of possible separators. This value will be saved to the project file.
@@ -254,6 +255,16 @@ namespace PicturePerfect.ViewModels
         {
             get { return pathToExternalViewer; }
             set { this.RaiseAndSetIfChanged(ref pathToExternalViewer, value); ThisApplication.ProjectFile.PathToExternalViewer = value; }
+        }
+
+        private bool autoBackupChecked = false;
+        /// <summary>
+        /// Get or set weather the auto backup shall be performed.
+        /// </summary>
+        public bool AutoBackupChecked
+        {
+            get { return autoBackupChecked; }
+            set { this.RaiseAndSetIfChanged(ref autoBackupChecked, value); ThisApplication.ProjectFile.AutoBackupChecked = value; }
         }
 
         #endregion
@@ -494,6 +505,7 @@ namespace PicturePerfect.ViewModels
             UseSeparator = ThisApplication.ProjectFile.UseSeparator;
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
             PathToExternalViewer = ThisApplication.ProjectFile.PathToExternalViewer;
+            AutoBackupChecked = ThisApplication.ProjectFile.AutoBackupChecked;
         }
 
         /// <summary>

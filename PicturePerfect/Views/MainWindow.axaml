@@ -285,14 +285,23 @@
 						</StackPanel>
 					</ScrollViewer>
 
-					<!-- Performance settings -->
+					<!-- Features settings -->
 					<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="1">
 						<StackPanel Margin="10" IsEnabled="{Binding ProjectIsLoaded}">
-							<Label Content="Performance" FontWeight="Bold" Margin="0,0,0,10"/>
+							<Label Content="Features" FontWeight="Bold" Margin="0,0,0,10"/>
+							<!-- external viewer -->
 							<TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{Binding ExternalViewerDescription}" />
 							<StackPanel Orientation="Horizontal" Margin="0,0,0,10" >
 								<Button Content="Select path" Margin="0,0,5,0" Click="ButtonExternalViewer_Click"/>
 								<TextBox Name="textBoxExternalViewer" Text="{Binding PathToExternalViewer}" Width="300" Margin="0,0,5,0" IsReadOnly="True" />
+							</StackPanel>
+							<!-- automated backup -->
+							<TextBlock TextWrapping="Wrap" Margin="0,20,0,10" Text="{Binding AutoBackupDescription}" />
+							<CheckBox Content="Perform automated backup" Margin="0,0,0,10" IsChecked="{Binding AutoBackupChecked}" />
+							<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+								<Button Content="Clear backups" />
+								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="Current space on disk:" />
+								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="5 MB" />
 							</StackPanel>
 						</StackPanel>
 					</ScrollViewer>

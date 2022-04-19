@@ -224,6 +224,16 @@ namespace PicturePerfect.Models
             get { return pathToExternalViewer; }
             set { pathToExternalViewer = value; Save(); }
         }
+
+        private bool autoBackupChecked = true;
+        /// <summary>
+        /// Get or set weather the auto backup shall be performed.
+        /// </summary>
+        public bool AutoBackupChecked
+        {
+            get { return autoBackupChecked; }
+            set { autoBackupChecked = value; Save(); }
+        }
         #endregion
 
         /// <summary>
@@ -347,6 +357,14 @@ namespace PicturePerfect.Models
 
                 return value;
             }
+            bool CheckAutoBackupCheckedException()
+            {
+                bool value;
+                try { value = bool.Parse(projectFile["AutoBackupChecked"]); }
+                catch { value = false; }
+
+                return value;
+            }
 
             // update project file
             ProjectFile newFile = new()
@@ -368,6 +386,7 @@ namespace PicturePerfect.Models
                 TifFilesChecked = CheckTifFilesCheckedException(),
                 ImageViewFullScreenChecked = CheckImageViewFullScreenChecked(),
                 PathToExternalViewer = CheckPathToExternalViewer(),
+                AutoBackupChecked = CheckAutoBackupCheckedException(),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
                 Separator = projectFile["Separator"],
 
