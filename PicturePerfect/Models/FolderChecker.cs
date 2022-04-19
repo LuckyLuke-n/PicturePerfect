@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace PicturePerfect.Models
@@ -61,6 +62,29 @@ namespace PicturePerfect.Models
             }
 
             return counter;
+        }
+
+        /// <summary>
+        /// Method to get the size of a folder in MB.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>Returns the bytes as an integer.</returns>
+        public double GetFolderSize(string path)
+        {
+            double size = 0;
+
+            // Get array of all file names.
+            string[] files = Directory.GetFiles(path, "*.*");
+
+            // Calculate total bytes of all files in a loop.
+            foreach (string file in files)
+            {
+                //FileInfo to get length of each file.
+                FileInfo info = new(file);
+                size += (double)info.Length / 1000000;
+            }
+
+            return Math.Round(size, 3);
         }
     }
 }

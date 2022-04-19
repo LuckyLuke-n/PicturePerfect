@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace PicturePerfect.Models
@@ -227,6 +228,19 @@ namespace PicturePerfect.Models
             Connection.Close();
 
             return version;
+        }
+
+        /// <summary>
+        /// Method to make a backup of the currently loaded project's database. The update will only occur once a day.
+        /// </summary>
+        public static void Backup()
+        {
+            // create folder if necessary (versions until 1.1.1 do not have this folder)
+            Directory.CreateDirectory(ThisApplication.ProjectFile.BackupFolder);
+
+            // copy the datbase if it does not already exist
+            string backupFilePath = Path.Combine(ThisApplication.ProjectFile.BackupFolder, $"database_backup_{DateTime.Today.ToString("yyyy-MM-dd")}.sqlite");
+            if (File.Exists(backupFilePath) == false && ThisApplication.ProjectFile.AutoBackupChecked == true) { File.Copy(ThisApplication.ProjectFile.DatabasePath, backupFilePath, false); }
         }
 
         /// <summary>

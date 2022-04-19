@@ -5,11 +5,5 @@ The true power is unleashed when you add the raw images to the database. You can
 Apart from the image catalog PicturePerfect includes the RawConvert. It enables you to convert a selected batch of raw images to jpg files.
 
 
-Release notes version 1.1.x
-- Bugfix: Fixed an issue leading to displaying wrong exposure times and showing those as 0 ms. (V1.1.1)
-- Performance: Advanced metadata like ISO value and exposure time are no longer stored in the database. They are extracted from the file without slowing down the application. (V1.1.1)
-- Feature: Added a feature to check the version of the currently loaded projects's database in the info window. (V1.1.1)
-- Feature: Added a feature to extract advanced meta data from the image file and add it to the database. (V1.1.0)
-- Bugfix: Fixed an issue preventing the selection for raw files to be exported in their original raw format. (V1.1.0)
-- Bugfix: Fixed an issue causing image sizes exeeding the size of the image viewer window. (V1.1.0)
-- Feature: Added support for .tif files. (V1.1.0)
+Release notes version 1.2.x
+- Feature: Added a feature to perform an automated database update once a day upon loading a project file.

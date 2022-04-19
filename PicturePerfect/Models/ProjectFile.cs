@@ -38,6 +38,10 @@ namespace PicturePerfect.Models
         /// </summary>
         public string ImageFolder { get; private set; } = string.Empty;
         /// <summary>
+        /// Get or set the path to the backup folder.
+        /// </summary>
+        public string BackupFolder { get; private set;} = string.Empty;
+        /// <summary>
         /// Get the absolute path to the database sqlite file.
         /// </summary>
         public string DatabasePath { get; private set; } = string.Empty;
@@ -264,6 +268,7 @@ namespace PicturePerfect.Models
                 ProjectOwner = Environment.UserName,
                 CreationDate = DateTime.Now,
                 ImageFolder = Path.Combine(path, "images"),
+                BackupFolder = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "backup"),
                 DatabasePath = Path.Combine(path, "sqlite", "database.sqlite"),
                 OrfFilesChecked = true,
                 NefFilesChecked = true,
@@ -349,7 +354,7 @@ namespace PicturePerfect.Models
 
                 return value;
             }
-            string CheckPathToExternalViewer()
+            string CheckPathToExternalViewerException()
             {
                 string value;
                 try { value = projectFile["PathToExternalViewer"]; }
@@ -365,6 +370,14 @@ namespace PicturePerfect.Models
 
                 return value;
             }
+            string CheckBackupFolderException()
+            {
+                string value;
+                try { value = projectFile["BackupFolder"]; }
+                catch { value = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "backup"); }
+
+                return value;
+            }
 
             // update project file
             ProjectFile newFile = new()
@@ -376,6 +389,7 @@ namespace PicturePerfect.Models
                 CreationDate = DateTime.Parse(projectFile["CreationDate"]),
                 Notes = projectFile["Notes"],
                 ImageFolder = Path.Combine(new FileInfo(path).DirectoryName, "images"),
+                BackupFolder = CheckBackupFolderException(),
                 DatabasePath = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "database.sqlite"),
 
                 // settings
@@ -385,7 +399,7 @@ namespace PicturePerfect.Models
                 PngFilesChecked = CheckPngFilesCheckedException(),
                 TifFilesChecked = CheckTifFilesCheckedException(),
                 ImageViewFullScreenChecked = CheckImageViewFullScreenChecked(),
-                PathToExternalViewer = CheckPathToExternalViewer(),
+                PathToExternalViewer = CheckPathToExternalViewerException(),
                 AutoBackupChecked = CheckAutoBackupCheckedException(),
                 UseSeparator = bool.Parse(projectFile["UseSeparator"]),
                 Separator = projectFile["Separator"],

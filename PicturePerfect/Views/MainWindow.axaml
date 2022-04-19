@@ -301,7 +301,7 @@
 							<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
 								<Button Content="Clear backups" />
 								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="Current space on disk:" />
-								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="5 MB" />
+								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="{Binding AutoUpdateSize}" />
 							</StackPanel>
 						</StackPanel>
 					</ScrollViewer>

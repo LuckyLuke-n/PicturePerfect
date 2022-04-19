@@ -267,6 +267,16 @@ namespace PicturePerfect.ViewModels
             set { this.RaiseAndSetIfChanged(ref autoBackupChecked, value); ThisApplication.ProjectFile.AutoBackupChecked = value; }
         }
 
+        private string autoUpdateSize = "0 MB";
+        /// <summary>
+        /// Get or set the value for the size of the automated updates in the backup folder.
+        /// </summary>
+        public string AutoUpdateSize
+        {
+            get { return autoUpdateSize; }
+            set { this.RaiseAndSetIfChanged(ref autoUpdateSize, value); }
+        }
+
         #endregion
 
         #region Status Bar and search box
@@ -479,7 +489,7 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to set the control properties for the settings page.
+        /// Method to set the control properties for the main window. Setting the controls is based on loading the data from the project file and the sqlite database.
         /// </summary>
         private void SetMainWindowPages()
         {
@@ -506,6 +516,7 @@ namespace PicturePerfect.ViewModels
             if (UseSeparator == true) { Separator = ThisApplication.ProjectFile.Separator; };
             PathToExternalViewer = ThisApplication.ProjectFile.PathToExternalViewer;
             AutoBackupChecked = ThisApplication.ProjectFile.AutoBackupChecked;
+            AutoUpdateSize = $"{new FolderChecker().GetFolderSize(ThisApplication.ProjectFile.BackupFolder)} MB";
         }
 
         /// <summary>
@@ -863,6 +874,14 @@ namespace PicturePerfect.ViewModels
                     _ = await MessageBox.Show(message, null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Warning);
                     */
                 }
+
+                // backup the database
+                try
+                {
+                    Database.Backup();
+                    AutoUpdateSize = $"{new FolderChecker().GetFolderSize(ThisApplication.ProjectFile.BackupFolder)} MB";
+                }
+                catch (Exception ex) { _ = await MessageBox.Show($"Database update failed with error '{ex.Message}'.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error); }
             }
             else
             {
