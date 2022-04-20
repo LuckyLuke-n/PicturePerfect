@@ -7,3 +7,4 @@ Apart from the image catalog PicturePerfect includes the RawConvert. It enables 
 
 Release notes version 1.2.x
 - Feature: Added a feature to perform an automated database update once a day upon loading a project file.
+- Bugfix: Fixed an issue preventing the subcategories to be unlinked from the image when the category was changed.

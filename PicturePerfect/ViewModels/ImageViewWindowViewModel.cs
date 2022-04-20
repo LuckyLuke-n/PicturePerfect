@@ -782,18 +782,23 @@ namespace PicturePerfect.ViewModels
             }
 
             // check if properties causing relinking in database where changed
+            // location
             if (LocationIndexSelected == -1 || Locations.List[LocationIndexSelected].Id != ImageFile.Location.Id)
             {
                 changedImageFile = ImageFile.CommitLocationChange(Locations.List[LocationIndexSelected]);
                 changesMade = true;
             }
 
+            // category
             if (CategoryIndexSelected == -1 || CategoriesTree.Tree[CategoryIndexSelected].Id != ImageFile.Category.Id)
             {
+                // change category
+                // links in database will be delete via CommitCatagoryChange method
                 changedImageFile = ImageFile.CommitCategoryChange(CategoriesTree.Tree[CategoryIndexSelected]);
                 changesMade = true;
             }
 
+            // sucategory 1
             if (SubCategory1IndexSelected != -1)
             {
                 if (SubCategories1[SubCategory1IndexSelected].Id != ImageFile.SubCategory1.Id)
@@ -803,6 +808,7 @@ namespace PicturePerfect.ViewModels
                 }
             }
 
+            // subcategory 2
             if (SubCategory2IndexSelected != -1)
             {
                 if (SubCategories2[SubCategory2IndexSelected].Id != ImageFile.SubCategory2.Id)

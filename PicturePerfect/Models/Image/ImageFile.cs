@@ -259,8 +259,13 @@ namespace PicturePerfect.Models
         /// <returns>The updated image file object.</returns>
         public ImageFile CommitCategoryChange(Category category)
         {
+            // set category object
             Category = category;
             Database.LinkImageToCategory(this, category);
+
+            // reset subcategories, since links to subcategories were deleted in Database.LinkImageToCategory method
+            SubCategory1 = new SubCategory();
+            SubCategory2 = new SubCategory();
 
             return this;
         }
