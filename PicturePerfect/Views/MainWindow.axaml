@@ -299,7 +299,7 @@
 							<TextBlock TextWrapping="Wrap" Margin="0,20,0,10" Text="{Binding AutoBackupDescription}" />
 							<CheckBox Content="Perform automated backup" Margin="0,0,0,10" IsChecked="{Binding AutoBackupChecked}" />
 							<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-								<Button Content="Clear backups" />
+								<Button Content="Clear backups" Command="{Binding ClearBackupsCommand}" />
 								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="Current space on disk:" />
 								<Label VerticalContentAlignment="Center" Margin="5,0,0,0" Content="{Binding AutoUpdateSize}" />
 							</StackPanel>

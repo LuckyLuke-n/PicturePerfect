@@ -439,6 +439,7 @@ namespace PicturePerfect.ViewModels
         public ReactiveCommand<Unit, Unit> SearchCommand { get; }
         public ReactiveCommand<Unit, Unit> EditCategoriesCommand { get; }
         public ReactiveCommand<Unit, Unit> EditLocationsCommand { get; }
+        public ReactiveCommand<Unit, Unit> ClearBackupsCommand { get; }
         #endregion
 
         #region Command RawConverter
@@ -483,6 +484,9 @@ namespace PicturePerfect.ViewModels
             ClearRawConverterItemCommand = ReactiveCommand.Create(RunClearRawConverterItemCommand);
             StartRawConverterCommand = ReactiveCommand.Create(RunStartRawConverterCommandAsync);
             CancelRawConverterCommand = ReactiveCommand.Create(RunCancelRawConverterCommand);
+
+            // commands for settings section
+            ClearBackupsCommand = ReactiveCommand.Create(RunClearBackupsCommand);
 
             // clear the temp folder
             ThisApplication.ClearTemp();
@@ -1208,6 +1212,21 @@ namespace PicturePerfect.ViewModels
             {
                 BackgroundWorkerRawConverter.CancelAsync();
             }
+        }
+
+        /// <summary>
+        /// Method to delete all files in the backup folder.
+        /// </summary>
+        private void RunClearBackupsCommand()
+        {
+            // iterate through directory and delete all files
+            foreach (FileInfo file in new DirectoryInfo(ThisApplication.ProjectFile.BackupFolder).GetFiles())
+            {
+                file.Delete();
+            }
+
+            // set the size property
+            AutoUpdateSize = $"{new FolderChecker().GetFolderSize(ThisApplication.ProjectFile.BackupFolder)} MB";
         }
     }
 }
