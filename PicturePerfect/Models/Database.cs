@@ -592,7 +592,7 @@ namespace PicturePerfect.Models
             // new command
             Connection.Open();
 
-            // insert new row linking the image and the location
+            // update row linking the image and the location
             SqliteCommand commandNew = new()
             {
                 CommandText = "UPDATE images_categories SET category_id=@category_id WHERE image_id=@image_id",
@@ -601,6 +601,16 @@ namespace PicturePerfect.Models
             // add all with value, only works if each column is unique, which should always be the case
             paramters.ForEach(parameter => commandNew.Parameters.AddWithValue(parameter, values[paramters.IndexOf(parameter)]));
             commandNew.ExecuteNonQuery();
+
+            // remove links between this image and the previously set subcategories
+            // no check if image has already links. reason: delte old rows from database which remained active before this bugfix
+            SqliteCommand commandUnlinkSubcategories = new()
+            {
+                CommandText = "DELETE FROM images_subcategories WHERE image_id=@image_id",
+                Connection = Connection
+            };
+            commandUnlinkSubcategories.Parameters.AddWithValue("@image_id", image.Id);
+            commandUnlinkSubcategories.ExecuteNonQuery();           
 
             // close connection
             Connection.Close();
