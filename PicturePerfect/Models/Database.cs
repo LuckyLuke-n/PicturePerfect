@@ -138,6 +138,7 @@ namespace PicturePerfect.Models
 
         /// <summary>
         /// Method to upgrade the database. This implements changes to the tables and datatypes.
+        /// The databse file is copied to the backup folder before making any changes.
         /// </summary>
         public static void UpgradeDatabase()
         {
@@ -150,15 +151,18 @@ namespace PicturePerfect.Models
             }
             else if (CurrentVersion == 1 && ThisApplication.DatabaseVersion == 2)
             {
+                Backup(isUpgrade: true);
                 Upgrade1To2();
             }
             else if (CurrentVersion == 1 && ThisApplication.DatabaseVersion == 3)
             {
+                Backup(isUpgrade: true);
                 Upgrade1To2();
                 Upgrade2To3();
             }
             else if (CurrentVersion == 2 && ThisApplication.DatabaseVersion == 3)
             {
+                Backup(isUpgrade: true);
                 Upgrade2To3();
             }
             else
@@ -233,13 +237,16 @@ namespace PicturePerfect.Models
         /// <summary>
         /// Method to make a backup of the currently loaded project's database. The update will only occur once a day.
         /// </summary>
-        public static void Backup()
+        public static void Backup(bool isUpgrade)
         {
             // create folder if necessary (versions until 1.1.1 do not have this folder)
             Directory.CreateDirectory(ThisApplication.ProjectFile.BackupFolder);
 
             // copy the datbase if it does not already exist
-            string backupFilePath = Path.Combine(ThisApplication.ProjectFile.BackupFolder, $"database_backup_{DateTime.Today.ToString("yyyy-MM-dd")}.sqlite");
+            string newFilename;
+            if (isUpgrade == true) { newFilename = $"database_upgrade_backup_{DateTime.Today.ToString("yyyy-MM-dd")}.sqlite"; }
+            else { newFilename = $"database_backup_{DateTime.Today.ToString("yyyy-MM-dd")}.sqlite"; }
+            string backupFilePath = Path.Combine(ThisApplication.ProjectFile.BackupFolder, newFilename);
             if (File.Exists(backupFilePath) == false && ThisApplication.ProjectFile.AutoBackupChecked == true) { File.Copy(ThisApplication.ProjectFile.DatabasePath, backupFilePath, false); }
         }
 

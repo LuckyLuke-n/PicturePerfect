@@ -66,6 +66,7 @@ namespace PicturePerfect.Models
 
         /// <summary>
         /// Method to get the size of a folder in MB.
+        /// If the backup folder does not exist the returned size will be zero.
         /// </summary>
         /// <param name="path"></param>
         /// <returns>Returns the bytes as an integer.</returns>
@@ -73,15 +74,19 @@ namespace PicturePerfect.Models
         {
             double size = 0;
 
-            // Get array of all file names.
-            string[] files = Directory.GetFiles(path, "*.*");
-
-            // Calculate total bytes of all files in a loop.
-            foreach (string file in files)
+            // check if folder exists to avoid error when project is below ot equal version V1.1.1
+            if (Directory.Exists(path) == true)
             {
-                //FileInfo to get length of each file.
-                FileInfo info = new(file);
-                size += (double)info.Length / 1000000;
+                // Get array of all file names.
+                string[] files = Directory.GetFiles(path, "*.*");
+
+                // Calculate total bytes of all files in a loop.
+                foreach (string file in files)
+                {
+                    //FileInfo to get length of each file.
+                    FileInfo info = new(file);
+                    size += (double)info.Length / 1000000;
+                }
             }
 
             return Math.Round(size, 3);

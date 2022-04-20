@@ -812,16 +812,7 @@ namespace PicturePerfect.ViewModels
                 // upgrade necessary
                 if (Database.CurrentVersion < ThisApplication.DatabaseVersion)
                 {
-                    // upgrade necessary
-                    // make backup copy
-                    string currentDatabase = ThisApplication.ProjectFile.DatabasePath;
-                    FileInfo fileInfo = new FileInfo(currentDatabase); // get the folder from fileinfo to construct a new name
-                    string databaseFolder = fileInfo.DirectoryName;
-                    string backupDatabase = Path.Combine(databaseFolder, $"database_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}_.backup.sqlite");
-
-                    // copy the file to the currently used sqlite folder
-                    File.Copy(currentDatabase, backupDatabase, true);
-                    
+                    // upgrade necessary                   
                     // try the upgrade and handle the errors in user error messages
                     try
                     {
@@ -878,7 +869,7 @@ namespace PicturePerfect.ViewModels
                 // backup the database
                 try
                 {
-                    Database.Backup();
+                    Database.Backup(isUpgrade: false);
                     AutoUpdateSize = $"{new FolderChecker().GetFolderSize(ThisApplication.ProjectFile.BackupFolder)} MB";
                 }
                 catch (Exception ex) { _ = await MessageBox.Show($"Database update failed with error '{ex.Message}'.", null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error); }
