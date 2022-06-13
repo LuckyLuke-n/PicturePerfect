@@ -8,7 +8,7 @@ Avalonia.Diagnostics V0.10.15 by .NET Foundation and Contributors licensed under
 
 Avalonia.ReactiveUI V0.10.15 by .NET Foundation and Contributors licensed under MIT License
 
-Magick.NET-Q16-AnyCPU V11.1.2 by Dirk Lemstra licensed under Apache License 2.0
+Magick.NET-Q16-AnyCPU V11.2.0 by Dirk Lemstra licensed under Apache License 2.0
 
 MetadataExtractor V2.7.2 by Drew Noakes and contributors licensed under Apache License 2.0
 

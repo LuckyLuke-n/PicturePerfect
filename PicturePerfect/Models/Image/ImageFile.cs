@@ -419,7 +419,6 @@ namespace PicturePerfect.Models
         /// Extract a metadata description from this image file.
         /// </summary>
         /// <param name="description"></param>
-        /// <param name="fileType"></param>
         /// <returns>Returns the metadata as a string.</returns>
         /// <exception cref="ArgumentException"></exception>
         private string ExtractMetadata(MetadataDescriptions description)
@@ -476,6 +475,36 @@ namespace PicturePerfect.Models
                         break;
                     case MetadataDescriptions.ExposureBias:
                         metadata = SubIfdDirectory.Tags[15].Description; // e.g. 38 0 EV;
+                        break;
+                    case MetadataDescriptions.FocalLength:
+                        metadata = SubIfdDirectory.Tags[12].Description; // e.g. 38 mm;
+                        break;
+                    default:
+                        throw new ArgumentException("Error while extracting metadata.");
+                        //break;
+                }
+            }
+            else if (SubIfdDirectory != null && TifStrings.Contains(FileType))
+            {
+                // file is of type tif/tiff
+                // this will not work with all tif files, the success depends on the source of the tif file
+                // check cases
+                switch (description)
+                {
+                    case MetadataDescriptions.CameraInfo:
+                        metadata = SubIfdDirectory.Tags[25].Description; // lens model as string
+                        break;
+                    case MetadataDescriptions.FStop:
+                        metadata = SubIfdDirectory.Tags[1].Description; // e.g. f/8,0
+                        break;
+                    case MetadataDescriptions.ISO:
+                        metadata = SubIfdDirectory.Tags[3].Description; // e.g.250
+                        break;
+                    case MetadataDescriptions.ExposureTime:
+                        metadata = SubIfdDirectory.Tags[0].Description; // e.g. 1/500 sec
+                        break;
+                    case MetadataDescriptions.ExposureBias:
+                        metadata = SubIfdDirectory.Tags[7].Description; // e.g. 38 0 EV;
                         break;
                     case MetadataDescriptions.FocalLength:
                         metadata = SubIfdDirectory.Tags[12].Description; // e.g. 38 mm;
