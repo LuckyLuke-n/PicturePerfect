@@ -874,6 +874,62 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Method to load all image file data for files with a specific location assignment.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns>Returns the list of image files.</returns>
+        public static List<ImageFile> LoadImageFilesByLocation(Locations.Location location)
+        {
+            List<ImageFile> list = new();
+
+            // specific location
+            string commandTextIds = "SELECT image_id FROM images_locations WHERE location_id=@location_id";
+
+            Connection.Open();
+
+            SqliteCommand commandIds = new(commandTextIds, Connection);
+            commandIds.Parameters.AddWithValue("location_id", location.Id);
+            SqliteDataReader readerId = commandIds.ExecuteReader();
+
+            if (readerId.HasRows)
+            {
+                while (readerId.Read())
+                {
+                    // get id and corresponding image
+                    int imageId = readerId.GetInt32(0);
+
+                    string commandTextImage = "SELECT id, custom_name, name, subfolder, file_type, date_taken, size, camera, iso, fstop, exposure_time, exposure_bias, focal_length, notes FROM images WHERE id=@id ORDER BY date_taken ASC";
+                    SqliteCommand commandImage = new(commandTextImage, Connection);
+                    commandImage.Parameters.AddWithValue("@id", imageId);
+                    SqliteDataReader readerImage = commandImage.ExecuteReader();
+
+                    // only one entry as a result
+                    readerImage.Read();
+
+                    int id = readerImage.GetInt32((int)TableImagesOrdinals.Id);
+                    string customName = readerImage.GetString((int)TableImagesOrdinals.CustomName);
+                    string name = readerImage.GetString((int)TableImagesOrdinals.Name);
+                    string subfolderName = readerImage.GetString((int)TableImagesOrdinals.Subfolder);
+                    string fileType = readerImage.GetString((int)TableImagesOrdinals.FileType);
+                    DateTime dateTaken = DateTime.Parse(readerImage.GetString((int)TableImagesOrdinals.DateTaken));
+                    double size = readerImage.GetDouble((int)TableImagesOrdinals.Size);
+                    string notes = readerImage.GetString((int)TableImagesOrdinals.Notes);
+
+                    Category category = GetCategoryByImage(id);
+                    SubCategory[] subCategories = GetSubCategories(id);
+
+                    ImageFile imageFile = ImageFile.NewFromDatabase(id, name, customName, subfolderName, fileType, dateTaken, size, notes, location, category, subCategories[0], subCategories[1]);
+
+                    list.Add(imageFile);
+                }
+            }
+
+            Connection.Close();
+
+            return list;
+        }
+
+        /// <summary>
         /// Method to get the location for a specific image file.
         /// </summary>
         /// <param name="imageId"></param>

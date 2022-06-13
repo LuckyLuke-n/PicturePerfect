@@ -81,6 +81,19 @@ namespace PicturePerfect.Models
         }
 
         /// <summary>
+        /// Load images from the database by a specific location.
+        /// </summary>
+        /// <param name="location"></param>
+        public void LoadByLocation(Locations.Location location)
+        {
+            List.Clear();
+
+            List<ImageFile> list = Database.LoadImageFilesByLocation(location);
+
+            list.ForEach(file => List.Add(file));
+        }
+
+        /// <summary>
         /// Copy image files from a folder to \images\subfolder\ and store the information to the database.
         /// </summary>
         /// <param name="files">List of files to be added.</param>

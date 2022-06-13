@@ -420,6 +420,18 @@ namespace PicturePerfect.ViewModels
         }
         #endregion
 
+        #region ListBox location properties
+        private Locations.Location locationSelected = new();
+        /// <summary>
+        /// Get or set the selected location.
+        /// </summary>
+        public Locations.Location LocationSelected
+        {
+            get { return locationSelected; }
+            set { this.RaiseAndSetIfChanged(ref locationSelected, value); LoadImagesByLocationObject(); }
+        }
+        #endregion
+
         #region Commands images
         public ReactiveCommand<Unit, Unit> ShowImageCommand { get; }
         public ReactiveCommand<Unit, Unit> MarkAsFavorite1Command { get; }
@@ -969,7 +981,7 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to hide or show the load images section.
+        /// Method to hide or show the load images section. The images will be added to the LoadedImageFiles list.
         /// </summary>
         private void RunToggleLoadImagesCommand()
         {
@@ -978,7 +990,7 @@ namespace PicturePerfect.ViewModels
         }
 
         /// <summary>
-        /// Method to load images by category or subcategory.
+        /// Method to load images by category or subcategory. The images will be added to the LoadedImageFiles list.
         /// </summary>
         private void LoadImagesByCategoryObject()
         {
@@ -994,6 +1006,14 @@ namespace PicturePerfect.ViewModels
                 SubCategory subCategory = (SubCategory)SelectedCategoryObject;
                 LoadedImageFiles.LoadBySubCategory(subCategory);
             }
+        }
+
+        /// <summary>
+        /// Method to load images by a location object. The images will be added to the LoadedImageFiles list.
+        /// </summary>
+        private void LoadImagesByLocationObject()
+        {
+            LoadedImageFiles.LoadByLocation(LocationSelected);
         }
 
         /// <summary>
