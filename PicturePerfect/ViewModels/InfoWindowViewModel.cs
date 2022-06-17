@@ -1,5 +1,10 @@
 ﻿using PicturePerfect.Models;
+using PicturePerfect.Views;
+using ReactiveUI;
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reactive;
 
 namespace PicturePerfect.ViewModels
 {
@@ -23,6 +28,12 @@ namespace PicturePerfect.ViewModels
         public static string About => File.ReadAllText("Resources/about.txt");
         public static string Libraries => File.ReadAllText("Resources/libraries.txt");
         public static string License => File.ReadAllText("Resources/license.txt");
+
+        public static string GitHubLink => "https://github.com/LuckyLuke-n/PicturePerfect";
+        #endregion
+
+        #region Commands
+        public ReactiveCommand<Unit, Unit> OpenGitHubCommand { get; }
         #endregion
 
         /// <summary>
@@ -30,7 +41,24 @@ namespace PicturePerfect.ViewModels
         /// </summary>
         public InfoWindowViewModel()
         {
+            OpenGitHubCommand = ReactiveCommand.Create(RunOpenGitHubCommand);
+        }
 
+        /// <summary>
+        /// Method to open the github page of this application.
+        /// </summary>
+        private async void RunOpenGitHubCommand()
+        {
+            try
+            {
+                Process.Start("explorer.exe", GitHubLink);
+            }
+            catch (Exception exception)
+            {
+                string text = "We encoutered an error opening the link in your default browser." + Environment.NewLine +
+                    $"Original message: {exception.Message}";
+                _ = await MessageBox.Show(text, null, MessageBox.MessageBoxButtons.Ok, MessageBox.MessageBoxIcon.Error);
+            }         
         }
     }
 }

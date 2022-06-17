@@ -15,11 +15,12 @@
 		<Border Grid.Row="2" Grid.ColumnSpan="2" Background="{Binding LightColor}"/>
 
 		<!-- Stack Panel for information -->
-		<StackPanel Margin="10">
+		<StackPanel Margin="10,10,0,0">
 			<Label Content="{Binding ApplicatonName}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
 			<Label Content="{Binding ApplicationVersion}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
-			<Label Content="{Binding BuildDate}" Padding="10" Foreground="{Binding LightColor}" FontSize="{Binding LargeFontSize}"/>
+			<Label Content="{Binding BuildDate}" Padding="10" Foreground="{Binding LightColor}"/>
 			<Label Content="{Binding DatabaseVersion}" Padding="10" Foreground="{Binding LightColor}"/>
+			<Button Content="{Binding GitHubLink}" Padding="10" Foreground="{Binding LightColor}" Background="{Binding DarkColor}" Command="{Binding OpenGitHubCommand}"/>
 		</StackPanel>
 		
 		
@@ -28,14 +29,17 @@
 
 		<!-- Tab control -->
 		<TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
+			<!-- About -->
 			<TabItem Header="About">
 				<TextBox Text="{Binding About}" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
 			</TabItem>
 
+			<!-- Libraries -->
 			<TabItem Header="Libraries">
 				<TextBox Text="{Binding Libraries}" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>			
 			</TabItem>
 
+			<!-- License -->
 			<TabItem Header="License">
 				<TextBox Text="{Binding License}" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{Binding LightColor}"/>
 			</TabItem>
