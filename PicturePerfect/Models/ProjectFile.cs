@@ -268,7 +268,7 @@ namespace PicturePerfect.Models
                 ProjectOwner = Environment.UserName,
                 CreationDate = DateTime.Now,
                 ImageFolder = Path.Combine(path, "images"),
-                BackupFolder = Path.Combine(new FileInfo(path).DirectoryName, "sqlite", "backup"),
+                BackupFolder = Path.Combine(path, "sqlite", "backup"),
                 DatabasePath = Path.Combine(path, "sqlite", "database.sqlite"),
                 OrfFilesChecked = true,
                 NefFilesChecked = true,
