@@ -5,6 +5,7 @@ using MetadataExtractor.Formats.Exif;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -121,7 +122,8 @@ namespace PicturePerfect.Models
             ISO,
             ExposureTime,
             ExposureBias,
-            FocalLength
+            FocalLength,
+            DateTimeDigitized
         }
 
         /// <summary>
@@ -183,20 +185,40 @@ namespace PicturePerfect.Models
             imageFile.CustomName = fileInfo.Name;
             imageFile.Name = fileInfo.Name;
             imageFile.FileType = fileInfo.Extension;
-            imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un.edited files. This is a work around since it was not possible to read the create date from exifdirectory.
             imageFile.Size = Math.Round(fileInfo.Length / 1000000.00, 3);
 
             imageFile.Subfolder = subfolderName;
             imageFile.Location = location; // this is either the default location "None" or a user selection.
 
-            // copy the file to the image folder's subfolder
-            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
-            File.Copy(path, destination, true);
-
             // store the metadata directory 
             // this can be null
             IReadOnlyList<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(path);
             imageFile.SubIfdDirectory = directories.OfType<ExifSubIfdDirectory>().FirstOrDefault();
+
+            // fix the date digitized bug
+            if (imageFile.SubIfdDirectory != null && OrfStrings.Contains(imageFile.FileType))
+            {
+                // orf
+                imageFile.DateTaken = DateTime.ParseExact(imageFile.SubIfdDirectory.Tags[7].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture);
+            }
+            else if (imageFile.SubIfdDirectory != null && JpgStrings.Contains(imageFile.FileType))
+            {
+                // jpg
+                imageFile.DateTaken = DateTime.ParseExact(imageFile.SubIfdDirectory.Tags[14].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture);
+            }
+            else if (imageFile.SubIfdDirectory != null && TifStrings.Contains(imageFile.FileType))
+            {
+                // tiff
+                imageFile.DateTaken = DateTime.ParseExact(imageFile.SubIfdDirectory.Tags[6].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un-edited files.
+            }
+
+            // copy the file to the image folder's subfolder
+            string destination = Path.Combine(ThisApplication.ProjectFile.ImageFolder, imageFile.Subfolder, imageFile.Name);
+            File.Copy(path, destination, true);
 
             // add to sqlite
             Database.AddImage(imageFile);
@@ -450,6 +472,9 @@ namespace PicturePerfect.Models
                     case MetadataDescriptions.FocalLength:
                         metadata = SubIfdDirectory.Tags[16].Description; // e.g. 38 mm;
                         break;
+                    case MetadataDescriptions.DateTimeDigitized:
+                        metadata = DateTime.ParseExact(SubIfdDirectory.Tags[7].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture).ToString(); // 2021:06:15 09:42:21 to 15.06.2021 09:42:21
+                        break;
                     default:
                         throw new ArgumentException("Error while extracting metadata.");
                         //break;
@@ -478,6 +503,9 @@ namespace PicturePerfect.Models
                         break;
                     case MetadataDescriptions.FocalLength:
                         metadata = SubIfdDirectory.Tags[12].Description; // e.g. 38 mm;
+                        break;
+                    case MetadataDescriptions.DateTimeDigitized:
+                        metadata = DateTime.ParseExact(SubIfdDirectory.Tags[14].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture).ToString(); // 2021:06:15 09:42:21 to 15.06.2021 09:42:21
                         break;
                     default:
                         throw new ArgumentException("Error while extracting metadata.");
@@ -508,6 +536,9 @@ namespace PicturePerfect.Models
                         break;
                     case MetadataDescriptions.FocalLength:
                         metadata = SubIfdDirectory.Tags[12].Description; // e.g. 38 mm;
+                        break;
+                    case MetadataDescriptions.DateTimeDigitized:
+                        metadata = DateTime.ParseExact(SubIfdDirectory.Tags[6].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture).ToString(); // 2021:06:15 09:42:21 to 15.06.2021 09:42:21
                         break;
                     default:
                         throw new ArgumentException("Error while extracting metadata.");
