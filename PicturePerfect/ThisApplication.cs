@@ -27,7 +27,7 @@ namespace PicturePerfect
         /// <summary>
         /// Get the application build date.
         /// </summary>
-        public static string BuildDate { get; } = "2022-06-xx";
+        public static string BuildDate { get; } = "2022-06-30";
 
         /// <summary>
         /// Get the database version.

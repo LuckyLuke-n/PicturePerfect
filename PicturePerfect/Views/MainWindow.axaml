@@ -357,7 +357,7 @@
 			<Image Source="/Assets/Drawables/search.png" Height="25" Margin="5,0,5,0"/>
 			<TextBox Text="{Binding SearchQuery}" Background="{Binding DarkContrastColor}"
 					 CornerRadius="0" BorderThickness="0" Margin="1" Width="{Binding SearchBoxWidth}"
-					 ToolTip.Tip="Type your search query here.">
+					 ToolTip.Tip="Type here to search for a custom image name.">
 				<TextBox.KeyBindings>
 					<KeyBinding Gesture="Enter" Command="{Binding SearchCommand}" />
 				</TextBox.KeyBindings>
