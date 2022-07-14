@@ -1,17 +1,17 @@
-﻿Avalonia V0.10.15 by .NET Foundation and Contributors licensed under MIT License
+﻿Avalonia V0.10.16 by .NET Foundation and Contributors licensed under MIT License
 
-Avalonia.Controls.DataGrid V0.10.15 by .NET Foundation and Contributors licensed under MIT License
+Avalonia.Controls.DataGrid V0.10.16 by .NET Foundation and Contributors licensed under MIT License
 
-Avalonia.Desktop V0.10.15 by .NET Foundation and Contributors licensed under MIT License
+Avalonia.Desktop V0.10.16 by .NET Foundation and Contributors licensed under MIT License
 
-Avalonia.Diagnostics V0.10.15 by .NET Foundation and Contributors licensed under MIT License
+Avalonia.Diagnostics V0.10.16 by .NET Foundation and Contributors licensed under MIT License
 
-Avalonia.ReactiveUI V0.10.15 by .NET Foundation and Contributors licensed under MIT License
+Avalonia.ReactiveUI V0.10.16 by .NET Foundation and Contributors licensed under MIT License
 
 Magick.NET-Q16-AnyCPU V11.2.1 by Dirk Lemstra licensed under Apache License 2.0
 
-MetadataExtractor V2.7.2 by Drew Noakes and contributors licensed under Apache License 2.0
+MetadataExtractor V2.7.3 by Drew Noakes and contributors licensed under Apache License 2.0
 
-Microsoft.Data.Sqlite V6.0.5 by Microsoft licensed under MIT License
+Microsoft.Data.Sqlite V6.0.7 by Microsoft licensed under MIT License
 
 Newtonsoft.Json V13.0.1 by James Newton-King licensed under MIT License
