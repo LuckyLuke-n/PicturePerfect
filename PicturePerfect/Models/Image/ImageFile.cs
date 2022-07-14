@@ -204,7 +204,16 @@ namespace PicturePerfect.Models
             else if (imageFile.SubIfdDirectory != null && JpgStrings.Contains(imageFile.FileType))
             {
                 // jpg
-                imageFile.DateTaken = DateTime.ParseExact(imageFile.SubIfdDirectory.Tags[14].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture);
+                try
+                {
+                    imageFile.DateTaken = DateTime.ParseExact(imageFile.SubIfdDirectory.Tags[14].Description, "yyyy:MM:dd HH:mm:ss", CultureInfo.CurrentCulture);
+                }
+                catch
+                {
+                    // datetime could not be parsed
+                    imageFile.DateTaken = fileInfo.LastWriteTime; // Last write time is the creation date for un-edited files.
+                }
+                
             }
             else if (imageFile.SubIfdDirectory != null && TifStrings.Contains(imageFile.FileType))
             {
