@@ -820,8 +820,11 @@ namespace PicturePerfect.ViewModels
 
             if (changesMade == true && changedImageFile != null)
             {
-                // adjust field in observable collection stored in view model base to update the data grid
-                LoadedImageFiles.ReplaceBySqliteId(changedImageFile.Id, changedImageFile);
+                // adjusting only field in observable collection does not work any more
+                // reload by filtering object and reset the image list index to ensure that the next and back buttons still work as intended.
+                int selectedImageIndexBackup = SelectedImageIndex;
+                LoadImagesByFilter();
+                SelectedImageIndex = selectedImageIndexBackup;
             }
         }
     }

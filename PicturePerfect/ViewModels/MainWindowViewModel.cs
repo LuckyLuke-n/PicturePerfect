@@ -416,7 +416,7 @@ namespace PicturePerfect.ViewModels
         public object SelectedCategoryObject
         {
             get { return selectedCategoryObject; }
-            set { this.RaiseAndSetIfChanged(ref selectedCategoryObject, value); LoadImagesByCategoryObject(); }
+            set { this.RaiseAndSetIfChanged(ref selectedCategoryObject, value); SelectedFilteringObject = value; LoadImagesByFilter(); }
         }
         #endregion
 
@@ -428,7 +428,7 @@ namespace PicturePerfect.ViewModels
         public Locations.Location LocationSelected
         {
             get { return locationSelected; }
-            set { this.RaiseAndSetIfChanged(ref locationSelected, value); LoadImagesByLocationObject(); }
+            set { this.RaiseAndSetIfChanged(ref locationSelected, value); SelectedFilteringObject = value; LoadImagesByFilter(); }
         }
         #endregion
 
@@ -989,6 +989,7 @@ namespace PicturePerfect.ViewModels
             PathToImageSourceFolder = "Select a source folder";
         }
 
+        /*
         /// <summary>
         /// Method to load images by category or subcategory. The images will be added to the LoadedImageFiles list.
         /// </summary>
@@ -1007,7 +1008,9 @@ namespace PicturePerfect.ViewModels
                 LoadedImageFiles.LoadBySubCategory(subCategory);
             }
         }
+        */
 
+        /*
         /// <summary>
         /// Method to load images by a location object. The images will be added to the LoadedImageFiles list.
         /// </summary>
@@ -1015,6 +1018,7 @@ namespace PicturePerfect.ViewModels
         {
             LoadedImageFiles.LoadByLocation(LocationSelected);
         }
+        */
 
         /// <summary>
         /// Method to run delete the selected image.
