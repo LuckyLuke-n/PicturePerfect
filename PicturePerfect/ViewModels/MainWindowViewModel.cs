@@ -989,37 +989,6 @@ namespace PicturePerfect.ViewModels
             PathToImageSourceFolder = "Select a source folder";
         }
 
-        /*
-        /// <summary>
-        /// Method to load images by category or subcategory. The images will be added to the LoadedImageFiles list.
-        /// </summary>
-        private void LoadImagesByCategoryObject()
-        {
-            if (SelectedCategoryObject.GetType() == typeof(Category))
-            {
-                // Selection was a category
-                Category category = (Category)SelectedCategoryObject;
-                LoadedImageFiles.LoadByCategory(category);
-            }
-            else
-            {
-                // selection was a subcategory
-                SubCategory subCategory = (SubCategory)SelectedCategoryObject;
-                LoadedImageFiles.LoadBySubCategory(subCategory);
-            }
-        }
-        */
-
-        /*
-        /// <summary>
-        /// Method to load images by a location object. The images will be added to the LoadedImageFiles list.
-        /// </summary>
-        private void LoadImagesByLocationObject()
-        {
-            LoadedImageFiles.LoadByLocation(LocationSelected);
-        }
-        */
-
         /// <summary>
         /// Method to run delete the selected image.
         /// </summary>

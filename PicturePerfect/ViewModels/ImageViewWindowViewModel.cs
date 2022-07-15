@@ -765,19 +765,19 @@ namespace PicturePerfect.ViewModels
         private void RunSaveChangesCommand()
         {
             bool changesMade = false;
-            ImageFile changedImageFile = null;
+            //ImageFile changedImageFile = null;
 
             // check if the custom file name was changed
             if (FileNameSelected != ImageFile.CustomName)
             {
-                changedImageFile = ImageFile.CommitCustomFileNameChange(FileNameSelected);
+                _ = ImageFile.CommitCustomFileNameChange(FileNameSelected);
                 changesMade = true;
             }
 
             // check if the notes where changed
             if (NotesSelected != ImageFile.Notes)
             {
-                changedImageFile = ImageFile.CommitNotesChange(NotesSelected);
+                _ = ImageFile.CommitNotesChange(NotesSelected);
                 changesMade = true;
             }
 
@@ -785,7 +785,7 @@ namespace PicturePerfect.ViewModels
             // location
             if (LocationIndexSelected == -1 || Locations.List[LocationIndexSelected].Id != ImageFile.Location.Id)
             {
-                changedImageFile = ImageFile.CommitLocationChange(Locations.List[LocationIndexSelected]);
+                _ = ImageFile.CommitLocationChange(Locations.List[LocationIndexSelected]);
                 changesMade = true;
             }
 
@@ -794,7 +794,7 @@ namespace PicturePerfect.ViewModels
             {
                 // change category
                 // links in database will be delete via CommitCatagoryChange method
-                changedImageFile = ImageFile.CommitCategoryChange(CategoriesTree.Tree[CategoryIndexSelected]);
+                _ = ImageFile.CommitCategoryChange(CategoriesTree.Tree[CategoryIndexSelected]);
                 changesMade = true;
             }
 
@@ -803,7 +803,7 @@ namespace PicturePerfect.ViewModels
             {
                 if (SubCategories1[SubCategory1IndexSelected].Id != ImageFile.SubCategory1.Id)
                 {
-                    changedImageFile = ImageFile.CommitSubCategory1Change(newSubCategory: SubCategories1[SubCategory1IndexSelected], oldSubCategory: ImageFile.SubCategory1);
+                    _ = ImageFile.CommitSubCategory1Change(newSubCategory: SubCategories1[SubCategory1IndexSelected], oldSubCategory: ImageFile.SubCategory1);
                     changesMade = true;
                 }
             }
@@ -813,12 +813,13 @@ namespace PicturePerfect.ViewModels
             {
                 if (SubCategories2[SubCategory2IndexSelected].Id != ImageFile.SubCategory2.Id)
                 {
-                    changedImageFile = ImageFile.CommitSubCategory2Change(newSubCategory: SubCategories2[SubCategory2IndexSelected], oldSubCategory: ImageFile.SubCategory2);
+                    _ = ImageFile.CommitSubCategory2Change(newSubCategory: SubCategories2[SubCategory2IndexSelected], oldSubCategory: ImageFile.SubCategory2);
                     changesMade = true;
                 }
             }
 
-            if (changesMade == true && changedImageFile != null)
+            //if (changesMade == true && changedImageFile != null)
+            if (changesMade == true)
             {
                 // adjusting only field in observable collection does not work any more
                 // reload by filtering object and reset the image list index to ensure that the next and back buttons still work as intended.

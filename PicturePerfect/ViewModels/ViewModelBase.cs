@@ -43,33 +43,6 @@ namespace PicturePerfect.ViewModels
         public static object? SelectedFilteringObject { get; set; } = null;
 
         /// <summary>
-        /// Method to load images by category or subcategory. The images will be added to the LoadedImageFiles list.
-        /// </summary>
-        public void LoadImagesByCategoryObject()
-        {
-            if (SelectedFilteringObject.GetType() == typeof(Category))
-            {
-                // Selection was a category
-                Category category = (Category)SelectedFilteringObject;
-                LoadedImageFiles.LoadByCategory(category);
-            }
-            else
-            {
-                // selection was a subcategory
-                SubCategory subCategory = (SubCategory)SelectedFilteringObject;
-                LoadedImageFiles.LoadBySubCategory(subCategory);
-            }
-        }
-
-        /// <summary>
-        /// Method to load images by a location object. The images will be added to the LoadedImageFiles list.
-        /// </summary>
-        public void LoadImagesByLocationObject()
-        {
-            LoadedImageFiles.LoadByLocation((Locations.Location)SelectedFilteringObject);
-        }
-
-        /// <summary>
         /// Method to load images by a category or location object. The images will be added to the LoadedImageFiles list.
         /// </summary>
         public void LoadImagesByFilter()

@@ -6,6 +6,7 @@ Apart from the image catalog PicturePerfect includes the RawConverter. It enable
 
 
 Release notes version 1.3.x
+- Bugfix: Fixed an issue preventing the data grid to be updated after changing image properties. (V1.3.3)
 - Bugfix: Fixed an issue causing the application to crash when da date daken cannot be extracted from a jpg file. (V1.3.3)
 - Bugfix: Fixed an issue leading to wrong date taken meta data information. (V1.3.2)
 - Bugfix: Fixed an issue causing the sqlite backup folder being created outside the project folder (V1.3.2)
